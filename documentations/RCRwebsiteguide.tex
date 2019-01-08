@@ -1,0 +1,45 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage{float}
+\usepackage{lmodern}
+\usepackage{physics}
+\usepackage{gensymb}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\setlength{\parindent}{15pt}
+%opening
+\title{Maintenance Guide/``Documentation'' for the RCR website}
+\author{Nick Konz}
+\begin{document}	
+\maketitle
+\section{The Functional Form Webpage}
+\subsection{Where to find these files}
+\par All of the needed files 
+\subsection{The C++ Source Code}
+\par The RCR source code is made up of the following files:
+\\\textbf{Source files}
+\begin{enumerate}
+	\item \texttt{RCR.cpp}
+	\item \texttt{NonParametric.cpp}
+	\item \texttt{FunctionalForm.cpp}
+	\item \texttt{MiscFunction.cpp}
+\end{enumerate}
+\textbf{Header files}
+\begin{enumerate}
+	\item \texttt{RCR.h}
+	\item \texttt{NonParametric.h}
+	\item \texttt{FunctionalForm.h}
+	\item \texttt{MiscFunction.h}
+\end{enumerate}
+\par For usage with the website, I pasted all of the code from these files into one big C++ file, \texttt{RCRSWIGFUll.cpp}, \textbf{which also includes} the sets of functions and partial derivatives (functions) for each of the six model function types that the website uses: \textbf{linear, quadratic, cubic, power law, exponential, logarithmic. Please read through this source code file thoroughly, as well as the RCR paper itself to understand the entire algorithm, as it is quite complex.} These functions and partial derivative functions are used for the Gauss Newton iterator used within \texttt{FunctionalForm.BuildModelSpace()}. Specifically, the Functional Form constructor takes in a vector of function pointers to the partial derivative functions, with derivatives taken in the same order as the parameters are specifies. See the RCR source code documentation, as well as the source code itself, for more details. \textbf{Also included} within \texttt{RCRSWIGFUll.cpp} are two functions, \texttt{requestHandlerUnWeighted()} and \texttt{requestHandlerWeighted()}, which are directly used with SWIG (more on SWIG in a bit) so that Functional RCR can be called through python (via SWIG) on one of the six model functions, with either weighted or unweighted data. The arguments of these functions are four vectors specifying x data, y data, $\sigma_y$ data, initial guesses for the model function parameters; also three integers, specifying rejection technique, size of the data (number of x/y datapoints), and an integer specifying the model function type. More on what these function returns in a bit.
+\par The convention is that the aformentioned model functions are numbered 1,2,3,4,5,6, in the order of linear, quadratic, cubic, power law, exponential, logarithmic, respectively. The convention for the numbering of rejection techniques is 1,2,3,4 for \texttt{SS\_MEDIAN\_DL}, \texttt{LS\_MODE\_68}, \texttt{LS\_MODE\_DL},
+\texttt{ES\_MODE\_DL}, respectively.
+\subsection{Using SWIG, and the Python controller}
+\subsection{The Front End}
+\subsection{The Interactive Plot (Bokeh)}
+\subsection{Connecting Everything: The Linux Server and SSH Tap}
+\subsection{Summary}
+\end{document}
