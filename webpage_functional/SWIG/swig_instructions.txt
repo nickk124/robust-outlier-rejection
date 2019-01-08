@@ -1,0 +1,6 @@
+Run the following while logged into the pico server, while logged into SSH Tap:
+
+$ swig -c++ -python RCRSWIGFull.i
+$ g++ -std=c++11 -O2 -fPIC -c RCRSWIGFull.cpp
+$ g++ -std=c++11 -O2 -fPIC -c RCRSWIGFull_wrap.cxx -I/usr/include/python2.7
+$ g++ -std=c++11 -shared RCRSWIGFull.o RCRSWIGFull_wrap.o -o _RCRSWIGFull.so
