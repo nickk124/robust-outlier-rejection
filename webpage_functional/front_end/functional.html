@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!--new-->
+  <head>
+      <script type="text/javascript"><!--
+  // These variables are used by the web2py_ajax_init function in web2py_ajax.js (which is loaded below).
+  var w2p_ajax_confirm_message = "Are you sure you want to delete this object?";
+  var w2p_ajax_date_format = "%Y-%m-%d";
+  var w2p_ajax_datetime_format = "%Y-%m-%d %H:%M:%S";
+  //--></script>
+    <title>Functional RCR Calculator</title>
+    <script src="/rcr/static/js/jquery.js" type="text/javascript"></script><link href="/rcr/static/css/calendar.css" rel="stylesheet" type="text/css" /><script src="/rcr/static/js/calendar.js" type="text/javascript"></script><script src="/rcr/static/js/web2py.js" type="text/javascript"></script><link href="/rcr/static/css/rcr2.css" rel="stylesheet" type="text/css" />
+    <!--<link rel= "stylesheet" type= "text/css" href= "{{URL('static','css/rcr2.css')}}">-->
+    <link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.16.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.16.min.css" type="text/css" />
+
+    <!--<script href= "{{URL('static','js/jquery.js') }}" type="text/javascript"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.16.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.16.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- NAVIGATION BAR -->
+<!--////////////////////////////////////////////////////////////////////////////-->
+    <div id="wrap">
+    <ul class="navbar">
+            <li style="margin-left:50px;"><a href="/rcr/calculator">Home</a> </li>
+            <li><a href="/rcr/calculator/value">Single-Value Calculator</a></li>
+            <li><a style="background-color:#5b8dd9;">Functional Calculator</a></li>
+            <li><a href="/rcr/calculator/downloads">Downloads</a> </li>
+            <li><a href="/rcr/calculator/contact">Contact Us</a> </li>
+    </ul>
+    </div>
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- CALCULATOR -->
+<!--////////////////////////////////////////////////////////////////////////////-->
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- DATA INPUT SECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
+    <div id="RMInput">
+      <h1 style="font-size:3.5em;"> Functional RCR Calculator</h1>
+            <br>
+
+      <h1 style="font-size:2.5em;"> Input Data</h1>
+            <div id="StepOne">
+              <div  id="ButtonSection">
+                <h2> Select Model Function Type: </h2>
+                <div style="display: inline; float:left;">
+                  <i style="padding-top:10px">For large datasets and/or for non-listed custom functions, <br>it is recommended to just download the C++ source code (documentation included) <a href="/rcr/calculator/downloads">here</a>.</i>
+                  <br>
+                  <br>
+                  <div class="dropdown">
+                    <button class="dropbtn">(Select Function Here)</button>
+                    <div class="dropdown-content">
+                      <button id="Linear" class="Button DataType">Linear</button>
+                      <br>
+                      <button id="Quadratic" class="Button DataType">Quadratic</button>
+                      <br>
+                      <button id="Cubic" class="Button DataType">Cubic</button>
+                      <br>
+                      <button id="PowerLaw" class="Button DataType">Power Law</button>
+                      <br>
+                      <button id="Exponential" class="Button DataType">Exponential</button>
+                      <br>
+                      <button id="Logarithmic" class="Button DataType">Logarithmic</button>
+                    </div>
+                  </div>
+
+                  <br>
+                  <br>
+                  <h3> Formatting: </h3>
+                  <i>You can simply paste in your data from sources such as Excel tables or other tab\newline-delimited data. </i>
+                  <br>
+                  <br>
+                  <b style="padding-top:10px">y data format:</b><i style="padding-top:10px"> one y value per line. y value uncertainties should be included on the same line to the right of the y data, seperated by white space. Weights, if unequal, should be included on the same line furthest to the right, separated by white space.</i>
+                  <br>
+                  <br>
+                  <b style="padding-top:10px">x data format:</b><i style="padding-top:10px"> For the single independent variable case, one x value per line.</i>
+                  <br>
+                  <br>
+                  <b style="padding-top:10px">parameter(s) guess format:</b><i style="padding-top:10px"> The functions have parameters a<sub>0</sub> , a<sub>1</sub> , a<sub>2</sub> etc, as shown. Initial guesses for the parameters should be listed one value per line, in that same order.</i>
+                </div>
+              </div>
+                <div id="functionImage" style="float:right; padding:8px; margin:25px; width:40%; background-color: #639BF1;">
+                  <img src="/rcr/static/linear.png" id="LinearImage">
+            			<img src="/rcr/static/quadratic.png" id="QuadraticImage">
+            			<img src="/rcr/static/cubic.png" id="CubicImage">
+                  <img src="/rcr/static/powerlaw.png" id="PowerLawImage">
+                  <img src="/rcr/static/exponential.png" id="ExponentialImage">
+                  <img src="/rcr/static/logarithmic.png" id="LogarithmicImage">
+                </div>
+              <!-- WIP user-chosen xbar / lnx_bar
+              <div style="float: right; padding-top:10px;">
+              <h2> Enter data for <span style="text-decoration: overline">x</span> or <span style="text-decoration: overline">ln x</span></h2>
+              <form>
+                Enter value for x&#772;: <br>
+                <input type="text" id="xBar" name="xBar"><br>
+              </form>
+              <br>
+              <i style="padding-top:10px"><span style="text-decoration: overline">x</span> is needed for all function types except for the power law, and is usually defined as the (weighted) <br> average of the raw x data, but can be defined differently if desired.</i>
+              <br>
+              <br>
+              <form>
+                Enter value for <span style="text-decoration: overline">ln x</span>: (optional):<br>
+                <input type="text" id="lnx_Bar" name="lnx_Bar"><br>
+              </form>
+              <br>
+              <i style="padding-top:10px"><span style="text-decoration: overline">ln x</span> is only necessary for the power law case, and is usually defined as the (weighted) average of <br> the natural logarithms of the raw x data, but can be defined differently if desired. <br> For more info, please see page 45 of the RCR paper <a href="/rcr/calculator/downloads">here</a>.</i>
+              <br>
+              </div>
+              -->
+              <div  id="ButtonSection">
+                  <h2> Select Data Type: </h2>
+                  <button id='Unweighted' class="Button DataType"> Equal Weights (Default) </button>
+                  <button id='Weighted' class="Button DataType"> Unequal Weights </button>
+                  <br>
+                  <br>
+
+              </div>
+
+              <div id="RejectionMethod" style="width:40%">
+                <table>
+                  <tr>
+                    <th>x data</th>
+                    <th>y and σ <sub>y</sub> data (with optional weights)</th>
+                    <th>Guess for parameters</th>
+                  </tr>
+                  <tr>
+                    <th><textarea style="width:80%; height:200px" class="dataTable" id="xdataarea"></textarea></th>
+                    <th><textarea style="width:80%; height:200px" class="dataTable" id="ydataarea"></textarea></th>
+                    <th><textarea style="width:80%; height:200px" class="dataTable" id="guessarea"></textarea></th>
+                  </tr>
+                </table>
+              </div>
+            </div>
+    <br>
+<br>
+<br>
+			<h1 style="font-size:2.5em; padding-top:25px;"> Select Rejection Method </h1>
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- DISTRIBUTION SELECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
+			<div id="StepOne" style="overflow:auto">
+
+                <div id="ButtonSection">
+
+                    <h2> Select Uncontaminated Distribution:</h2>
+
+                    <button id="Symmetric" class="Button Distribution"> Gaussian, Mildly Peaked, or Mildly Flat-Topped (Default) </button>
+                    <button id="Asymmetric" class="Button Distribution"> Mildly Asymmetric (Less Powerful) </button>
+
+                    <h2 id="SelectContaminantSectionTitle"> Select Contaminants:</h2>
+		    <div id="SelectContaminantSection">
+                    	<button id="Equal" class="Button Contaminants"> High and Low in Equal Proportions </button>
+                    	<button id="OneSided" class="Button Contaminants"> All High or All Low </button>
+                    	<button id="Between" class="Button Contaminants"> In Between (Default) </button>
+                    </div>
+		</div>
+                <div id="RejectionMethod">
+
+                    <h2> Selected Uncontaminated Distribution: </h2>
+			<br>
+      <div style="width:80%">
+        <img src="/rcr/static/symm.png" id="SymmetricImage">
+  			<img src="/rcr/static/asymm.png" id="AsymmetricImage">
+      </div>
+                    <h2> Selected Rejection Method: </h2>
+                    <p id="Option11" class="RejectionMethods">
+                         μ: Median (§2; Maples et al. 2018) <br>
+                         σ : Broken-line technique (§3, §4) <br>
+                        Rejection proportional to σ both below and above  μ (§5)
+                    </p>
+                    <p id="Option12" class="RejectionMethods">
+												μ : Half-sample mode (§2; Maples et al. 2018)  <br>
+												σ<sub>-</sub> , σ<sub>+</sub> : 68.3%-Value technique (§3, §4)<br>
+                        Rejection proportional to min{σ<sub>-</sub> , σ<sub>+</sub>} both below and above μ (§6)
+                    </p>
+                    <p id="Option13" class="RejectionMethods">
+												μ: Half-sample mode (§2; Maples et al. 2018)  <br>
+                        σ<sub>-</sub> , σ<sub>+</sub> : Broken-line technique (§3, §4)<br>
+                        Rejection proportional to min{σ<sub>-</sub> , σ<sub>+</sub>} both below and above μ (§6)
+                    </p>
+                    <p id="Option2All" class="RejectionMethods">
+												μ: Half-sample mode (§2; Maples et al. 2018)  <br>
+                        σ<sub>-</sub> , σ<sub>+</sub> : Broken-line technique (§3, §4)<br>
+                        Rejection proportional to σ<sub>-</sub> below μ and σ<sub>+</sub> above μ (§7)
+                    </p>
+                    <p id="Option3" class="RejectionMethods">
+			Fundamentally, RCR assumes that the uncontaminated distribution is Gaussian, or near Gaussian.  In particular, our <q>All High or All Low</q> and <q>In Between</q> contaminant type options are especially sensitive to this assumption, and should not be used if this assumption is not met.                    </p>
+                    <p id="OptionAll" class="RejectionMethods">
+                        Note: Rejection method is iterative, preceded by iterative bulk rejection (§9), and proceeded by both (1) iterative "median + 68.3%-value technique" rejection, and (2) iterative "mean + standard deviation " rejection (§8).
+                    </p>
+
+                </div>
+            </div>
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- DATA OUTPUT SECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
+
+            <h1 style="font-size:2.5em; padding-top:25px;"> Output </h1>
+              <div id="StepOne">
+                <div  id="ButtonSection">
+                <br>
+                    <div  style="float:left; width:400px">
+                        <button id="PerformRCR" class="Button RejectButton"  onclick="performFunctionalRCR();">Perform RCR!</button>
+                    </div>
+                    <br>
+                    <div id="OutputTableWrapper" style="display: none; display: inline; float:left; width:450px">
+                      <div id="RejectionMethod" style="float:left; width:400px">
+                        <div id="ButtonSection" style="width:100%; padding:5px 0px 5px 0px;">
+                        <br>
+                            <table style="width:100%;">
+                            <tr>
+                                <td  style="width:33%;">
+                                    <button id="showNonRejected" class="Button DataType"> Show Unrejected Points </button>
+                                </td>
+                                <td  style="width:33%;">
+                                    <button id="showRejected" class="Button DataType"> Show Rejected Points </button>
+                                </td>
+                                <td  style="width:33%;">
+                                    <button id="showAll" class="Button DataType"> Show Both With Flags </button>
+                                </td>
+                            </tr>
+                            </table>
+                        </div>
+
+                        <div id="RejectionMethod" style="width:130%; float:right">
+                          <table style="float:right">
+                            <tr>
+                              <th> Selected points: </th>
+                              <th>Final function <br> parameters:</th>
+                            </tr>
+                            <tr>
+                              <th>
+                                <textarea class="dataTable" id="nonRejectedData" style="margin-top:15px; width:80%; height:200px"></textarea>
+                                <textarea class="dataTable" id="rejectedData" style="margin-top:15px; width:80%; height:200px"></textarea>
+                                <textarea class="dataTable" id="allData" style="margin-top:15px; width:120%; height:200px"></textarea>
+                              </th>
+                              <th><textarea class="dataTable" id="finalParameters" style="margin-top:15px; width:80%; height:200px"></textarea></th>
+                            </tr>
+                          </table>
+                        </div>
+    		            </div>
+                    </div>
+                </div>
+                <!-- PLOT DIV -->
+                <div id="Plot" style="float:right; padding-bottom:25px">
+                  <div class="bk-root">
+                    <div class="bk-plotdiv" id="9dc89947-0ed6-4b51-ab29-3a3669bb2276"></div>
+                  </div>
+
+                  <script type="application/json" id="ea18ba29-8561-4021-ac9a-faee0eb64d39">
+                    {"3d866309-ffd3-4ba8-a1c2-2107ec082e86":{"roots":{"references":[{"attributes":{"callback":null},"id":"2fc745b7-cd4e-4c7d-b20c-79cebfcd5373","type":"DataRange1d"},{"attributes":{"fill_alpha":{"value":0.1},"fill_color":{"value":"#1f77b4"},"line_alpha":{"value":0.1},"line_color":{"value":"#1f77b4"},"size":{"units":"screen","value":5},"x":{"field":"x_nonrejected"},"y":{"field":"y_nonrejected"}},"id":"44a8308d-842c-4af2-85bf-037aeb9c10a1","type":"Circle"},{"attributes":{"data_source":{"id":"405cd5b7-2bba-462d-927a-43aa9fc640aa","type":"ColumnDataSource"},"glyph":{"id":"af538231-936a-43f6-8a05-cbe6743b66a3","type":"Line"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"e4a3cd6c-d47b-453a-94a5-49fffd9ad5a7","type":"Line"},"selection_glyph":null,"view":{"id":"d1c17136-6e2c-4bb6-92c8-d8d6da551068","type":"CDSView"}},"id":"ebcd23d3-94c8-472a-8019-4cb452badc87","type":"GlyphRenderer"},{"attributes":{},"id":"d9bb7530-e618-4b00-93af-ae5a6758d658","type":"LinearScale"},{"attributes":{"button_type":"success","callback":null,"icon":null,"js_property_callbacks":{"change:clicks":[{"id":"4299f106-0c2d-4961-8675-12c7e6a30d1f","type":"CustomJS"}]},"label":"Plot Results"},"id":"c5857131-a0ec-498e-b8cd-9b8e86a65051","type":"Button"},{"attributes":{},"id":"a43ac720-0f79-4851-b618-fa91a5f03d53","type":"LinearScale"},{"attributes":{"source":{"id":"f764e259-b575-4ab6-b95a-38983ff66a5a","type":"ColumnDataSource"}},"id":"07f3b6b2-bc17-4ac5-829e-e5c7dfe6d00b","type":"CDSView"},{"attributes":{"source":{"id":"405cd5b7-2bba-462d-927a-43aa9fc640aa","type":"ColumnDataSource"}},"id":"d1c17136-6e2c-4bb6-92c8-d8d6da551068","type":"CDSView"},{"attributes":{},"id":"aac96b51-c1f1-4ad2-924e-49cb1f06f55a","type":"UnionRenderers"},{"attributes":{"axis_label":"x","formatter":{"id":"8800e720-4d2e-49d0-a385-2cec68facb51","type":"BasicTickFormatter"},"plot":{"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"},"ticker":{"id":"0fcd67a3-1205-47d8-a8ef-449ecc83e747","type":"BasicTicker"}},"id":"6c8d500d-c799-4ba4-bb71-78d62799f84a","type":"LinearAxis"},{"attributes":{},"id":"34700a74-afa2-42cb-b78c-35a8f7714d3e","type":"Selection"},{"attributes":{},"id":"0fcd67a3-1205-47d8-a8ef-449ecc83e747","type":"BasicTicker"},{"attributes":{"plot":{"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"},"ticker":{"id":"0fcd67a3-1205-47d8-a8ef-449ecc83e747","type":"BasicTicker"}},"id":"ba0b3b50-4be7-472e-89ee-d881b83e4637","type":"Grid"},{"attributes":{"label":{"value":"fitted model"},"renderers":[{"id":"ebcd23d3-94c8-472a-8019-4cb452badc87","type":"GlyphRenderer"}]},"id":"6aa2a081-9f7c-45ff-99c3-d3cf78e7993e","type":"LegendItem"},{"attributes":{"axis_label":"y","formatter":{"id":"bce129bd-af86-45d5-941c-db22d914eb38","type":"BasicTickFormatter"},"plot":{"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"},"ticker":{"id":"e96e03c9-1696-4524-8819-0d2879550bc2","type":"BasicTicker"}},"id":"bd137448-e834-4654-98e4-0d9c9def1fc9","type":"LinearAxis"},{"attributes":{"data_source":{"id":"f764e259-b575-4ab6-b95a-38983ff66a5a","type":"ColumnDataSource"},"glyph":{"id":"e28769d6-5df4-4603-a224-95bfb0717156","type":"Circle"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"44a8308d-842c-4af2-85bf-037aeb9c10a1","type":"Circle"},"selection_glyph":null,"view":{"id":"07f3b6b2-bc17-4ac5-829e-e5c7dfe6d00b","type":"CDSView"}},"id":"b02e02b0-6ea5-47e3-96f3-97506ee58bea","type":"GlyphRenderer"},{"attributes":{},"id":"e96e03c9-1696-4524-8819-0d2879550bc2","type":"BasicTicker"},{"attributes":{"children":[{"id":"9af099a8-dd96-45fc-a26e-76da99a8c957","type":"WidgetBox"},{"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"}]},"id":"59b85646-db6a-4586-b036-7045decc7ce3","type":"Column"},{"attributes":{"dimension":1,"plot":{"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"},"ticker":{"id":"e96e03c9-1696-4524-8819-0d2879550bc2","type":"BasicTicker"}},"id":"b5cf9aa9-86c0-4cf4-b1f0-8bb854115497","type":"Grid"},{"attributes":{},"id":"11b1a1b2-d0cb-4568-a335-8be011ded852","type":"PanTool"},{"attributes":{"children":[{"id":"c5857131-a0ec-498e-b8cd-9b8e86a65051","type":"Button"}]},"id":"9af099a8-dd96-45fc-a26e-76da99a8c957","type":"WidgetBox"},{"attributes":{"bottom_units":"screen","fill_alpha":{"value":0.5},"fill_color":{"value":"lightgrey"},"left_units":"screen","level":"overlay","line_alpha":{"value":1.0},"line_color":{"value":"black"},"line_dash":[4,4],"line_width":{"value":2},"plot":null,"render_mode":"css","right_units":"screen","top_units":"screen"},"id":"c317473b-a9d7-49ae-8ef4-dbbb2f3394e6","type":"BoxAnnotation"},{"attributes":{},"id":"19814b62-286a-4a1f-9d00-1e6746aa6477","type":"Selection"},{"attributes":{},"id":"c3e851c6-b4fb-40c2-ad95-f7c39413b9ae","type":"WheelZoomTool"},{"attributes":{},"id":"3e7df4a6-9cd5-4cb0-93b6-ea7f05b9ff85","type":"UnionRenderers"},{"attributes":{"overlay":{"id":"c317473b-a9d7-49ae-8ef4-dbbb2f3394e6","type":"BoxAnnotation"}},"id":"ac3dbc22-f62d-4542-a3d6-dd2a6164eda1","type":"BoxZoomTool"},{"attributes":{},"id":"03a0407a-383e-4819-ba56-2c9721d66107","type":"SaveTool"},{"attributes":{},"id":"bce129bd-af86-45d5-941c-db22d914eb38","type":"BasicTickFormatter"},{"attributes":{},"id":"be87c366-4ecb-47bf-a681-31556474da8f","type":"ResetTool"},{"attributes":{"below":[{"id":"6c8d500d-c799-4ba4-bb71-78d62799f84a","type":"LinearAxis"}],"left":[{"id":"bd137448-e834-4654-98e4-0d9c9def1fc9","type":"LinearAxis"}],"renderers":[{"id":"6c8d500d-c799-4ba4-bb71-78d62799f84a","type":"LinearAxis"},{"id":"ba0b3b50-4be7-472e-89ee-d881b83e4637","type":"Grid"},{"id":"bd137448-e834-4654-98e4-0d9c9def1fc9","type":"LinearAxis"},{"id":"b5cf9aa9-86c0-4cf4-b1f0-8bb854115497","type":"Grid"},{"id":"c317473b-a9d7-49ae-8ef4-dbbb2f3394e6","type":"BoxAnnotation"},{"id":"1070a326-6e56-4456-a3af-3917e4f01a22","type":"Legend"},{"id":"b02e02b0-6ea5-47e3-96f3-97506ee58bea","type":"GlyphRenderer"},{"id":"d77758b3-49de-490a-bc90-362aa4d757b6","type":"GlyphRenderer"},{"id":"ebcd23d3-94c8-472a-8019-4cb452badc87","type":"GlyphRenderer"}],"title":{"id":"54462f9b-4536-4d09-bf45-061b5537aabb","type":"Title"},"toolbar":{"id":"0084a40c-7a87-46f0-9118-d56b32212641","type":"Toolbar"},"x_range":{"id":"0c10287a-18e5-467f-8537-d4bb25958e62","type":"DataRange1d"},"x_scale":{"id":"d9bb7530-e618-4b00-93af-ae5a6758d658","type":"LinearScale"},"y_range":{"id":"2fc745b7-cd4e-4c7d-b20c-79cebfcd5373","type":"DataRange1d"},"y_scale":{"id":"a43ac720-0f79-4851-b618-fa91a5f03d53","type":"LinearScale"}},"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"},{"attributes":{"fill_alpha":{"value":0.5},"fill_color":{"value":"navy"},"line_alpha":{"value":0.5},"line_color":{"value":"navy"},"size":{"units":"screen","value":5},"x":{"field":"x_nonrejected"},"y":{"field":"y_nonrejected"}},"id":"e28769d6-5df4-4603-a224-95bfb0717156","type":"Circle"},{"attributes":{},"id":"d4fd685a-2018-45fa-8b75-d3c2d7ceb677","type":"HelpTool"},{"attributes":{"label":{"value":"rejected data"},"renderers":[{"id":"d77758b3-49de-490a-bc90-362aa4d757b6","type":"GlyphRenderer"}]},"id":"fd65274b-32c3-43bd-9f01-970d6e788071","type":"LegendItem"},{"attributes":{},"id":"8800e720-4d2e-49d0-a385-2cec68facb51","type":"BasicTickFormatter"},{"attributes":{"data_source":{"id":"c6edfd65-97c6-462a-86b0-c0a411a0a290","type":"ColumnDataSource"},"glyph":{"id":"c7ffe90e-854f-4e82-a526-954e8809b4f2","type":"Circle"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"fc13ead9-50eb-4c97-87dd-e19c4d2e0efe","type":"Circle"},"selection_glyph":null,"view":{"id":"1962b91c-6dc8-451e-91a5-3aeccae14eca","type":"CDSView"}},"id":"d77758b3-49de-490a-bc90-362aa4d757b6","type":"GlyphRenderer"},{"attributes":{"callback":null,"data":{"x_nonrejected":[],"y_nonrejected":[]},"selected":{"id":"91088edd-08c6-4e04-a231-be64229c38f5","type":"Selection"},"selection_policy":{"id":"9bd5a380-ad37-464a-a2f3-8ccdd013de85","type":"UnionRenderers"}},"id":"f764e259-b575-4ab6-b95a-38983ff66a5a","type":"ColumnDataSource"},{"attributes":{"label":{"value":"nonrejected data of size"},"renderers":[{"id":"b02e02b0-6ea5-47e3-96f3-97506ee58bea","type":"GlyphRenderer"}]},"id":"9a14e865-ed0c-47ef-a758-b50aaec98b25","type":"LegendItem"},{"attributes":{"callback":null,"data":{"x_original":[],"y_fitted":[]},"selected":{"id":"19814b62-286a-4a1f-9d00-1e6746aa6477","type":"Selection"},"selection_policy":{"id":"3e7df4a6-9cd5-4cb0-93b6-ea7f05b9ff85","type":"UnionRenderers"}},"id":"405cd5b7-2bba-462d-927a-43aa9fc640aa","type":"ColumnDataSource"},{"attributes":{"args":{"sourceall":{"id":"405cd5b7-2bba-462d-927a-43aa9fc640aa","type":"ColumnDataSource"},"sourcenon":{"id":"f764e259-b575-4ab6-b95a-38983ff66a5a","type":"ColumnDataSource"},"sourcerej":{"id":"c6edfd65-97c6-462a-86b0-c0a411a0a290","type":"ColumnDataSource"}},"code":"\n    console.log('Plot Generating...');\n    var datanon = sourcenon.data;\n    var datarej = sourcerej.data;\n    var dataall = sourceall.data;\n\n    var x_rejected = datarej['x_rejected']\n    var y_rejected = datarej['y_rejected']\n    var x_nonrejected = datanon['x_nonrejected']\n    var y_nonrejected = datanon['y_nonrejected']\n    var x_original = dataall['x_original']\n    var y_fitted = dataall['y_fitted']\n\n    for (var i = 0; i &lt; x_rejected_result.length; i++) {\n        x_rejected[i] = x_rejected_result[i]\n        y_rejected[i] = y_rejected_result[i]\n    }\n    for (var i = 0; i &lt; x_nonrejected_result.length; i++) {\n        x_nonrejected[i] = x_nonrejected_result[i]\n        y_nonrejected[i] = y_nonrejected_result[i]\n    }\n    for (var i = 0; i &lt; x_original_result.length; i++) {\n        x_original[i] = x_original_result[i]\n        y_fitted[i] = y_fitted_result[i]\n    }\n\n    console.log(datarej['x_rejected']);\n    console.log(datarej['y_rejected']);\n    console.log(datanon['x_nonrejected']);\n    console.log(datanon['y_nonrejected']);\n    console.log(dataall['x_original']);\n    console.log(dataall['y_fitted']);\n\n    sourcenon.change.emit();\n    sourcerej.change.emit();\n    sourceall.change.emit();\n"},"id":"4299f106-0c2d-4961-8675-12c7e6a30d1f","type":"CustomJS"},{"attributes":{"line_alpha":0.1,"line_color":"#1f77b4","line_width":2,"x":{"field":"x_original"},"y":{"field":"y_fitted"}},"id":"e4a3cd6c-d47b-453a-94a5-49fffd9ad5a7","type":"Line"},{"attributes":{"items":[{"id":"9a14e865-ed0c-47ef-a758-b50aaec98b25","type":"LegendItem"},{"id":"fd65274b-32c3-43bd-9f01-970d6e788071","type":"LegendItem"},{"id":"6aa2a081-9f7c-45ff-99c3-d3cf78e7993e","type":"LegendItem"}],"plot":{"id":"02326a34-d38f-4a76-a633-fccc74097684","subtype":"Figure","type":"Plot"}},"id":"1070a326-6e56-4456-a3af-3917e4f01a22","type":"Legend"},{"attributes":{"line_color":"green","line_width":2,"x":{"field":"x_original"},"y":{"field":"y_fitted"}},"id":"af538231-936a-43f6-8a05-cbe6743b66a3","type":"Line"},{"attributes":{"source":{"id":"c6edfd65-97c6-462a-86b0-c0a411a0a290","type":"ColumnDataSource"}},"id":"1962b91c-6dc8-451e-91a5-3aeccae14eca","type":"CDSView"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_scroll":"auto","active_tap":"auto","tools":[{"id":"11b1a1b2-d0cb-4568-a335-8be011ded852","type":"PanTool"},{"id":"c3e851c6-b4fb-40c2-ad95-f7c39413b9ae","type":"WheelZoomTool"},{"id":"ac3dbc22-f62d-4542-a3d6-dd2a6164eda1","type":"BoxZoomTool"},{"id":"03a0407a-383e-4819-ba56-2c9721d66107","type":"SaveTool"},{"id":"be87c366-4ecb-47bf-a681-31556474da8f","type":"ResetTool"},{"id":"d4fd685a-2018-45fa-8b75-d3c2d7ceb677","type":"HelpTool"}]},"id":"0084a40c-7a87-46f0-9118-d56b32212641","type":"Toolbar"},{"attributes":{"fill_alpha":{"value":0.1},"fill_color":{"value":"#1f77b4"},"line_alpha":{"value":0.1},"line_color":{"value":"#1f77b4"},"size":{"units":"screen","value":5},"x":{"field":"x_rejected"},"y":{"field":"y_rejected"}},"id":"fc13ead9-50eb-4c97-87dd-e19c4d2e0efe","type":"Circle"},{"attributes":{"callback":null},"id":"0c10287a-18e5-467f-8537-d4bb25958e62","type":"DataRange1d"},{"attributes":{"fill_alpha":{"value":0.5},"fill_color":{"value":"red"},"line_alpha":{"value":0.5},"line_color":{"value":"red"},"size":{"units":"screen","value":5},"x":{"field":"x_rejected"},"y":{"field":"y_rejected"}},"id":"c7ffe90e-854f-4e82-a526-954e8809b4f2","type":"Circle"},{"attributes":{"callback":null,"data":{"x_rejected":[],"y_rejected":[]},"selected":{"id":"34700a74-afa2-42cb-b78c-35a8f7714d3e","type":"Selection"},"selection_policy":{"id":"aac96b51-c1f1-4ad2-924e-49cb1f06f55a","type":"UnionRenderers"}},"id":"c6edfd65-97c6-462a-86b0-c0a411a0a290","type":"ColumnDataSource"},{"attributes":{},"id":"9bd5a380-ad37-464a-a2f3-8ccdd013de85","type":"UnionRenderers"},{"attributes":{},"id":"91088edd-08c6-4e04-a231-be64229c38f5","type":"Selection"},{"attributes":{"plot":null,"text":""},"id":"54462f9b-4536-4d09-bf45-061b5537aabb","type":"Title"}],"root_ids":["59b85646-db6a-4586-b036-7045decc7ce3"]},"title":"Bokeh Application","version":"0.12.16"}}
+                  </script>
+                  <script type="text/javascript">
+                    (function() {
+                      var fn = function() {
+                        Bokeh.safely(function() {
+                          (function(root) {
+                            function embed_document(root) {
+
+                            var docs_json = document.getElementById('ea18ba29-8561-4021-ac9a-faee0eb64d39').textContent;
+                            var render_items = [{"docid":"3d866309-ffd3-4ba8-a1c2-2107ec082e86","elementid":"9dc89947-0ed6-4b51-ab29-3a3669bb2276","modelid":"59b85646-db6a-4586-b036-7045decc7ce3"}];
+                            root.Bokeh.embed.embed_items(docs_json, render_items);
+
+                            }
+                            if (root.Bokeh !== undefined) {
+                              embed_document(root);
+                            } else {
+                              var attempts = 0;
+                              var timer = setInterval(function(root) {
+                                if (root.Bokeh !== undefined) {
+                                  embed_document(root);
+                                  clearInterval(timer);
+                                }
+                                attempts++;
+                                if (attempts > 100) {
+                                  console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing")
+                                  clearInterval(timer);
+                                }
+                              }, 10, root)
+                            }
+                          })(window);
+                        });
+                      };
+                      if (document.readyState != "loading") fn();
+                      else document.addEventListener("DOMContentLoaded", fn);
+                    })();
+                  </script>
+                </div>
+              </div>
+
+          <br>
+
+  </body>
+</html>
+<script>
+
+var chosenFunctionType;
+
+//Initializing the final result lists that will come from RCR and will result in plotting:
+var x_rejected_result = [];
+var y_rejected_result = [];
+var x_nonrejected_result = [];
+var y_nonrejected_result = [];
+var x_original_result = [];
+var y_fitted_result = [];
+
+function test(){
+  console.log('Testing performFunctionalRCR button')
+  return;
+}
+
+function testPerform(){
+  x_rejected_result = [];
+  y_rejected_result = [];
+  x_nonrejected_result = [];
+  y_nonrejected_result = [];
+  x_original_result = [];
+  y_fitted_result = [];
+
+  mainDataContents = document.getElementById('ydataarea').value
+  xDataContents = document.getElementById('xdataarea').value
+  //console.log("xDataContents: " + xDataContents);
+  guessDataContents = document.getElementById('guessarea').value
+
+  $('#OutputTableWrapper').css('display', 'inline');
+  $('#Plot').css('display', 'inline');
+
+  hasSymmetricDist = $('#Symmetric').data('clicked');
+  hasEqualCont = $('#Equal').data('clicked');
+  hasOneSidedCont = $('#OneSided').data('clicked');
+  hasInBetweenCont = $('#Between').data('clicked');
+  hasWeights = $('#Weighted').data('clicked');
+
+  /*
+  if (chosenFunctionType === 'PowerLaw'){
+    correct_barData = document.getElementById('lnx_Bar')
+  } else {
+    correct_barData = document.getElementById('xBar')
+  }
+  */
+
+  console.log("hasSymmetricDist: " + hasSymmetricDist);
+	console.log("hasEqualCont: " + hasEqualCont);
+	console.log("hasOneSidedCont: " + hasOneSidedCont);
+	console.log("hasInBetweenCont: " + hasInBetweenCont);
+	console.log("hasWeights: " + hasWeights);
+  console.log("chosenFunctionType: " + chosenFunctionType);
+  //console.log(correct_barData);
+  /*
+  var test_finalParametersData = "1.0\n2.0";
+  var test_nonRejectedData = "1.0\t-1.0\n2.0\t1.0";
+  var test_RejectedData = "3.0\t8.0";
+  var test_AllData = "1.0\t-1.0\n2.0\t1.0\n3.0\t8.0";
+
+  document.getElementById('finalParameters').value = test_finalParametersData;
+  document.getElementById('nonRejectedData').value = test_nonRejectedData;
+  document.getElementById('rejectedData').value = test_RejectedData;
+  document.getElementById('allData').value = test_AllData;
+  */
+
+  var test_finalParametersData = "-1.5\n1.0";
+  var test_nonRejectedData = "1.0\t-6.0\n2.0\t-5.0\n3.0\t-4.0\n4.0\t-3.0\n5.0\t-2.0\n6.0\t-1.0\n8.0\t1.0\n9.0\t2.0\n10.0\t3.0";
+  var test_RejectedData = "7.0\t25.0";
+  var test_AllData = "1.0\t-6.0\n2.0\t-5.0\n3.0\t-4.0\n4.0\t-3.0\n5.0\t-2.0\n6.0\t-1.0\n7.0\t25.0\n8.0\t1.0\n9.0\t2.0\n10.0\t3.0";
+
+  document.getElementById('finalParameters').value = test_finalParametersData;
+  document.getElementById('nonRejectedData').value = test_nonRejectedData;
+  document.getElementById('rejectedData').value = test_RejectedData;
+  document.getElementById('allData').value = test_AllData;
+
+  //this function will use a different parametric function, and corresponding c++ function based off of what parametric function was chosen
+
+  //convert results to lists of strings (for plotting)
+  var parameters_result = test_finalParametersData.split("\n");
+  parameters_result = parameters_result.map(Number);
+
+  var nonRejArr = test_nonRejectedData.split("\n");
+  var rejArr = test_RejectedData.split("\n");
+
+  //adds number data to nonrejected and rejected x and y arrays
+  for (var i = 0; i < nonRejArr.length; i++) {
+    var dataSet = nonRejArr[i].split("\t");
+    x_nonrejected_result.push(Number(dataSet[0]));
+    y_nonrejected_result.push(Number(dataSet[1]));
+  }
+  for (var i = 0; i < rejArr.length; i++) {
+    var dataSet = rejArr[i].split("\t");
+    x_rejected_result.push(Number(dataSet[0]));
+    y_rejected_result.push(Number(dataSet[1]));
+
+  }
+  //for plotting the fitted function: (completes x_original_result)
+  x_original_result = xDataContents.split("\n");
+  //console.log(x_original_result);
+  if (x_original_result[x_original_result.length - 1] ===""){
+    x_original_result.pop();
+  }
+  x_original_result = x_original_result.map(Number);
+  //console.log(x_original_result);
+
+  //gets array of weights, as numbers in order:
+  var weights_result = [];
+  if (hasWeights){
+    var mainDataContents_arr = mainDataContents.split("\n");
+
+    for (var i = 0; i < x_original_result.length; i++){
+      var dataSet = mainDataContents_arr[i].split("\t");
+      weights_result.push(Number(dataSet[2]));
+    }
+  }
+
+
+  //creates data for fitted model (y_fitted_result)
+  switch (chosenFunctionType){
+    case "Linear":
+      var xBar = 0;
+      if (hasWeights){
+        xBar = getWeightedXBar(x_original_result, weights_result);
+      } else {
+        xBar = getXBar(x_original_result);
+        //console.log(xBar);
+      }
+      var a0 = parameters_result[0];
+      var a1 = parameters_result[1];
+      //console.log(parameters_result);
+
+      for (var i = 0; i < x_original_result.length; i++) {
+        var y_point = ( a0 + a1*(x_original_result[i] - xBar) );
+        y_fitted_result.push(y_point);
+        //console.log(y_fitted_result);
+      }
+      break;
+    case "Quadratic":
+
+      var xBar = 0;
+      if (hasWeights){
+        xBar = getWeightedXBar(x_original_result, weights_result);
+      } else {
+        xBar = getXBar(x_original_result);
+      }
+      var a0 = parameters_result[0];
+      var a1 = parameters_result[1];
+      var a2 = parameters_result[2];
+
+      for (var i = 0; i < x_original_result.length; i++) {
+        var y_point = ( a0 + a1*(x_original_result[i] - xBar) + a2*Math.pow((x_original_result[i] - xBar), 2.0));
+        y_fitted_result.push(y_point);
+      }
+      break;
+    case "Cubic":
+      var XBar = 0;
+      if (hasWeights){
+        XBar = getWeightedXBar(x_original_result, weights_result);
+      } else {
+        XBar = getXBar(x_original_result);
+      }
+      var a0 = parameters_result[0];
+      var a1 = parameters_result[1];
+      var a2 = parameters_result[2];
+      var a3 = parameters_result[3];
+
+      for (var i = 0; i < x_original_result.length; i++) {
+        var y_point = ( a0 + a1*(x_original_result[i] - xBar) + a2*Math.pow((x_original_result[i] - xBar), 2.0) + a3*Math.pow((x_original_result[i] - xBar), 3.0));
+        y_fitted_result.push(y_point);
+      }
+      break;
+    case "PowerLaw":
+      var lnXBar = 0;
+      if (hasWeights){
+        lnXBar = getWeightedLnXBar(x_original_result, weights_result);
+      } else {
+        lnXBar = getLnXBar(x_original_result);
+      }
+
+      var a0 = parameters_result[0];
+      var a1 = parameters_result[1];
+
+      for (var i = 0; i < x_original_result.length; i++) {
+        var y_point = ( a0*Math.pow((x_original_result[i]/Math.exp(lnXBar)), a1) );
+        y_fitted_result.push(y_point);
+      }
+      break;
+    case "Exponential":
+      var xBar = 0;
+      if (hasWeights){
+        xBar = getWeightedXBar(x_original_result, weights_result);
+      } else {
+        xBar = getXBar(x_original_result);
+      }
+      var a0 = parameters_result[0];
+      var a1 = parameters_result[1];
+
+      for (var i = 0; i < x_original_result.length; i++) {
+        var y_point = ( a0 * Math.exp(a1*(x_original_result[i]-xBar)) );
+        y_fitted_result.push(y_point);
+      }
+      break;
+    case "Logarithmic":
+      var xBar = 0;
+      if (hasWeights){
+        xBar = getWeightedXBar(x_original_result, weights_result);
+      } else {
+        xBar = getXBar(x_original_result);
+      }
+      var a0 = parameters_result[0];
+
+      for (var i = 0; i < x_original_result.length; i++) {
+        var y_point = ( a0 * Math.log(x_original_result[i] - xBar) );
+        y_fitted_result.push(y_point);
+      }
+      break;
+    default:
+      console.log("Error: no model function selected");
+  }
+  console.log(x_rejected_result);
+  console.log(y_rejected_result);
+  console.log(x_nonrejected_result);
+  console.log(y_nonrejected_result);
+  console.log(x_original_result);
+  console.log(y_fitted_result);
+}
+
+
+function functionSelector(functionName){
+  chosenFunctionType = functionName;
+  console.log('Function chosen: ' + chosenFunctionType)
+}
+
+function getXBar(xArr){
+  var upperSum = 0;
+  for (var i = 0; i < xArr.length; i++){
+    upperSum += xArr[i];
+  }
+  return (upperSum / xArr.length);
+}
+
+function getWeightedXBar(xArr, wArr){
+  var upperSum = 0;
+  var lowerSum = 0;
+  for (var i = 0; i < xArr.length; i++){
+    upperSum += (xArr[i]*wArr[i]);
+    lowerSum += wArr[i];
+  }
+  return (upperSum / lowerSum);
+}
+
+function getLnXBar(xArr){
+  var upperSum = 0;
+  for (var i = 0; i < xArr.length; i++){
+    upperSum += Math.log(xArr[i]);
+  }
+  return (upperSum / xArr.length);
+}
+
+function getWeightedLnXBar(xArr, wArr){
+  var upperSum = 0;
+  var lowerSum = 0;
+  for (var i = 0; i < xArr.length; i++){
+    upperSum += (Math.log(xArr[i])*wArr[i]);
+    lowerSum += wArr[i];
+  }
+  return (upperSum / lowerSum);
+}
+
+function performFunctionalRCR(){
+  x_rejected_result = [];
+  y_rejected_result = [];
+  x_nonrejected_result = [];
+  y_nonrejected_result = [];
+  x_original_result = [];
+  y_fitted_result = [];
+
+  mainDataContents = document.getElementById('ydataarea').value
+  xDataContents = document.getElementById('xdataarea').value
+  guessDataContents = document.getElementById('guessarea').value
+
+  $('#OutputTableWrapper').css('display', 'inline');
+  $('#Plot').css('display', 'inline');
+
+  hasSymmetricDist = $('#Symmetric').data('clicked');
+  hasEqualCont = $('#Equal').data('clicked');
+  hasOneSidedCont = $('#OneSided').data('clicked');
+  hasInBetweenCont = $('#Between').data('clicked');
+  hasWeights = $('#Weighted').data('clicked');
+
+  /*
+  if (chosenFunctionType === 'PowerLaw'){
+    correct_barData = document.getElementById('lnx_Bar')
+  } else {
+    correct_barData = document.getElementById('xBar')
+  }
+  */
+
+  console.log("mainDataContents:" + mainDataContents);
+  console.log("xDataContents:" + xDataContents);
+  console.log("guessDataContents:" + guessDataContents);
+  console.log("hasSymmetricDist: " + hasSymmetricDist);
+	console.log("hasEqualCont: " + hasEqualCont);
+	console.log("hasOneSidedCont: " + hasOneSidedCont);
+	console.log("hasInBetweenCont: " + hasInBetweenCont);
+	console.log("hasWeights: " + hasWeights);
+  console.log("chosenFunctionType: " + chosenFunctionType);
+  //console.log(correct_barData);
+
+  var request = $.ajax
+      (
+          {
+              url: '/rcr/calculator/callFunctionalRCR',
+              type: "POST",
+              data: { mainData : mainDataContents,
+                      xData : xDataContents,
+                      guessData : guessDataContents,
+                      symDist : hasSymmetricDist,
+                      equalCont :  hasEqualCont,
+                      oneSidedCont : hasOneSidedCont,
+                      inBetweenCont : hasInBetweenCont,
+                      weighted :  hasWeights,
+                      functionType : chosenFunctionType
+                    },
+              dataType: "json",
+              success: function(data, textStatus, jqXHR)
+              {
+                  console.log('yes');
+      console.log(data);
+                  document.getElementById('finalParameters').value = data['finalParametersData'];
+                  document.getElementById('nonRejectedData').value = data['nonRejectedData'];
+                  document.getElementById('rejectedData').value = data['rejectedData'];
+                  document.getElementById('allData').value = data['allData'];
+
+                  //convert results to lists of strings (for plotting)
+                  var parameters_result = data['finalParametersData'].split("\n");
+                  parameters_result = parameters_result.map(Number);
+
+                  var nonRejArr = data['nonRejectedData'].split("\n");
+                  var rejArr = data['rejectedData'].split("\n");
+
+                  //adds number data to nonrejected and rejected x and y arrays
+                  for (var i = 0; i < nonRejArr.length; i++) {
+                    var dataSet = nonRejArr[i].split("\t");
+                    x_nonrejected_result.push(Number(dataSet[0]));
+                    y_nonrejected_result.push(Number(dataSet[1]));
+                  }
+                  for (var i = 0; i < rejArr.length; i++) {
+                    var dataSet = rejArr[i].split("\t");
+                    x_rejected_result.push(Number(dataSet[0]));
+                    y_rejected_result.push(Number(dataSet[1]));
+
+                  }
+                  //for plotting the fitted function: (completes x_original_result)
+                  x_original_result = xDataContents.split("\n");
+                  //console.log(x_original_result);
+                  if (x_original_result[x_original_result.length - 1] ===""){
+                    x_original_result.pop();
+                  }
+                  x_original_result = x_original_result.map(Number);
+                  //console.log(x_original_result);
+
+                  //gets array of weights, as numbers in order:
+                  var weights_result = [];
+                  if (hasWeights){
+                    var mainDataContents_arr = mainDataContents.split("\n");
+
+                    for (var i = 0; i < x_original_result.length; i++){
+                      var dataSet = mainDataContents_arr[i].split("\t");
+                      weights_result.push(Number(dataSet[2]));
+                    }
+                  }
+
+
+                  //creates data for fitted model (y_fitted_result)
+                  switch (chosenFunctionType){
+                    case "Linear":
+                      var xBar = 0;
+                      if (hasWeights){
+                        xBar = getWeightedXBar(x_original_result, weights_result);
+                      } else {
+                        xBar = getXBar(x_original_result);
+                      }
+                      var a0 = parameters_result[0];
+                      var a1 = parameters_result[1];
+
+                      for (var i = 0; i < x_original_result.length; i++) {
+                        var y_point = ( a0 + a1*(x_original_result[i] - xBar) )
+                        y_fitted_result.push(y_point)
+                      }
+                      break;
+                    case "Quadratic":
+
+                      var xBar = 0;
+                      if (hasWeights){
+                        xBar = getWeightedXBar(x_original_result, weights_result);
+                      } else {
+                        xBar = getXBar(x_original_result);
+                      }
+                      var a0 = parameters_result[0];
+                      var a1 = parameters_result[1];
+                      var a2 = parameters_result[2];
+
+                      for (var i = 0; i < x_original_result.length; i++) {
+                        var y_point = ( a0 + a1*(x_original_result[i] - xBar) + a2*Math.pow((x_original_result[i] - xBar), 2.0))
+                        y_fitted_result.push(y_point)
+                      }
+                      break;
+                    case "Cubic":
+                      var XBar = 0;
+                      if (hasWeights){
+                        XBar = getWeightedXBar(x_original_result, weights_result);
+                      } else {
+                        XBar = getXBar(x_original_result);
+                      }
+                      var a0 = parameters_result[0];
+                      var a1 = parameters_result[1];
+                      var a2 = parameters_result[2];
+                      var a3 = parameters_result[3];
+
+                      for (var i = 0; i < x_original_result.length; i++) {
+                        var y_point = ( a0 + a1*(x_original_result[i] - xBar) + a2*Math.pow((x_original_result[i] - xBar), 2.0) + a3*Math.pow((x_original_result[i] - xBar), 3.0))
+                        y_fitted_result.push(y_point)
+                      }
+                      break;
+                    case "PowerLaw":
+                      var lnXBar = 0;
+                      if (hasWeights){
+                        lnXBar = getWeightedLnXBar(x_original_result, weights_result);
+                      } else {
+                        lnXBar = getLnXBar(x_original_result);
+                      }
+
+                      var a0 = parameters_result[0];
+                      var a1 = parameters_result[1];
+
+                      for (var i = 0; i < x_original_result.length; i++) {
+                        var y_point = ( a0*Math.pow((x_original_result[i]/Math.exp(lnXBar)), a1) )
+                        y_fitted_result.push(y_point)
+                      }
+                      break;
+                    case "Exponential":
+                      var xBar = 0;
+                      if (hasWeights){
+                        xBar = getWeightedXBar(x_original_result, weights_result);
+                      } else {
+                        xBar = getXBar(x_original_result);
+                      }
+                      var a0 = parameters_result[0];
+                      var a1 = parameters_result[1];
+
+                      for (var i = 0; i < x_original_result.length; i++) {
+                        var y_point = ( a0 * Math.exp(a1*(x_original_result[i]-xBar)) )
+                        y_fitted_result.push(y_point)
+                      }
+                      break;
+                    case "Logarithmic":
+                      var xBar = 0;
+                      if (hasWeights){
+                        xBar = getWeightedXBar(x_original_result, weights_result);
+                      } else {
+                        xBar = getXBar(x_original_result);
+                      }
+                      var a0 = parameters_result[0];
+
+                      for (var i = 0; i < x_original_result.length; i++) {
+                        var y_point = ( a0 * Math.log(x_original_result[i] - xBar) )
+                        y_fitted_result.push(y_point)
+                      }
+                      break;
+                    default:
+                      console.log("Error: no model function selected");
+                  }
+
+
+
+                  //console.log(data['rejTech']);
+
+
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log(errorThrown)
+                  console.log('no');
+                  console.log(jqXHR);
+                  console.log(textStatus);
+              }
+          }
+      );
+
+
+
+  //this function will use a different parametric function, and corresponding c++ function based off of what parametric function was chosen
+  }
+
+function type(){
+        $('#RCRNote').css('display','block');
+        $('#NonRCRNote').css('display','none');
+        $('#SelectContaminantSection').css('display','block');
+        $('#OutputTableWrapper').css('display','inline');
+        $('#LinearImage').css('display', 'none');
+				$('#QuadraticImage').css('display', 'none');
+				$('#CubicImage').css('display', 'none');
+        $('#PowerLawImage').css('display', 'none');
+				$('#ExponentialImage').css('display', 'none');
+				$('#LogarithmicImage').css('display', 'none');
+        $('#functionImage').css('display', 'none');
+        $('#SymmetricImage').css('display', 'none');
+        $('#AsymmetricImage').css('display', 'none');
+        $('#Plot').css('display', 'none');
+      	document.getElementById("SelectContaminantSectionTitle").innerHTML = "Select Contaminants:";
+      	document.getElementById("PerformRCR").innerHTML = "Perform RCR!";
+        $('#OutputTableWrapper').css('display','none');
+        document.getElementById('nonRejectedData').value = '';
+        document.getElementById('rejectedData').value = '';
+        document.getElementById('allData').value = '';
+        switch (true)
+		{
+            case ($('#Symmetric').data('clicked') && $('#Equal').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option11').css('display','block');
+				$('#OptionAll').css('display','block');
+        $('#SymmetricImage').css('display', 'block');
+                break;
+			case ($('#Symmetric').data('clicked') &&  $('#OneSided').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option12').css('display','block');
+				$('#OptionAll').css('display','block');
+        $('#SymmetricImage').css('display', 'block');
+                break;
+			case ($('#Symmetric').data('clicked') && $('#Between').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option13').css('display','block');
+				$('#OptionAll').css('display','block');
+        $('#SymmetricImage').css('display', 'block');
+                break;
+			case ($('#Asymmetric').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option2All').css('display','block');
+				$('#OptionAll').css('display','block');
+        $('#AsymmetricImage').css('display', 'block');
+                break;
+
+      case ($('#Linear').data('clicked')):
+        $('#LinearImage').css('display', 'block');
+                break;
+      case ($('#Quadratic').data('clicked')):
+        $('#QuadraticImage').css('display', 'block');
+                break;
+      case ($('#Cubic').data('clicked')):
+        $('#CubicImage').css('display', 'block');
+                break;
+      case ($('#PowerLaw').data('clicked')):
+        $('#PowerLawImage').css('display', 'block');
+                break;
+      case ($('#Exponential').data('clicked')):
+        $('#ExponentialImage').css('display', 'block');
+                break;
+      case ($('#Logarithmic').data('clicked')):
+        $('#LogarithmicImage').css('display', 'block');
+                break;
+
+
+      /*
+			case ($('#Nongaussian').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option3').css('display','block');
+				$('#Option3Image').css('display', 'block');
+
+                $('#RCRNote').css('display','none');
+                $('#SelectContaminantSection').css('display','none');
+        	$('#OutputTableWrapper').css('display','none');
+      */
+
+		document.getElementById("SelectContaminantSectionTitle").innerHTML = "We do not perform outlier rejection in this case.";
+		document.getElementById("PerformRCR").innerHTML = "Characterize!";
+
+                $('#NonRCRNote').css('display','block');
+
+                break;
+			default:
+				$('.RejectionMethods').css('display','none')
+
+        };
+};
+function outputSelection(){
+       switch (true)
+		{
+            case ($('#showNonRejected').data('clicked')):
+				$('#nonRejectedData').css('display','inline')
+				$('#rejectedData').css('display','none');
+				$('#allData').css('display','none');
+                break;
+            case ($('#showRejected').data('clicked')):
+				$('#nonRejectedData').css('display','none')
+				$('#rejectedData').css('display','inline');
+				$('#allData').css('display','none');
+                break;
+            case ($('#showAll').data('clicked')):
+				$('#nonRejectedData').css('display','none')
+				$('#rejectedData').css('display','none');
+				$('#allData').css('display','inline');
+                break;
+			default:
+				$('.RejectionMethods').css('display','none')
+
+        };
+}
+
+function toggleBool(button)	{
+		if ($(button).data('clicked') === false)
+		{
+			$(button).data('clicked',true);
+			return;
+		}
+		else if ($(button).data('clicked') === true)
+		{
+			$(button).data('clicked', false);
+		}
+	};
+
+function SingleActiveButtonCheck(button1, button2){
+	if ($(button1).data('clicked') === true && $(button2).data('clicked') === true)
+	{
+		toggleBool($(button2))
+		$(button2).toggleClass('ButtonActive');
+	}
+};
+
+function SingleActiveButtonCheckNoBool(button1, button2){
+	if ($(button1).hasClass('ButtonActive')&& $(button2).hasClass('ButtonActive'))
+	{
+    //console.log(chosenFunctionType);
+		$(button2).toggleClass('ButtonActive');
+	}
+};
+
+function main(){
+
+	$('#Symmetric').data('clicked',true);
+	$('#Asymmetric').data('clicked',false);
+	//$('#Nongaussian').data('clicked',false);
+
+	$('#Equal').data('clicked',false);
+	$('#Between').data('clicked',true);
+	$('#OneSided').data('clicked',false);
+
+	$('#Unweighted').data('clicked', true);
+	$('#Weighted').data('clicked',false);
+
+  $('#showNonRejected').data('clicked',true);
+	$('#showRejected').data('clicked',false);
+	$('#showAll').data('clicked',false);
+
+	$('#showNonRejected').toggleClass('ButtonActive');
+	$('#Symmetric').toggleClass('ButtonActive');
+	$('#Between').toggleClass('ButtonActive');
+	$('#Unweighted').toggleClass("ButtonActive");
+
+
+
+	type();
+    outputSelection();
+
+    //the below are handlers for when buttons are clicked
+
+    $('#Symmetric').click(function() {
+        if ($('#Symmetric').data('clicked') === false)
+        {
+            toggleBool('#Symmetric');
+            $('#Symmetric').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Symmetric','#Asymmetric');
+            //SingleActiveButtonCheck('#Symmetric','#Nongaussian');
+            type();
+        }
+	});
+    $('#Asymmetric').click(function() {
+        if ($('#Asymmetric').data('clicked') === false)
+        {
+            toggleBool('#Asymmetric');
+            $('#Asymmetric').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Asymmetric','#Symmetric');
+            //SingleActiveButtonCheck('#Asymmetric','#Nongaussian');
+            type();
+        }
+    });
+    /*
+    $('#Nongaussian').click(function() {
+        if ($('#Nongaussian').data('clicked') === false)
+        {
+            toggleBool('#Nongaussian');
+            $('#Nongaussian').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Nongaussian','#Symmetric');
+            SingleActiveButtonCheck('#Nongaussian','#Asymmetric');
+            type();
+        }
+    });
+    */
+    $('#Equal').click(function() {
+        if ($('#Equal').data('clicked') === false)
+        {
+            toggleBool('#Equal');
+            $('#Equal').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Equal','#OneSided');
+            SingleActiveButtonCheck('#Equal','#Between');
+            type();
+        }
+    });
+    $('#OneSided').click(function() {
+        if ($('#OneSided').data('clicked') === false)
+        {
+            toggleBool('#OneSided');
+            $('#OneSided').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#OneSided','#Between');
+            SingleActiveButtonCheck('#OneSided','#Equal');
+            type();
+        }
+    });
+    $('#Between').click(function() {
+        if ($('#Between').data('clicked') === false)
+        {
+            toggleBool('#Between');
+            $('#Between').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Between','#Equal');
+            SingleActiveButtonCheck('#Between','#OneSided');
+            type();
+        }
+    });
+
+    $('#showNonRejected').click(function() {
+        if ($('#showNonRejected').data('clicked') === false)
+        {
+            toggleBool('#showNonRejected');
+            $('#showNonRejected').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#showNonRejected','#showRejected');
+            SingleActiveButtonCheck('#showNonRejected','#showAll');
+            outputSelection();
+        }
+    });
+
+    $('#showRejected').click(function() {
+        if ($('#showRejected').data('clicked') === false)
+        {
+            toggleBool('#showRejected');
+            $('#showRejected').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#showRejected','#showNonRejected');
+            SingleActiveButtonCheck('#showRejected','#showAll');
+            outputSelection();
+        }
+    });
+
+    $('#showAll').click(function() {
+        if ($('#showAll').data('clicked') === false)
+        {
+            toggleBool('#showAll');
+            $('#showAll').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#showAll','#showNonRejected');
+            SingleActiveButtonCheck('#showAll','#showRejected');
+            outputSelection();
+        }
+    });
+
+	$('#Unweighted').click(function()	{
+        if ($('#Unweighted').data('clicked') === false)
+        {
+            $('#Unweighted').toggleClass("ButtonActive");
+            toggleBool('#Unweighted');
+            SingleActiveButtonCheck('#Unweighted','#Weighted');
+        }
+	});
+
+	$('#Weighted').click(function()	{
+        if ($('#Weighted').data('clicked') === false)
+        {
+            $('#Weighted').toggleClass("ButtonActive");
+            toggleBool('#Weighted');
+            SingleActiveButtonCheck('#Weighted','#Unweighted');
+        }
+	});
+
+  $('#Linear').click(function()	{
+        functionSelector('Linear');
+        $('#Linear').toggleClass("ButtonActive");
+        //console.log('hey')
+        SingleActiveButtonCheckNoBool('#Linear','#Quadratic');
+        SingleActiveButtonCheckNoBool('#Linear','#Cubic');
+        SingleActiveButtonCheckNoBool('#Linear','#PowerLaw');
+        SingleActiveButtonCheckNoBool('#Linear','#Exponential');
+        SingleActiveButtonCheckNoBool('#Linear','#Logarithmic');
+
+        $('#functionImage').css('display', 'inline');
+
+        $('#LinearImage').css('display', 'inline');
+				$('#QuadraticImage').css('display', 'none');
+				$('#CubicImage').css('display', 'none');
+        $('#PowerLawImage').css('display', 'none');
+				$('#ExponentialImage').css('display', 'none');
+				$('#LogarithmicImage').css('display', 'none');
+	});
+
+  $('#Quadratic').click(function()	{
+        functionSelector('Quadratic');
+        $('#Quadratic').toggleClass("ButtonActive");
+        SingleActiveButtonCheckNoBool('#Quadratic','#Linear');
+        SingleActiveButtonCheckNoBool('#Quadratic','#Cubic');
+        SingleActiveButtonCheckNoBool('#Quadratic','#PowerLaw');
+        SingleActiveButtonCheckNoBool('#Quadratic','#Exponential');
+        SingleActiveButtonCheckNoBool('#Quadratic','#Logarithmic');
+
+        $('#functionImage').css('display', 'inline');
+
+        $('#LinearImage').css('display', 'none');
+				$('#QuadraticImage').css('display', 'inline');
+				$('#CubicImage').css('display', 'none');
+        $('#PowerLawImage').css('display', 'none');
+				$('#ExponentialImage').css('display', 'none');
+				$('#LogarithmicImage').css('display', 'none');
+	});
+
+  $('#Cubic').click(function()	{
+        functionSelector('Cubic');
+        $('#Cubic').toggleClass("ButtonActive");
+        SingleActiveButtonCheckNoBool('#Cubic','#Linear');
+        SingleActiveButtonCheckNoBool('#Cubic','#Quadratic');
+        SingleActiveButtonCheckNoBool('#Cubic','#PowerLaw');
+        SingleActiveButtonCheckNoBool('#Cubic','#Exponential');
+        SingleActiveButtonCheckNoBool('#Cubic','#Logarithmic');
+
+        $('#functionImage').css('display', 'inline');
+
+        $('#LinearImage').css('display', 'none');
+				$('#QuadraticImage').css('display', 'none');
+				$('#CubicImage').css('display', 'inline');
+        $('#PowerLawImage').css('display', 'none');
+				$('#ExponentialImage').css('display', 'none');
+				$('#LogarithmicImage').css('display', 'none');
+	});
+
+  $('#PowerLaw').click(function()	{
+        functionSelector('PowerLaw');
+        $('#PowerLaw').toggleClass("ButtonActive");
+        SingleActiveButtonCheckNoBool('#PowerLaw','#Linear');
+        SingleActiveButtonCheckNoBool('#PowerLaw','#Quadratic');
+        SingleActiveButtonCheckNoBool('#PowerLaw','#Cubic');
+        SingleActiveButtonCheckNoBool('#PowerLaw','#Exponential');
+        SingleActiveButtonCheckNoBool('#PowerLaw','#Logarithmic');
+
+        $('#functionImage').css('display', 'inline');
+
+        $('#LinearImage').css('display', 'none');
+				$('#QuadraticImage').css('display', 'none');
+				$('#CubicImage').css('display', 'none');
+        $('#PowerLawImage').css('display', 'inline');
+				$('#ExponentialImage').css('display', 'none');
+				$('#LogarithmicImage').css('display', 'none');
+	});
+
+  $('#Exponential').click(function()	{
+        functionSelector('Exponential');
+        $('#Exponential').toggleClass("ButtonActive");
+        SingleActiveButtonCheckNoBool('#Exponential','#Linear');
+        SingleActiveButtonCheckNoBool('#Exponential','#Quadratic');
+        SingleActiveButtonCheckNoBool('#Exponential','#Cubic');
+        SingleActiveButtonCheckNoBool('#Exponential','#PowerLaw');
+        SingleActiveButtonCheckNoBool('#Exponential','#Logarithmic');
+
+        $('#functionImage').css('display', 'inline');
+
+        $('#LinearImage').css('display', 'none');
+				$('#QuadraticImage').css('display', 'none');
+				$('#CubicImage').css('display', 'none');
+        $('#PowerLawImage').css('display', 'none');
+				$('#ExponentialImage').css('display', 'inline');
+				$('#LogarithmicImage').css('display', 'none');
+  });
+
+  $('#Logarithmic').click(function()	{
+        functionSelector('Logarithmic');
+        $('#Logarithmic').toggleClass("ButtonActive");
+        SingleActiveButtonCheckNoBool('#Logarithmic','#Linear');
+        SingleActiveButtonCheckNoBool('#Logarithmic','#Quadratic');
+        SingleActiveButtonCheckNoBool('#Logarithmic','#Cubic');
+        SingleActiveButtonCheckNoBool('#Logarithmic','#PowerLaw');
+        SingleActiveButtonCheckNoBool('#Logarithmic','#Exponential');
+
+        $('#functionImage').css('display', 'inline');
+
+        $('#LinearImage').css('display', 'none');
+				$('#QuadraticImage').css('display', 'none');
+				$('#CubicImage').css('display', 'none');
+        $('#PowerLawImage').css('display', 'none');
+				$('#ExponentialImage').css('display', 'none');
+				$('#LogarithmicImage').css('display', 'inline');
+  });
+
+
+
+	var oldVal = "";
+    $("#inputTextAreaData").on("change keyup paste", function()
+    {
+        var currentVal = $(this).val();
+        if(currentVal == oldVal)
+        {
+            return; //check to prevent multiple simultaneous triggers
+        }
+
+        oldVal = currentVal;
+        //action to be performed on textarea changed
+        type();
+    });
+
+};
+
+$(document).ready(main);
+
+</script>
