@@ -1,6 +1,34 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "FunctionalForm.h"
 #include <iostream>
+//std::vector <double>(*p)(std::vector <double>)
+
+// Constructors
+Priors::Priors(priorTypes priorType, std::vector <double>(*p)(std::vector <double>)) { //custom priors
+	this->priorType = priorType;
+	this->p = (*p);
+};
+
+Priors::Priors(priorTypes priorType, std::vector < std::vector <double> > params) { //Gaussian or bounded priors only
+	this->priorType = priorType;
+	if (priorType == GAUSSIAN) {
+		this->gaussianParams = params;
+	}
+	else if (priorType == CONSTRAINED) {
+		this->paramBounds = params;
+	}
+};
+
+Priors::Priors(priorTypes priorType, std::vector < std::vector <double> > gaussianParams, std::vector < std::vector <double> > paramBounds) { //mixed
+	this->priorType = priorType;
+	this->paramBounds = paramBounds;
+	this->gaussianParams = gaussianParams;
+};
+
+//default constructor
+Priors::Priors() {
+
+};
 
 FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess)
 {
@@ -17,6 +45,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
+	this->hasPriors = false;
 }
 FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -33,6 +62,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
+	this->hasPriors = false;
 }
 FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess)
 {
@@ -49,6 +79,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
+	this->hasPriors = false;
 }
 FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -65,7 +96,82 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
+	this->hasPriors = false;
 }
+//constructors with priors:
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+{
+	this->f = (*f);
+	this->priorsObject = priorsObject;
+	this->x = x;
+	this->y = y;
+	this->guess = guess;
+	this->sigma_y = sigma_y;
+	this->w.resize(x.size(), 1.0);
+	this->partialsvector = partialsvector;
+	this->M = partialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = false;
+	this->weightedCheck = false;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+}
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+{
+	this->f = (*f);
+	this->priorsObject = priorsObject;
+	this->x = x;
+	this->y = y;
+	this->w = w;
+	this->sigma_y = sigma_y;
+	this->guess = guess;
+	this->partialsvector = partialsvector;
+	this->M = partialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = false;
+	this->weightedCheck = true;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+}
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+{
+	this->f_ND = (*f);
+	this->priorsObject = priorsObject;
+	this->x_ND = x_ND;
+	this->y = y;
+	this->sigma_y = sigma_y;
+	this->guess = guess;
+	this->w.resize(x.size(), 1.0);
+	this->NDpartialsvector = NDpartialsvector;
+	this->M = NDpartialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = true;
+	this->weightedCheck = false;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+}
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+{
+	this->f_ND = (*f);
+	this->priorsObject = priorsObject;
+	this->x_ND = x_ND;
+	this->y = y;
+	this->sigma_y = sigma_y;
+	this->guess = guess;
+	this->w = w;
+	this->NDpartialsvector = NDpartialsvector;
+	this->M = NDpartialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = true;
+	this->weightedCheck = true;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+}
+
 //default constructor:
 FunctionalForm::FunctionalForm() {
 
@@ -336,7 +442,7 @@ void FunctionalForm::buildModelSpace()
 
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						parameterSpace[f].push_back(comboparamset[f]);
 					}
@@ -365,7 +471,7 @@ void FunctionalForm::buildModelSpace()
 				}
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 					}
 					else {
@@ -399,7 +505,7 @@ void FunctionalForm::buildModelSpace()
 					}
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						}
 						else {
@@ -417,7 +523,7 @@ void FunctionalForm::buildModelSpace()
 					}
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 							parameterSpace[f].push_back(comboparamset[f]);
 						}
@@ -469,7 +575,7 @@ void FunctionalForm::buildModelSpace()
 
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						parameterSpace[f].push_back(comboparamset[f]);
 					}
@@ -498,7 +604,7 @@ void FunctionalForm::buildModelSpace()
 				}
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 					}
 					else {
@@ -532,7 +638,7 @@ void FunctionalForm::buildModelSpace()
 					}
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						}
 						else {
@@ -551,7 +657,7 @@ void FunctionalForm::buildModelSpace()
 
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 							parameterSpace[f].push_back(comboparamset[f]);
 						}
@@ -598,7 +704,7 @@ void FunctionalForm::buildModelSpace()
 
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						parameterSpace[f].push_back(comboparamset[f]);
 					}
@@ -627,7 +733,7 @@ void FunctionalForm::buildModelSpace()
 				}
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 					}
 					else {
@@ -662,7 +768,7 @@ void FunctionalForm::buildModelSpace()
 					}
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						}
 						else {
@@ -680,7 +786,7 @@ void FunctionalForm::buildModelSpace()
 					}
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 							parameterSpace[f].push_back(comboparamset[f]);
 						}
@@ -728,7 +834,7 @@ void FunctionalForm::buildModelSpace()
 
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						parameterSpace[f].push_back(comboparamset[f]);
 					}
@@ -764,7 +870,7 @@ void FunctionalForm::buildModelSpace()
 				}
 				for (int f = 0; f < M; f++) {
 					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-					if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 					}
 					else {
@@ -798,7 +904,7 @@ void FunctionalForm::buildModelSpace()
 					}
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 						}
 						else {
@@ -817,7 +923,7 @@ void FunctionalForm::buildModelSpace()
 
 					for (int f = 0; f < M; f++) {
 						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
-						if ((testweight != testweight) || (isinf(testweight)) || (testweight == 0.0)) {
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
 							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
 							parameterSpace[f].push_back(comboparamset[f]);
 						}
@@ -831,6 +937,235 @@ void FunctionalForm::buildModelSpace()
 			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
 		}
 	}
+
+
+	//Now the parameter space is constructed, apply the priors (if there are any):
+	if (hasPriors) {
+
+		std::vector <double> innerPostWeightSpace (weightSpace[0].size(), 0.0);
+		std::vector <double> innerPostExtraWeightSpace (extraWeightSpace[0].size(), 0.0);
+		std::vector <std::vector<double> > postWeightSpace (M, innerPostWeightSpace);
+		std::vector <std::vector<double> > postExtraWeightSpace (M, innerPostExtraWeightSpace);
+		std::vector <double> holdWeights;
+		std::vector <double> holdPost;
+		std::vector <double> gaussianParamSet;
+		std::vector <double> boundsSet;
+
+		switch (priorsObject.priorType) {
+		case CUSTOM:
+			// weight space
+			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
+				holdWeights.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					holdWeights.push_back(weightSpace[j][i]);
+				}
+				holdPost = priorsObject.p(holdWeights); // takes in a vector of parameter weights, and returns a vector with modified weights
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postWeightSpace[j][i] = holdPost[j];
+				}
+			}
+			// extra weight space
+			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
+				holdWeights.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					holdWeights.push_back(extraWeightSpace[j][i]);
+				}
+				holdPost = priorsObject.p(holdWeights);
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postExtraWeightSpace[j][i] = holdPost[j];
+				}
+			}
+			break;
+		case GAUSSIAN:
+			// weight space
+			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
+				holdPost.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					gaussianParamSet = priorsObject.gaussianParams[j];
+					if ((std::isnan(gaussianParamSet[0]) == false) && ( std::isnan(gaussianParamSet[1]) == false) ){ //if neither are nans
+						holdPost.push_back(weightSpace[j][i] * gaussian(parameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+					}
+					else { //if they're nans (don't modify priors))                             
+						holdPost.push_back(weightSpace[j][i]);
+					}
+				}
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postWeightSpace[j][i] = holdPost[j];
+				}
+			}
+			// extra weight space
+			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
+				holdPost.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					gaussianParamSet = priorsObject.gaussianParams[j];
+					if ((std::isnan(gaussianParamSet[0]) == false) && (std::isnan(gaussianParamSet[1]) == false)) { //if neither are nans
+						holdPost.push_back(extraWeightSpace[j][i] * gaussian(parameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+					}
+					else { //if they're nans (don't modify priors))                             
+						holdPost.push_back(extraWeightSpace[j][i]);
+					}
+				}
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postExtraWeightSpace[j][i] = holdPost[j];
+				}
+			}
+			break;
+		case CONSTRAINED:
+			// weight space
+			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
+				holdPost.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					boundsSet = priorsObject.paramBounds[j];
+					if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == true)) { //if both are nans (no bounds on the prior to add)
+						holdPost.push_back(weightSpace[j][i]);
+					}
+					else if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == true)) { // lower bound      
+						if (parameterSpace[j][i] < boundsSet[0]) { // is the parameter below the bound?
+							holdPost.push_back(0.0); //makes the weight zero if the param is out of bounds
+						}
+						else {
+							holdPost.push_back(weightSpace[j][i]); //continue
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == false)) { // upper bound                          
+						if (parameterSpace[j][i] > boundsSet[1]) { // is the parameter above the bound?
+							holdPost.push_back(0.0); //makes the weight zero if the param is out of bounds
+						}
+						else {
+							holdPost.push_back(weightSpace[j][i]); //continue
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == false)) { // lower and upper bounds          
+						if ( (parameterSpace[j][i] < boundsSet[0] ) || (parameterSpace[j][i] > boundsSet[1]) ) { // is the parameter not within the bounds?
+							holdPost.push_back(0.0); //makes the weight zero if the param is out of bounds
+						}
+						else {
+							holdPost.push_back(weightSpace[j][i]); //continue
+						}
+					}
+				}
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postWeightSpace[j][i] = holdPost[j];
+				}
+			}
+			// extra weight space
+			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
+				holdPost.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					boundsSet = priorsObject.paramBounds[j];
+					if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == true)) { //if both are nans (no bounds on the prior to add)
+						holdPost.push_back(extraWeightSpace[j][i]);
+					}
+					else if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == true)) { // lower bound      
+						if (extraParameterSpace[j][i] < boundsSet[0]) { // is the parameter below the bound?
+							holdPost.push_back(0.0); //makes the weight zero if the param is out of bounds
+						}
+						else {
+							holdPost.push_back(extraWeightSpace[j][i]); //continue
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == false)) { // upper bound                          
+						if (extraParameterSpace[j][i] > boundsSet[1]) { // is the parameter above the bound?
+							holdPost.push_back(0.0); //makes the weight zero if the param is out of bounds
+						}
+						else {
+							holdPost.push_back(extraWeightSpace[j][i]); //continue
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == false)) { // lower and upper bounds          
+						if ((extraParameterSpace[j][i] < boundsSet[0]) || (extraParameterSpace[j][i] > boundsSet[1])) { // is the parameter not within the bounds?
+							holdPost.push_back(0.0); //makes the weight zero if the param is out of bounds
+						}
+						else {
+							holdPost.push_back(extraWeightSpace[j][i]); //continue
+						}
+					}
+				}
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postExtraWeightSpace[j][i] = holdPost[j];
+				}
+			}
+
+			break;
+		case MIXED:
+			// weight space
+			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
+				holdPost.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					gaussianParamSet = priorsObject.gaussianParams[j];
+					boundsSet = priorsObject.paramBounds[j];
+					//Gaussian:
+					if ((std::isnan(gaussianParamSet[0]) == false) && (std::isnan(gaussianParamSet[1]) == false)) { //if neither are nans
+						holdPost.push_back(weightSpace[j][i] * gaussian(parameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+					}
+					else { //if they're nans (don't modify priors))                             
+						holdPost.push_back(weightSpace[j][i]);
+					}
+					//Constrained:
+					if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == true)) { // lower bound      
+						if (parameterSpace[j][i] < boundsSet[0]) { // is the parameter below the bound?
+							holdPost[j] = (0.0); //makes the weight zero if the param is out of bounds
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == false)) { // upper bound                          
+						if (parameterSpace[j][i] > boundsSet[1]) { // is the parameter above the bound?
+							holdPost[j] = (0.0); //makes the weight zero if the param is out of bounds
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == false)) { // lower and upper bounds          
+						if ((parameterSpace[j][i] < boundsSet[0]) || (parameterSpace[j][i] > boundsSet[1])) { // is the parameter not within the bounds?
+							holdPost[j] = (0.0); //makes the weight zero if the param is out of bounds
+						}
+					}
+				}
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postWeightSpace[j][i] = holdPost[j];
+				}
+			}
+			// extra weight space
+			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
+				holdPost.clear();
+				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
+					gaussianParamSet = priorsObject.gaussianParams[j];
+					boundsSet = priorsObject.paramBounds[j];
+					//Gaussian:
+					if ((std::isnan(gaussianParamSet[0]) == false) && (std::isnan(gaussianParamSet[1]) == false)) { //if neither are nans
+						holdPost.push_back(extraWeightSpace[j][i] * gaussian(extraParameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+					}
+					else { //if they're nans (don't modify priors))                             
+						holdPost.push_back(extraWeightSpace[j][i]);
+					}
+					//Constrained:
+					if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == true)) { // lower bound      
+						if (extraParameterSpace[j][i] < boundsSet[0]) { // is the parameter below the bound?
+							holdPost[j] = (0.0); //makes the weight zero if the param is out of bounds
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == false)) { // upper bound                          
+						if (extraParameterSpace[j][i] > boundsSet[1]) { // is the parameter above the bound?
+							holdPost[j] = (0.0); //makes the weight zero if the param is out of bounds
+						}
+					}
+					else if ((std::isnan(boundsSet[0]) == false) && (std::isnan(boundsSet[1]) == false)) { // lower and upper bounds          
+						if ((extraParameterSpace[j][i] < boundsSet[0]) || (extraParameterSpace[j][i] > boundsSet[1])) { // is the parameter not within the bounds?
+							holdPost[j] = (0.0); //makes the weight zero if the param is out of bounds
+						}
+					}
+				}
+				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
+					postWeightSpace[j][i] = holdPost[j];
+				}
+			}
+
+			break;
+		default:
+			break;
+		}
+
+		//now that priors have been applied:
+		weightSpace = postWeightSpace;
+		extraWeightSpace = postExtraWeightSpace;
+	};
 }
 
 std::vector<double> FunctionalForm::regression() //determines params

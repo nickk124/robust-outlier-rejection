@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "MiscFunctions.h"
 
 // Function to get cofactor of A[p][q] in temp[][]. n is current
@@ -1302,4 +1302,10 @@ double fRand(double fMin, double fMax)
 {
 	double f = (double)rand() / RAND_MAX;
 	return fMin + f * (fMax - fMin);
+}
+
+double pi = 3.1415926535897932384626434;
+
+double gaussian(double x, double mu, double sig) {
+	return (std::exp((-0.5) * (std::pow((x - mu), 2.0) / (2.0 * std::pow(sig, 2.0)))) / std::sqrt(2.0*pi*std::pow(sig, 2.0)));
 }

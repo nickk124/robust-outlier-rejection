@@ -81,6 +81,9 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w); //the case of >1 independent (x) variables in the function
 
+// misc
 double factorial(double n);
 
 double fRand(double fMin, double fMax);
+
+double gaussian(double x, double mu, double sig);

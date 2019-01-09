@@ -1,6 +1,22 @@
 #pragma once
 #include "MiscFunctions.h"
 
+enum priorTypes {CUSTOM, GAUSSIAN, CONSTRAINED, MIXED};
+
+class Priors
+{
+public:
+	//constructors:
+	Priors(priorTypes priorType, std::vector <double>(*p)(std::vector <double>)); //custom priors
+	Priors(priorTypes priorType, std::vector < std::vector <double> > params); //Only Gaussian or only bounded/constrained
+	Priors(priorTypes priorType, std::vector < std::vector <double> > gaussianParams, std::vector < std::vector <double> > paramBounds); //mixed
+	Priors();
+
+	priorTypes priorType;
+	std::vector <double>(*p)(std::vector <double>); // a pointer to a function that takes in a weights vector and modifies it with the priors
+	std::vector < std::vector <double> > gaussianParams; // a vector that contains a vector of mu and sigma for the guassian prior of each param. If no prior, then just use NANs.
+	std::vector < std::vector <double> > paramBounds; // a vector that contains vectors of the bounds of each param. If not bounded, use NANs, and if there's only one bound, use NAN for the other "bound".
+};
 
 class FunctionalForm
 {
@@ -9,6 +25,12 @@ public:
 	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess); //case of there being <1 indepedent variable (x variable) in the function
 	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w);
 	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w);
+	//PRIORS support:
+	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject);
+	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject);
+	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject);
+
 	//default constructor:
 	FunctionalForm();
 
@@ -51,6 +73,9 @@ public:
 	//actual modeled function: (these are pointers to the function)
 	double(*f)(double, std::vector <double>);
 	double(*f_ND)(std::vector <double>, std::vector <double>);
+
+	Priors priorsObject;
+	bool hasPriors;
 
 	//double function(double x, std::vector <double> params); // 1D case
 	//double function_ND(std::vector <double> x, std::vector <double> params); // >1D case

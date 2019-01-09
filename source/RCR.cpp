@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "RCR.h"
 #include <cmath>
 #include <math.h>
@@ -1163,15 +1163,6 @@ std::vector<double> get2DMedian(FunctionalForm &f)
 
 	sort(sortedWX, sortedX);
 	sort(sortedWY, sortedY);
-
-	/*
-	for (int i = 0; i < sortedX.size() / 2; i++) {
-		std::cout << sortedX[i] << std::endl;
-		if (sortedX[i] == 10.0046) {
-			std::cout << "test" << std::endl;
-		}
-	}
-	*/
 
 	std::vector<double> toRet;
 	double m = getMedian(sortedX.size(), sortedWX, sortedX), b = getMedian(sortedY.size(), sortedWY, sortedY);
