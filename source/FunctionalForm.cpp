@@ -251,6 +251,7 @@ void FunctionalForm::buildModelSpace()
 	extraParameterSpace.clear();
 	extraWeightSpace.clear();
 	combos.clear();
+	NDcombos.clear();
 	combos_indices.clear();
 	combosgood_indices.clear();
 
@@ -281,16 +282,32 @@ void FunctionalForm::buildModelSpace()
 		}
 		wbar = wsum / goodcount;
 	}
-	for (int i = 0; i < combos.size(); i++) //the following builds the vector of good-flagged combinations, and the vector of their corresponding indices.
-	{
-		bool check = true;
-		for (int j = 0; j < M; j++) {
-			if (flags[combos_indices[i][j]] == false) {
-				check = false;
+	if (NDcheck == false) {
+		for (int i = 0; i < combos.size(); i++) //the following builds the vector of good-flagged combinations, and the vector of their corresponding indices.
+		{
+			bool check = true;
+			for (int j = 0; j < M; j++) {
+				if (flags[combos_indices[i][j]] == false) {
+					check = false;
+				}
+			}
+			if (check) {
+				combosgood_indices.push_back(combos_indices[i]);
 			}
 		}
-		if (check) {
-			combosgood_indices.push_back(combos_indices[i]);
+	}
+	else if (NDcheck) {
+		for (int i = 0; i < NDcombos.size(); i++) //the following builds the vector of good-flagged combinations, and the vector of their corresponding indices.
+		{
+			bool check = true;
+			for (int j = 0; j < M; j++) {
+				if (flags[combos_indices[i][j]] == false) {
+					check = false;
+				}
+			}
+			if (check) {
+				combosgood_indices.push_back(combos_indices[i]);
+			}
 		}
 	}
 	// the below limits the number of combos used if the criteria from the paper is met (chooses random eigthed draws instead of directly using all of combosgood_indices
@@ -1245,7 +1262,7 @@ std::vector<double> FunctionalForm::getErrors_ND(std::vector <double> line) //sa
 	*/
 	double modeledY;
 	std::vector<double> toRet;
-	for (int i = 0; i < x.size(); i++)
+	for (int i = 0; i < x_ND.size(); i++)
 	{
 		if (flags[i])
 		{

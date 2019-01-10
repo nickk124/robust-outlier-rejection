@@ -5974,7 +5974,7 @@ std::vector<double> RCR::handleMuTechSelect()
 	parametricModel->parameters = line; //most recent calculation of parameters ("line" vector) is stored)
 
 	if (parametricModel->NDcheck == true) {
-		errors = parametricModel->getErrors(line);
+		errors = parametricModel->getErrors_ND(line);
 	}
 	else if (parametricModel->NDcheck == false) {
 		errors = parametricModel->getErrors(line);
