@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+        {{response.files.append(URL('static','css/rcr.css'))}}
+
+        {{include 'web2py_ajax.html'}}		
+		<link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300' rel='stylesheet' type='text/css'>
+		<title> Robust Chauvenet Rejection </title>
+	</head>
+	
+	
+	<body>
+	
+<!--////////////////////////////////////////////////////////////////////////////-->	
+<!-- NAVIGATION BAR --> 
+<!--////////////////////////////////////////////////////////////////////////////-->
+		<div id="wrap">
+		<ul class="navbar">
+            <li style="margin-left:50px;"><a href="{{=URL(request.application, 'calculator', 'index')}}">Home</a> </li>
+            <li><a style="background-color:#5b8dd9;">Single-Value Calculator</a></li>
+            <li><a href="{{=URL(request.application, 'calculator', 'functional')}}">Functional Calculator</a></li>
+            <li><a href="{{=URL(request.application, 'calculator', 'downloads')}}">Downloads</a> </li>
+            <li><a href="{{=URL(request.application, 'calculator', 'contact')}}">Contact Us</a> </li>
+		</ul>
+		</div>
+	
+<!--////////////////////////////////////////////////////////////////////////////-->	
+<!-- REJECTION METHOD SECTION --> 
+<!--////////////////////////////////////////////////////////////////////////////-->	
+
+
+		<div id="RMInput">
+			<h1 style="font-size:3.5em;"> Single-Value RCR Calculator </h1>
+            <br>
+
+	    <h1 style="font-size:2.5em;"> Input Data</h1>
+            <div id="StepOne">
+                <div  id="ButtonSection">
+                    <h2> Select Data Type: </h2>
+                    <button id='Unweighted' class="Button DataType"> Equal Weights (Default) </button>
+                    <button id='Weighted' class="Button DataType"> Unequal Weights </button>
+                    <br>
+                    <br>
+
+                    <i style="padding-top:10px">Format:  One value per line.  Weights, if unequal, should be included on the same line, separated by white space.</i>
+                </div>
+                <div id="RejectionMethod" style="padding-top:25px;  position:relative; float:right">
+                    <textarea class="dataTable" id="inputTextAreaData"></textarea>                    
+                </div>
+            </div>
+		<br>
+<br>
+<br>
+			<h1 style="font-size:2.5em; padding-top:25px;"> Select Rejection Method </h1>
+
+			<div id="StepOne" style="overflow:auto">
+
+                <div id="ButtonSection">
+
+                    <h2> Select Uncontaminated Distribution:</h2>
+                    
+                    <button id="Symmetric" class="Button Distribution"> Gaussian, Mildly Peaked, or Mildly Flat-Topped (Default) </button>
+                    <button id="Asymmetric" class="Button Distribution"> Mildly Asymmetric (Less Powerful) </button>
+                    <button id="Nongaussian" class="Button Distribution"> Other </button>
+                    
+                    <h2 id="SelectContaminantSectionTitle"> Select Contaminants:</h2>
+		    <div id="SelectContaminantSection">
+                    	<button id="Equal" class="Button Contaminants"> High and Low in Equal Proportions </button>
+                    	<button id = "OneSided" class="Button Contaminants"> All High or All Low </button>
+                    	<button id = "Between" class="Button Contaminants"> In Between (Default) </button>
+                    </div>
+		</div>
+                <div id="RejectionMethod">
+
+                    <h2> Selected Uncontaminated Distribution: </h2>
+			<br>
+			<img src="{{=URL('static', 'rcr1.png')}}" id="Option1Image">	
+			<img src="{{=URL('static', 'rcr2.png')}}" id="Option2Image">	
+			<img src="{{=URL('static', 'rcr3.png')}}" id="Option3Image">	
+                    <h2> Selected Rejection Method: </h2>
+                    <p id="Option11" class="RejectionMethods"> 
+                         &#956: Median (&sect2; Maples et al. 2017) <br>
+                         &#963 : Broken-line technique (&sect3, &sect4) <br>
+                        Rejection proportional to &#963 both below and above  &#956 (&sect5)
+                    </p>
+                    <p id="Option12" class="RejectionMethods">  
+                        &#956 : Half-sample mode (&sect2; Maples et al. 2017) <br>
+                        &#963<sub>-</sub> , &#963<sub>+</sub> : 68.3%-Value technique (&sect3, &sect4)<br>
+                        Rejection proportional to min{&#963<sub>-</sub> , &#963<sub>+</sub>} both below and above &#956 (&sect6)
+                    </p>
+                    <p id="Option13" class="RejectionMethods"> 
+                        &#956: Half-sample mode (&sect2; Maples et al. 2017) <br>
+                        &#963<sub>-</sub> , &#963<sub>+</sub> : Broken-line technique (&sect3, &sect4)<br>
+                        Rejection proportional to min{&#963<sub>-</sub> , &#963<sub>+</sub>} both below and above &#956 (&sect6)
+                    </p>			
+                    <p id="Option2All" class="RejectionMethods">  
+                        &#956: Half-sample mode (&sect2; Maples et al. 2017) <br>
+                        &#963<sub>-</sub> , &#963<sub>+</sub> : Broken-line technique (&sect3, &sect4)<br>
+                        Rejection proportional to &#963<sub>-</sub> below &#956 and &#963<sub>+</sub> above &#956 (&sect7)
+                    </p>	
+                    <p id="Option3" class="RejectionMethods">  
+			Fundamentally, RCR assumes that the uncontaminated distribution is Gaussian, or near Gaussian.  In particular, our <q>All High or All Low</q> and <q>In Between</q> contaminant type options are especially sensitive to this assumption, and should not be used if this assumption is not met.                    </p>		
+                    <p id="OptionAll" class="RejectionMethods"> 
+                        Note: Rejection method is iterative, preceded by iterative bulk rejection (&sect9), and proceeded by both (1) iterative "median + 68.3%-value technique" rejection, and (2) iterative "mean + standard deviation " rejection (&sect8).
+                    </p>
+
+                </div>
+            </div>
+            
+        
+<!--////////////////////////////////////////////////////////////////////////////-->	
+<!-- DATA INPUT SECTION --> 
+<!--////////////////////////////////////////////////////////////////////////////-->	
+            
+
+
+            <h1 style="font-size:2.5em; padding-top:25px;"> Output </h1>
+            <div id="StepOne">
+                <div  id="ButtonSection">
+                <br>
+                    <div  style="float:left">
+                        <button id="PerformRCR" class="Button RejectButton"  onclick="performRCR()">Perform RCR!</button>
+                    </div>
+                    <div style="padding-left:25%;">
+                        <table>
+                            <tr>
+                                <td>
+                                    <h3> Mean: </h3>
+                                </td>
+                                <td>
+                                    <h3 id="outputMean"> 0 </h3>
+                                </td>
+                            </tr>
+                            <tr id="outputStDevRow">
+                                <td>
+                                    <h3> Standard Deviation: </h3>
+                                </td>
+                                <td>
+                                    <h3 id="outputStDev"> 0 </h3>
+                                </td>
+                            </tr>
+                            <tr id="outputStDevPlusRow">
+                                <td>
+                                    <h3> Standard Deviation Above Mean: </h3>
+                                </td>
+                                <td>
+                                    <h3 id="outputStDevPlus"> 0 </h3>
+                                </td>
+                            </tr>
+                            <tr id="outputStDevMinusRow">
+                                <td>
+                                    <h3> Standard Deviation Below Mean: </h3>
+                                </td>
+                                <td>
+                                    <h3 id="outputStDevMinus"> 0 </h3>
+                                </td>
+                            </tr>
+
+                            
+                        </table>
+                        <br>
+
+                    </div>                        
+                    <div id="NonRCRNote">
+                        <i style="padding-top:10px; display:block;">Note:  RCR not performed.</i> 
+
+                    </div>
+                </div>
+		<div id="OutputTableWrapper">
+                <div id="RejectionMethod" style="float:right;">                                        
+                    <div id="ButtonSection" style="width:100%; padding:5px 0px 5px 0px;">
+                    <br>
+                        <table style="width:100%;">
+                        <tr>
+                            <td  style="width:33%;">
+                                <button id="showNonRejected" class="Button DataType"> Show Unrejected Points </button>
+                            </td>
+                            <td  style="width:33%;">
+                                <button id="showRejected" class="Button DataType"> Show Rejected Points </button>
+                            </td>
+                            <td  style="width:33%;">
+                                <button id="showAll" class="Button DataType"> Show Both With Flags </button>             
+                            </td>
+                        </tr>
+                        </table>
+                    </div>  
+                    <textarea class="dataTable" id="nonRejectedData" style="margin-top:25px;"></textarea>
+                    <textarea class="dataTable" id="rejectedData" style="margin-top:25px;"></textarea>
+                    <textarea class="dataTable" id="allData" style="margin-top:25px;"></textarea>
+
+		</div>
+                </div>
+
+            </div>		
+		</div>
+        
+        <br>
+<!--////////////////////////////////////////////////////////////////////////////-->	
+<!-- DATA OUTPUT SECTION --> 
+<!--////////////////////////////////////////////////////////////////////////////-->	
+
+
+	</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<!--<script type="text/javascript" src="javascript.js"></script>-->
+</html>
+<script>
+function calculateStDev(inputData)
+{
+	console.log(inputData);
+    var request = $.ajax
+        (
+            {
+                url: '{{=URL(request.application, "calculator", "characterizeData")}}',
+                type: "POST",
+                data: { inputData : inputDataContents,
+                      },
+                dataType: "json",
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log('yes');
+		    console.log(data);
+
+                    outputMean.innerText = data['mu'];
+                    outputStDev.innerText = data['stDevTotal'];
+                    outputStDevPlus.innerText = data['stDevAbove'];
+                    outputStDevMinus.innerText = data['stDevBelow'];
+				
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console.log(errorThrown)
+                    console.log('noOther');
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                }
+            }
+        );
+	
+}
+function performRCR(){
+
+
+    inputDataContents = document.getElementById('inputTextAreaData').value;
+
+    if ($('#Nongaussian').data('clicked') === true)
+    {
+	console.log('other');
+	calculateStDev(inputDataContents);
+	return;
+    }    
+    $('#OutputTableWrapper').css('display', 'inline');
+
+    hasSymmetricDist = $('#Symmetric').data('clicked');
+    hasEqualCont = $('#Equal').data('clicked');
+    hasOneSidedCont = $('#OneSided').data('clicked');
+    hasInBetweenCont = $('#Between').data('clicked');
+    hasWeights = $('#Weighted').data('clicked');
+	console.log(hasSymmetricDist);
+	console.log(hasEqualCont);
+	console.log(hasOneSidedCont);
+	console.log(hasInBetweenCont);
+	console.log(hasWeights);
+    var request = $.ajax
+        (
+            {
+                url: '{{=URL(request.application, "calculator", "callRCR")}}',
+                type: "POST",
+                data: { inputData : inputDataContents,
+                        symDist : hasSymmetricDist,
+                        equalCont :  hasEqualCont,
+                        oneSidedCont : hasOneSidedCont,
+                        inBetweenCont : hasInBetweenCont,
+                        weighted :  hasWeights
+                      },
+                dataType: "json",
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log('yes');
+		    console.log(data);
+                    document.getElementById('nonRejectedData').value = data['nonRejectedData'];
+                    document.getElementById('rejectedData').value = data['rejectedData'];
+                    document.getElementById('allData').value = data['allData'];
+
+                    outputMean.innerText = data['mu'];
+
+                    outputStDev.innerText = data['stDevTotal'];
+                    outputStDevPlus.innerText = data['stDevAbove'];
+                    outputStDevMinus.innerText = data['stDevBelow'];
+					
+                    console.log(data['rejTech']);
+
+
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console.log(errorThrown)
+                    console.log('no');
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                }
+            }
+        );
+            
+};
+
+function type(){
+        document.getElementById('outputStDevRow').style.display = 'table-row';
+        document.getElementById('outputStDevPlusRow').style.display = 'table-row';
+        document.getElementById('outputStDevMinusRow').style.display = 'table-row'; 
+        $('#RCRNote').css('display','block');
+        $('#NonRCRNote').css('display','none');
+        $('#SelectContaminantSection').css('display','block');
+        $('#OutputTableWrapper').css('display','inline');
+	$('#Option1Image').css('display', 'none');
+	$('#Option2Image').css('display', 'none');
+	$('#Option3Image').css('display', 'none');
+	document.getElementById("SelectContaminantSectionTitle").innerHTML = "Select Contaminants:";
+	document.getElementById("PerformRCR").innerHTML = "Perform RCR!";
+        outputMean.innerText = '';
+        outputStDev.innerText = '';
+        outputStDevPlus.innerText = '';
+        outputStDevMinus.innerText = '';
+        $('#OutputTableWrapper').css('display','none');
+        document.getElementById('nonRejectedData').value = '';
+        document.getElementById('rejectedData').value = '';
+        document.getElementById('allData').value = '';
+        switch (true)
+		{
+            case ($('#Symmetric').data('clicked') && $('#Equal').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option11').css('display','block');
+				$('#OptionAll').css('display','block');
+				$('#Option1Image').css('display', 'block');
+                break;
+			case ($('#Symmetric').data('clicked') &&  $('#OneSided').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option12').css('display','block');
+				$('#OptionAll').css('display','block');
+				$('#Option1Image').css('display', 'block');
+                break;
+			case ($('#Symmetric').data('clicked') && $('#Between').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option13').css('display','block');
+				$('#OptionAll').css('display','block');
+				$('#Option1Image').css('display', 'block');
+                break;
+			case ($('#Asymmetric').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option2All').css('display','block');
+				$('#OptionAll').css('display','block');
+				$('#Option2Image').css('display', 'block');
+                break;
+			case ($('#Nongaussian').data('clicked')):
+				$('.RejectionMethods').css('display','none')
+				$('#Option3').css('display','block');
+				$('#Option3Image').css('display', 'block');
+
+                $('#RCRNote').css('display','none');
+                $('#SelectContaminantSection').css('display','none');
+        	$('#OutputTableWrapper').css('display','none');
+
+		document.getElementById("SelectContaminantSectionTitle").innerHTML = "We do not perform outlier rejection in this case.";
+		document.getElementById("PerformRCR").innerHTML = "Characterize!";
+
+                $('#NonRCRNote').css('display','block');
+
+                break;
+			default:
+				$('.RejectionMethods').css('display','none')
+
+        };
+};
+
+function outputSelection(){
+       switch (true)
+		{
+            case ($('#showNonRejected').data('clicked')):
+				$('#nonRejectedData').css('display','inline')
+				$('#rejectedData').css('display','none');
+				$('#allData').css('display','none');
+                break;
+            case ($('#showRejected').data('clicked')):
+				$('#nonRejectedData').css('display','none')
+				$('#rejectedData').css('display','inline');
+				$('#allData').css('display','none');
+                break;
+            case ($('#showAll').data('clicked')):
+				$('#nonRejectedData').css('display','none')
+				$('#rejectedData').css('display','none');
+				$('#allData').css('display','inline');
+                break;
+			default:
+				$('.RejectionMethods').css('display','none')
+
+        };
+}
+
+function toggleBool(button)	{
+		if ($(button).data('clicked') === false)
+		{
+			$(button).data('clicked',true);
+			return;
+		}
+		else if ($(button).data('clicked') === true)
+		{
+			$(button).data('clicked', false);
+		}
+	};
+
+function SingleActiveButtonCheck(button1, button2){
+	if ($(button1).data('clicked') === true && $(button2).data('clicked') === true)
+	{
+		toggleBool($(button2))
+		$(button2).toggleClass('ButtonActive');
+	}
+};
+
+function main(){
+	 
+	$('#Symmetric').data('clicked',true);
+	$('#Asymmetric').data('clicked',false);
+	$('#Nongaussian').data('clicked',false);
+
+	$('#Equal').data('clicked',false);
+	$('#Between').data('clicked',true);
+	$('#OneSided').data('clicked',false);
+	
+	$('#Unweighted').data('clicked', true);
+	$('#Weighted').data('clicked',false);
+    
+    $('#showNonRejected').data('clicked',true);
+	$('#showRejected').data('clicked',false);
+	$('#showAll').data('clicked',false);
+
+	$('#showNonRejected').toggleClass('ButtonActive');
+	$('#Symmetric').toggleClass('ButtonActive');
+	$('#Between').toggleClass('ButtonActive');
+	$('#Unweighted').toggleClass("ButtonActive");
+	 
+    
+	
+	type();
+    outputSelection();
+	 
+    $('#Symmetric').click(function() {
+        if ($('#Symmetric').data('clicked') === false)
+        {
+            toggleBool('#Symmetric');
+            $('#Symmetric').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Symmetric','#Asymmetric');
+            SingleActiveButtonCheck('#Symmetric','#Nongaussian');
+            type();           
+        }
+	});
+    $('#Asymmetric').click(function() {
+        if ($('#Asymmetric').data('clicked') === false)
+        {
+            toggleBool('#Asymmetric');
+            $('#Asymmetric').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Asymmetric','#Symmetric');
+            SingleActiveButtonCheck('#Asymmetric','#Nongaussian');
+            type();
+        }
+    });
+    $('#Nongaussian').click(function() {
+        if ($('#Nongaussian').data('clicked') === false)
+        {
+            toggleBool('#Nongaussian');
+            $('#Nongaussian').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Nongaussian','#Symmetric');
+            SingleActiveButtonCheck('#Nongaussian','#Asymmetric');
+            type();
+        }
+    });
+    $('#Equal').click(function() {
+        if ($('#Equal').data('clicked') === false)
+        {
+            toggleBool('#Equal');
+            $('#Equal').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Equal','#OneSided');
+            SingleActiveButtonCheck('#Equal','#Between');
+            type();
+        }
+    });   
+    $('#OneSided').click(function() {
+        if ($('#OneSided').data('clicked') === false)
+        {
+            toggleBool('#OneSided');
+            $('#OneSided').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#OneSided','#Between');
+            SingleActiveButtonCheck('#OneSided','#Equal');
+            type();
+        }
+    });  
+    $('#Between').click(function() {
+        if ($('#Between').data('clicked') === false)
+        {
+            toggleBool('#Between');
+            $('#Between').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#Between','#Equal');
+            SingleActiveButtonCheck('#Between','#OneSided');
+            type();
+        }
+    });
+    
+    $('#showNonRejected').click(function() {
+        if ($('#showNonRejected').data('clicked') === false)
+        {
+            toggleBool('#showNonRejected');
+            $('#showNonRejected').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#showNonRejected','#showRejected');
+            SingleActiveButtonCheck('#showNonRejected','#showAll');
+            outputSelection();
+        }
+    });
+    
+    $('#showRejected').click(function() {
+        if ($('#showRejected').data('clicked') === false)
+        {
+            toggleBool('#showRejected');
+            $('#showRejected').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#showRejected','#showNonRejected');
+            SingleActiveButtonCheck('#showRejected','#showAll');
+            outputSelection();
+        }
+    });
+    
+    $('#showAll').click(function() {
+        if ($('#showAll').data('clicked') === false)
+        {
+            toggleBool('#showAll');
+            $('#showAll').toggleClass('ButtonActive');
+            SingleActiveButtonCheck('#showAll','#showNonRejected');
+            SingleActiveButtonCheck('#showAll','#showRejected');
+            outputSelection();
+        }
+    });
+	
+	$('#Unweighted').click(function()	{
+        if ($('#Unweighted').data('clicked') === false)
+        {
+            $('#Unweighted').toggleClass("ButtonActive");
+            toggleBool('#Unweighted');
+            SingleActiveButtonCheck('#Unweighted','#Weighted');
+        }
+	});
+	$('#Weighted').click(function()	{
+        if ($('#Weighted').data('clicked') === false)
+        {
+            $('#Weighted').toggleClass("ButtonActive");
+            toggleBool('#Weighted');
+            SingleActiveButtonCheck('#Weighted','#Unweighted');
+        }
+	});
+    
+	var oldVal = "";
+    $("#inputTextAreaData").on("change keyup paste", function() 
+    {
+        var currentVal = $(this).val();
+        if(currentVal == oldVal) 
+        {
+            return; //check to prevent multiple simultaneous triggers
+        }
+    
+        oldVal = currentVal;
+        //action to be performed on textarea changed
+        type();
+    });
+
+};
+
+$(document).ready(main);
+</script>
