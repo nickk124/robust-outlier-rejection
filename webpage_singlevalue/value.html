@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-    
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<head>
         {{response.files.append(URL('static','css/rcr.css'))}}
 
-        {{include 'web2py_ajax.html'}}		
+        {{include 'web2py_ajax.html'}}
 		<link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300' rel='stylesheet' type='text/css'>
 		<title> Robust Chauvenet Rejection </title>
 	</head>
-	
-	
+
+
 	<body>
-	
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- NAVIGATION BAR --> 
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- NAVIGATION BAR -->
 <!--////////////////////////////////////////////////////////////////////////////-->
 		<div id="wrap">
 		<ul class="navbar">
@@ -26,10 +26,10 @@
             <li><a href="{{=URL(request.application, 'calculator', 'contact')}}">Contact Us</a> </li>
 		</ul>
 		</div>
-	
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- REJECTION METHOD SECTION --> 
-<!--////////////////////////////////////////////////////////////////////////////-->	
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- REJECTION METHOD SECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
 
 
 		<div id="RMInput">
@@ -48,7 +48,7 @@
                     <i style="padding-top:10px">Format:  One value per line.  Weights, if unequal, should be included on the same line, separated by white space.</i>
                 </div>
                 <div id="RejectionMethod" style="padding-top:25px;  position:relative; float:right">
-                    <textarea class="dataTable" id="inputTextAreaData"></textarea>                    
+                    <textarea class="dataTable" id="inputTextAreaData"></textarea>
                 </div>
             </div>
 		<br>
@@ -61,11 +61,11 @@
                 <div id="ButtonSection">
 
                     <h2> Select Uncontaminated Distribution:</h2>
-                    
+
                     <button id="Symmetric" class="Button Distribution"> Gaussian, Mildly Peaked, or Mildly Flat-Topped (Default) </button>
                     <button id="Asymmetric" class="Button Distribution"> Mildly Asymmetric (Less Powerful) </button>
                     <button id="Nongaussian" class="Button Distribution"> Other </button>
-                    
+
                     <h2 id="SelectContaminantSectionTitle"> Select Contaminants:</h2>
 		    <div id="SelectContaminantSection">
                     	<button id="Equal" class="Button Contaminants"> High and Low in Equal Proportions </button>
@@ -77,44 +77,44 @@
 
                     <h2> Selected Uncontaminated Distribution: </h2>
 			<br>
-			<img src="{{=URL('static', 'rcr1.png')}}" id="Option1Image">	
-			<img src="{{=URL('static', 'rcr2.png')}}" id="Option2Image">	
-			<img src="{{=URL('static', 'rcr3.png')}}" id="Option3Image">	
+			<img src="{{=URL('static', 'rcr1.png')}}" id="Option1Image">
+			<img src="{{=URL('static', 'rcr2.png')}}" id="Option2Image">
+			<img src="{{=URL('static', 'rcr3.png')}}" id="Option3Image">
                     <h2> Selected Rejection Method: </h2>
-                    <p id="Option11" class="RejectionMethods"> 
-                         &#956: Median (&sect2; Maples et al. 2017) <br>
-                         &#963 : Broken-line technique (&sect3, &sect4) <br>
-                        Rejection proportional to &#963 both below and above  &#956 (&sect5)
+                    <p id="Option11" class="RejectionMethods">
+                         &#956: Median (&sect2.1; Maples et al. 2018) <br>
+                         &#963 : Broken-line technique (&sect2.2, &sect2.3) <br>
+                        Rejection proportional to &#963 both below and above  &#956 (&sect3.1, &sect3.3.2)
                     </p>
-                    <p id="Option12" class="RejectionMethods">  
-                        &#956 : Half-sample mode (&sect2; Maples et al. 2017) <br>
-                        &#963<sub>-</sub> , &#963<sub>+</sub> : 68.3%-Value technique (&sect3, &sect4)<br>
-                        Rejection proportional to min{&#963<sub>-</sub> , &#963<sub>+</sub>} both below and above &#956 (&sect6)
+                    <p id="Option12" class="RejectionMethods">
+                        &#956 : Half-sample mode (&sect2.1; Maples et al. 2018) <br>
+                        &#963<sub>-</sub> , &#963<sub>+</sub> : 68.3%-Value technique (&sect2.2, &sect2.3)<br>
+                        Rejection proportional to min{&#963<sub>-</sub> , &#963<sub>+</sub>} both below and above &#956 (&sect3.2, &sect3.3.2)
                     </p>
-                    <p id="Option13" class="RejectionMethods"> 
-                        &#956: Half-sample mode (&sect2; Maples et al. 2017) <br>
-                        &#963<sub>-</sub> , &#963<sub>+</sub> : Broken-line technique (&sect3, &sect4)<br>
-                        Rejection proportional to min{&#963<sub>-</sub> , &#963<sub>+</sub>} both below and above &#956 (&sect6)
-                    </p>			
-                    <p id="Option2All" class="RejectionMethods">  
-                        &#956: Half-sample mode (&sect2; Maples et al. 2017) <br>
-                        &#963<sub>-</sub> , &#963<sub>+</sub> : Broken-line technique (&sect3, &sect4)<br>
-                        Rejection proportional to &#963<sub>-</sub> below &#956 and &#963<sub>+</sub> above &#956 (&sect7)
-                    </p>	
-                    <p id="Option3" class="RejectionMethods">  
-			Fundamentally, RCR assumes that the uncontaminated distribution is Gaussian, or near Gaussian.  In particular, our <q>All High or All Low</q> and <q>In Between</q> contaminant type options are especially sensitive to this assumption, and should not be used if this assumption is not met.                    </p>		
-                    <p id="OptionAll" class="RejectionMethods"> 
-                        Note: Rejection method is iterative, preceded by iterative bulk rejection (&sect9), and proceeded by both (1) iterative "median + 68.3%-value technique" rejection, and (2) iterative "mean + standard deviation " rejection (&sect8).
+                    <p id="Option13" class="RejectionMethods">
+                        &#956: Half-sample mode (&sect2.1; Maples et al. 2018) <br>
+                        &#963<sub>-</sub> , &#963<sub>+</sub> : Broken-line technique (&sect2.2, &sect2.3)<br>
+                        Rejection proportional to min{&#963<sub>-</sub> , &#963<sub>+</sub>} both below and above &#956 (&sect3.2, &sect3.3.2)
+                    </p>
+                    <p id="Option2All" class="RejectionMethods">
+                        &#956: Half-sample mode (&sect2.1; Maples et al. 2018) <br>
+                        &#963<sub>-</sub> , &#963<sub>+</sub> : Broken-line technique (&sect2.2, &sect2.3)<br>
+                        Rejection proportional to &#963<sub>-</sub> below &#956 and &#963<sub>+</sub> above &#956 (&sect3.3.1)
+                    </p>
+                    <p id="Option3" class="RejectionMethods">
+			Fundamentally, RCR assumes that the uncontaminated distribution is Gaussian, or near Gaussian.  In particular, our <q>All High or All Low</q> and <q>In Between</q> contaminant type options are especially sensitive to this assumption, and should not be used if this assumption is not met.                    </p>
+                    <p id="OptionAll" class="RejectionMethods">
+                        Note: Rejection method is iterative, preceded by iterative bulk rejection (&sect5), and followed by both (1) iterative "median + 68.3%-value technique" rejection, and (2) iterative "mean + standard deviation " rejection (&sect4).
                     </p>
 
                 </div>
             </div>
-            
-        
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- DATA INPUT SECTION --> 
-<!--////////////////////////////////////////////////////////////////////////////-->	
-            
+
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- DATA INPUT SECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
+
 
 
             <h1 style="font-size:2.5em; padding-top:25px;"> Output </h1>
@@ -159,18 +159,22 @@
                                 </td>
                             </tr>
 
-                            
+
                         </table>
                         <br>
 
-                    </div>                        
+                    </div>
                     <div id="NonRCRNote">
-                        <i style="padding-top:10px; display:block;">Note:  RCR not performed.</i> 
+                        <i style="padding-top:10px; display:block;">Note:  RCR not performed.</i>
+
+                    </div>
+										<div id="OverRejectionNote">
+                        <i style="padding-top:10px; display:block;"></i>
 
                     </div>
                 </div>
 		<div id="OutputTableWrapper">
-                <div id="RejectionMethod" style="float:right;">                                        
+                <div id="RejectionMethod" style="float:right;">
                     <div id="ButtonSection" style="width:100%; padding:5px 0px 5px 0px;">
                     <br>
                         <table style="width:100%;">
@@ -182,11 +186,11 @@
                                 <button id="showRejected" class="Button DataType"> Show Rejected Points </button>
                             </td>
                             <td  style="width:33%;">
-                                <button id="showAll" class="Button DataType"> Show Both With Flags </button>             
+                                <button id="showAll" class="Button DataType"> Show Both With Flags </button>
                             </td>
                         </tr>
                         </table>
-                    </div>  
+                    </div>
                     <textarea class="dataTable" id="nonRejectedData" style="margin-top:25px;"></textarea>
                     <textarea class="dataTable" id="rejectedData" style="margin-top:25px;"></textarea>
                     <textarea class="dataTable" id="allData" style="margin-top:25px;"></textarea>
@@ -194,20 +198,154 @@
 		</div>
                 </div>
 
-            </div>		
+            </div>
 		</div>
-        
+
         <br>
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- DATA OUTPUT SECTION --> 
-<!--////////////////////////////////////////////////////////////////////////////-->	
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- DATA OUTPUT SECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
 
 
 	</body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<!--<script src="jquery.csv.min.js"></script>-->
 <!--<script type="text/javascript" src="javascript.js"></script>-->
 </html>
+<!-- the following script uses the jquery-csv library to take the csv file of overrejection percentages, and display the correct percentage -->
 <script>
+function overRejPercentage(N){
+ 		//N is data size/ number of data points
+		var percentageArray = [46.435,65.717,65.717,0.127,
+													25.547,48.491,48.491,0.039,
+													25.442,29.97,32.381,0.014,
+													14.362,20.828,24.589,0.007,
+													10.112,14.305,19.601,0.002,
+													7.554,9.961,15.853,0.003,
+													5.941,7.138,13.151,0.003,
+													4.155,5.06,10.952,0,
+													3.576,3.702,9.448,0,
+													2.694,2.665,7.915,0,
+													2.199,2.063,6.912,0,
+													1.736,1.506,5.813,0,
+													1.405,1.17,5.061,0,
+													1.161,0.945,4.377,0,
+													1.039,0.719,3.802,0,
+													0.867,0.53,3.282,0,
+													0.726,0.468,2.961,0,
+													0.657,0.346,2.573,0,
+													0.597,0.304,2.326,0,
+													0.495,0.239,2.037,0,
+													0.416,0.183,1.856,0,
+													0.365,0.168,1.642,0,
+													0.289,0.126,1.51,0,
+													0.277,0.109,1.347,0,
+													0.256,0.091,1.22,0,
+													0.251,0.075,1.149,0,
+													0.21,0.056,1.023,0,
+													0.209,0.044,0.918,0,
+													0.189,0.043,0.874,0,
+													0.178,0.033,0.811,0,
+													0.17,0.024,0.722,0,
+													0.153,0.024,0.649,0,
+													0.132,0.014,0.592,0,
+													0.113,0.021,0.566,0,
+													0.1,0.018,0.537,0,
+													0.09,0.014,0.479,0,
+													0.083,0.021,0.451,0,
+													0.075,0.013,0.418,0,
+													0.074,0.013,0.418,0,
+													0.067,0.007,0.375,0,
+													0.054,0.009,0.365,0,
+													0.047,0.006,0.323,0,
+													0.045,0.004,0.314,0,
+													0.044,0.004,0.287,0,
+													0.045,0.002,0.286,0,
+													0.037,0.003,0.251,0,
+													0.028,0,0.223,0,
+													0.026,0.004,0.221,0,
+													0.021,0.003,0.221,0,
+													0.025,0.003,0.224,0,
+													0.021,0.001,0.201,0,
+													0.019,0.001,0.189,0,
+													0.016,0.001,0.18,0,
+													0.017,0.003,0.176,0,
+													0.014,0.003,0.162,0,
+													0.014,0.002,0.145,0,
+													0.013,0.003,0.137,0,
+													0.012,0.004,0.132,0,
+													0.008,0.002,0.122,0,
+													0.009,0.002,0.105,0,
+													0.011,0.001,0.103,0,
+													0.01,0.001,0.095,0,
+													0.009,0.002,0.086,0,
+													0.008,0.003,0.086,0,
+													0.011,0.001,0.085,0,
+													0.013,0.002,0.088,0,
+													0.011,0.001,0.08,0,
+													0.007,0.001,0.086,0,
+													0.004,0,0.078,0,
+													0.005,0,0.075,0,
+													0.007,0,0.074,0,
+													0.004,0.002,0.06,0,
+													0.005,0,0.062,0,
+													0.008,0,0.063,0,
+													0.008,0.002,0.06,4,0,
+													0.008,0.001,0.057,0,
+													0.006,0.001,0.062,0,
+													0.006,0.001,0.055,0,
+													0.008,0,0.053,0,
+													0.005,0,0.05,0,
+													0.005,0.001,0.048,0,
+													0.004,0,0.046,0,
+													0.005,0,0.049,0,
+													0.005,0,0.045,0,
+													0.004,0,0.043,0,
+													0.005,0,0.039,0,
+													0.004,0,0.036,0,
+													0.004,0,0.042,0,
+													0.004,0.001,0.042,0,
+													0.003,0,0.034,0,
+													0.004,0,0.037,0,
+													0.004,0,0.035,0,
+													0.003,0,0.028,0,
+													0.003,0,0.028,0,
+													0.002,0,0.029,0,
+													0.002,0,0.027,0,
+													0.002,0,0.027,0];
+
+		var inputDataStr = document.getElementById('inputTextAreaData').value;
+		var inputDataArr = inputData.split("\n");
+
+		var hasSymm = $('#Symmetric').data('clicked');
+    var hasEq = $('#Equal').data('clicked');
+    var hasOne = $('#OneSided').data('clicked');
+    var hasInBet = $('#Between').data('clicked');
+
+		var rej; //rej corresponds to the number of the column of rcr_overrejectionprecentages.csv
+
+		if (hasSymm){
+			if (hasEq){
+				rej = 0; //'ss_med_dl'
+			} else if (hasOne){
+				rej = 1;
+			} else if (hasInBet){
+				rej = 2;
+			}
+		} else {
+			rej = 3;
+		}
+
+		var percentage2DArr = []; //converts the percentage data to a 2d array
+  	for (var i = 0; i < 97; i++){
+  		percentage2DArr.push(percentageArray.slice(0 + 4*i, 4 + 4*i));
+  	}
+
+		var percentage = percentage2DArr[N-3][rej];
+
+		return percentage;
+}
+
 function calculateStDev(inputData)
 {
 	console.log(inputData);
@@ -228,7 +366,7 @@ function calculateStDev(inputData)
                     outputStDev.innerText = data['stDevTotal'];
                     outputStDevPlus.innerText = data['stDevAbove'];
                     outputStDevMinus.innerText = data['stDevBelow'];
-				
+
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {
@@ -239,19 +377,31 @@ function calculateStDev(inputData)
                 }
             }
         );
-	
+
 }
 function performRCR(){
 
 
     inputDataContents = document.getElementById('inputTextAreaData').value;
 
+		var inputDataArr = inputDataContents.split("\n");
+		var N = inputDataArr.length;
+
+		if (N < 3){
+			document.getElementById("OverRejectionNote").innerHTML = "Note: Please enter at least three, properly formatted data points.";
+			$('#OverRejectionNote').css('display','block');
+		} else if (N >= 3 && N <= 99){
+			var perc = overRejPercentage(N);
+			document.getElementById("OverRejectionNote").innerHTML = "Note: Chance of runaway overrejection is " + perc.toString() +"%.";
+			$('#OverRejectionNote').css('display','block');
+		}
+
     if ($('#Nongaussian').data('clicked') === true)
     {
 	console.log('other');
 	calculateStDev(inputDataContents);
 	return;
-    }    
+    }
     $('#OutputTableWrapper').css('display', 'inline');
 
     hasSymmetricDist = $('#Symmetric').data('clicked');
@@ -290,7 +440,7 @@ function performRCR(){
                     outputStDev.innerText = data['stDevTotal'];
                     outputStDevPlus.innerText = data['stDevAbove'];
                     outputStDevMinus.innerText = data['stDevBelow'];
-					
+
                     console.log(data['rejTech']);
 
 
@@ -304,15 +454,16 @@ function performRCR(){
                 }
             }
         );
-            
+
 };
 
 function type(){
         document.getElementById('outputStDevRow').style.display = 'table-row';
         document.getElementById('outputStDevPlusRow').style.display = 'table-row';
-        document.getElementById('outputStDevMinusRow').style.display = 'table-row'; 
+        document.getElementById('outputStDevMinusRow').style.display = 'table-row';
         $('#RCRNote').css('display','block');
         $('#NonRCRNote').css('display','none');
+				$('#OverRejectionNote').css('display','none');
         $('#SelectContaminantSection').css('display','block');
         $('#OutputTableWrapper').css('display','inline');
 	$('#Option1Image').css('display', 'none');
@@ -420,7 +571,7 @@ function SingleActiveButtonCheck(button1, button2){
 };
 
 function main(){
-	 
+
 	$('#Symmetric').data('clicked',true);
 	$('#Asymmetric').data('clicked',false);
 	$('#Nongaussian').data('clicked',false);
@@ -428,10 +579,10 @@ function main(){
 	$('#Equal').data('clicked',false);
 	$('#Between').data('clicked',true);
 	$('#OneSided').data('clicked',false);
-	
+
 	$('#Unweighted').data('clicked', true);
 	$('#Weighted').data('clicked',false);
-    
+
     $('#showNonRejected').data('clicked',true);
 	$('#showRejected').data('clicked',false);
 	$('#showAll').data('clicked',false);
@@ -440,12 +591,12 @@ function main(){
 	$('#Symmetric').toggleClass('ButtonActive');
 	$('#Between').toggleClass('ButtonActive');
 	$('#Unweighted').toggleClass("ButtonActive");
-	 
-    
-	
+
+
+
 	type();
     outputSelection();
-	 
+
     $('#Symmetric').click(function() {
         if ($('#Symmetric').data('clicked') === false)
         {
@@ -453,7 +604,7 @@ function main(){
             $('#Symmetric').toggleClass('ButtonActive');
             SingleActiveButtonCheck('#Symmetric','#Asymmetric');
             SingleActiveButtonCheck('#Symmetric','#Nongaussian');
-            type();           
+            type();
         }
 	});
     $('#Asymmetric').click(function() {
@@ -485,7 +636,7 @@ function main(){
             SingleActiveButtonCheck('#Equal','#Between');
             type();
         }
-    });   
+    });
     $('#OneSided').click(function() {
         if ($('#OneSided').data('clicked') === false)
         {
@@ -495,7 +646,7 @@ function main(){
             SingleActiveButtonCheck('#OneSided','#Equal');
             type();
         }
-    });  
+    });
     $('#Between').click(function() {
         if ($('#Between').data('clicked') === false)
         {
@@ -506,7 +657,7 @@ function main(){
             type();
         }
     });
-    
+
     $('#showNonRejected').click(function() {
         if ($('#showNonRejected').data('clicked') === false)
         {
@@ -517,7 +668,7 @@ function main(){
             outputSelection();
         }
     });
-    
+
     $('#showRejected').click(function() {
         if ($('#showRejected').data('clicked') === false)
         {
@@ -528,7 +679,7 @@ function main(){
             outputSelection();
         }
     });
-    
+
     $('#showAll').click(function() {
         if ($('#showAll').data('clicked') === false)
         {
@@ -539,7 +690,7 @@ function main(){
             outputSelection();
         }
     });
-	
+
 	$('#Unweighted').click(function()	{
         if ($('#Unweighted').data('clicked') === false)
         {
@@ -556,16 +707,16 @@ function main(){
             SingleActiveButtonCheck('#Weighted','#Unweighted');
         }
 	});
-    
+
 	var oldVal = "";
-    $("#inputTextAreaData").on("change keyup paste", function() 
+    $("#inputTextAreaData").on("change keyup paste", function()
     {
         var currentVal = $(this).val();
-        if(currentVal == oldVal) 
+        if(currentVal == oldVal)
         {
             return; //check to prevent multiple simultaneous triggers
         }
-    
+
         oldVal = currentVal;
         //action to be performed on textarea changed
         type();
