@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+        {{response.files.append(URL('static','css/rcr.css'))}}
+
+        {{include 'web2py_ajax.html'}}		
+		<link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300' rel='stylesheet' type='text/css'>
+		<title> Robust Chauvenet Rejection </title>
+	</head>
+	
+	
+	<body>
+	
+<!--////////////////////////////////////////////////////////////////////////////-->	
+<!-- NAVIGATION BAR --> 
+<!--////////////////////////////////////////////////////////////////////////////-->
+		<div id="wrap">
+		<ul class="navbar">
+            <li style="margin-left:50px;"><a href="{{=URL(request.application, 'calculator', 'index')}}">Home</a> </li>
+            <li><a href="{{=URL(request.application, 'calculator', 'value')}}">Single-Value Calculator</a></li>
+            <li><a href="{{=URL(request.application, 'calculator', 'functional')}}">Functional Calculator</a></li>
+            <li><a href="{{=URL(request.application, 'calculator', 'downloads')}}">Downloads</a> </li>
+            <li><a style="background-color:#5b8dd9;">Contact Us</a> </li>
+		</ul>
+		</div>
+            
+		<div id="RMInput">
+            <h1 style="font-size:3.5em;"> Questions or Comments? </h1>	
+	    <br>	
+            <h1 style="font-size:2.5em;"> Feel free to contact us with bug reports, consultations requests, or general inquiries at rcr@unc.edu </h1>
+	
+           
+	</body>
+
+</html>
