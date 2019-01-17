@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-    
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<head>
         {{response.files.append(URL('static','css/rcr.css'))}}
 
-        {{include 'web2py_ajax.html'}}		
+        {{include 'web2py_ajax.html'}}
 		<link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300' rel='stylesheet' type='text/css'>
 		<title> Robust Chauvenet Rejection </title>
 	</head>
-	
-	
+
+
 	<body>
-	
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- NAVIGATION BAR --> 
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- NAVIGATION BAR -->
 <!--////////////////////////////////////////////////////////////////////////////-->
 		<div id="wrap">
 		<ul class="navbar">
@@ -26,7 +26,7 @@
             <li><a href="{{=URL(request.application, 'calculator', 'contact')}}">Contact Us</a> </li>
 		</ul>
 		</div>
-	
+
         <div id="ResourceWrapper">
             <h1>License</h1>
             <div id="ResourceItem">
@@ -41,21 +41,21 @@
                 <p style="padding: 1em 0em 0em 0em;">
                     Maples,&nbsp;M.&nbsp;P., Reichart,&nbsp;D.&nbsp;E., Konz,&nbsp;N.&nbsp;C., Berger,&nbsp;T.&nbsp;A., Trotter,&nbsp;A.&nbsp;S.,
                     Martin,&nbsp;J.&nbsp;R., Dutton,&nbsp;D.&nbsp;A., Paggen,&nbsp;M.&nbsp;L., Joyner,&nbsp;R.&nbsp;E., and Salemi,&nbsp;C.&nbsp;P.
-                    2017, ApJS, in press
+                    2018, ApJS, 238, A2, 1 - 49
                 </p>
 <br>
-                    <a href="https://arxiv.org/abs/1807.05276" style="color:#639bf1" target="_blank"> Download the paper </a>&nbsp;(arXiv.org)
+                    <a href="{{=URL('static', 'uploads/RCRpaper_final.pdf')}}" style="color:#639bf1"> Download the paper</a>
 	    </div>
             <br>
 <br>
             <h1>Code</h1>
-            <div id="ResourceItem">      
+            <div id="ResourceItem">
 <br>
-                    <a href="{{=URL('static', 'uploads/RCRSourceV1.03.zip')}}" style="color:#639bf1"> Download the source code and documentation (v1.03)</a>
-    
+                    <a href="{{=URL('static', 'uploads/RCRSourceV2.1.1.zip')}}" style="color:#639bf1"> Download the source code and documentation </a> (v2.1.1)
+
             </div>
         </div>
-    
+
 
 	</body>
 

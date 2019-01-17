@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-    
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<head>
         {{response.files.append(URL('static','css/rcr.css'))}}
 
-        {{include 'web2py_ajax.html'}}		
+        {{include 'web2py_ajax.html'}}
 		<link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300' rel='stylesheet' type='text/css'>
 		<title> Robust Chauvenet Rejection </title>
 	</head>
-	
-	
+
+
 	<body>
-	
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- NAVIGATION BAR --> 
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- NAVIGATION BAR -->
 <!--////////////////////////////////////////////////////////////////////////////-->
 		<div id="wrap">
             <ul class="navbar">
@@ -26,12 +26,12 @@
                 <li><a href="{{=URL(request.application, 'calculator', 'contact')}}">Contact Us</a> </li>
             </ul>
 		</div>
-	
-<!--////////////////////////////////////////////////////////////////////////////-->	
-<!-- REJECTION METHOD SECTION --> 
-<!--////////////////////////////////////////////////////////////////////////////-->	
+
+<!--////////////////////////////////////////////////////////////////////////////-->
+<!-- REJECTION METHOD SECTION -->
+<!--////////////////////////////////////////////////////////////////////////////-->
 		<div id="RMInput">
-            <h1 style="font-size:3.5em;"> Robust Chauvenet Rejection (RCR) </h1>		
+            <h1 style="font-size:3.5em;"> Robust Chauvenet Rejection (RCR) </h1>
             <p style="padding-bottom: 2em;">  </p>
 
             <h1 style="font-size:2.5em;"> What is RCR? </h1>
@@ -53,9 +53,9 @@
                 </p>
 
                 <p style="padding: 0em 0em 1em 0em;">
-                RCR has been carefully calibrated, and extensively simulated (see <a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">Maples et al. 2017</a>).  It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
+                RCR has been carefully calibrated, and extensively simulated (see <a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">Maples et al. 2018</a>).  It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
                 </p>
-                
+
             </div>
 <br>
             <h1 style="font-size:2.5em;"> How do I use RCR? </h1>
@@ -73,14 +73,14 @@
         RCR can be applied to weighted data, to functional data (e.g., x vs. y), and we have incorporated bulk rejection to decrease computation times with large samples.
                 </p>
                 <p style="padding: 0em 0em 1em 0em;">
-        Try our online calculators (<a href="{{=URL(request.application, 'calculator', 'value')}}" style="color:#639BF1">singe value</a> and <a href="{{=URL(request.application, 'calculator', 'functional')}}" style="color:#639BF1">functional</a>), or download the <a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">source code</a>.  
+        Try our online calculators (<a href="{{=URL(request.application, 'calculator', 'value')}}" style="color:#639BF1">single value</a> and <a href="{{=URL(request.application, 'calculator', 'functional')}}" style="color:#639BF1">functional</a>), or download the <a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">source code</a>.
                 </p>
             </div>
 <br>
             <h1 style="font-size:2.5em;"> Licensing and Citation </h1>
             <div id="StepOne">
                 <p style="padding: 1em 0em 1em 0em;">
-                    RCR is free to use for academic and non-commercial applications (<a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">license</a>).  We only ask that you cite <a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">Maples et al. 2017</a>.  
+                    RCR is free to use for academic and non-commercial applications (<a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">license</a>).  We only ask that you cite <a href="{{=URL(request.application, 'calculator', 'downloads')}}" style="color:#639BF1">Maples et al. 2018</a>.
                 </p>
                 <p style="padding: 0em 0em 1em 0em;">
                     For commercial applications, or consultation, feel free to <a href="{{=URL(request.application, 'calculator', 'contact')}}" style="color:#639BF1">contact us</a>.
@@ -94,7 +94,7 @@
                 </p>
 
                 <p style="padding: 0em 0em 0em 0em;">
-                    Dan Reichart and Michael Maples
+                    Dan Reichart, Michael Maples, Nick Konz
                 </p>
                 <p style="padding: 0em;">
                     Department of Physics and Astronomy
