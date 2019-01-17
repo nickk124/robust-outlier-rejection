@@ -169,7 +169,7 @@
 
                     </div>
 										<div id="OverRejectionNote">
-                        <i style="padding-top:10px; display:block;"></i>
+                        <i id="OverRejectionNotice" style="padding-top:10px; display:block;"></i>
 
                     </div>
                 </div>
@@ -314,8 +314,10 @@ function overRejPercentage(N){
 													0.002,0,0.027,0,
 													0.002,0,0.027,0];
 
-		var inputDataStr = document.getElementById('inputTextAreaData').value;
-		var inputDataArr = inputData.split("\n");
+		var percentage2DArr = []; //converts the percentage data to a 2d array
+  	for (var i = 0; i < 97; i++){
+  		percentage2DArr.push(percentageArray.slice(0 + 4*i, 4 + 4*i));
+  	}
 
 		var hasSymm = $('#Symmetric').data('clicked');
     var hasEq = $('#Equal').data('clicked');
@@ -336,13 +338,8 @@ function overRejPercentage(N){
 			rej = 3;
 		}
 
-		var percentage2DArr = []; //converts the percentage data to a 2d array
-  	for (var i = 0; i < 97; i++){
-  		percentage2DArr.push(percentageArray.slice(0 + 4*i, 4 + 4*i));
-  	}
-
-		var percentage = percentage2DArr[N-3][rej];
-
+		var percentage = Math.round( percentage2DArr[N-3][rej] * 10) / 10;
+		//rounds to first decimal place
 		return percentage;
 }
 
@@ -388,16 +385,16 @@ function performRCR(){
 		var N = inputDataArr.length;
 
 		if (N < 3){
-			document.getElementById("OverRejectionNote").innerHTML = "Note: Please enter at least three, properly formatted data points.";
+			document.getElementById("OverRejectionNotice").innerHTML = "Note: Please enter at least three, properly formatted data points.";
 		} else if (N >= 3 && N <= 99){
 			var perc = overRejPercentage(N);
 			if (perc < 0.1){
-				document.getElementById("OverRejectionNote").innerHTML = "Note: Chance of runaway overrejection is <0.1%."
+				document.getElementById("OverRejectionNotice").innerHTML = "Note: Chance of runaway overrejection is <0.1%."
 			} else if (perc >= 0.1){
-			document.getElementById("OverRejectionNote").innerHTML = "Note: Chance of runaway overrejection is " + perc.toString() +"%.";
+			document.getElementById("OverRejectionNotice").innerHTML = "Note: Chance of runaway overrejection is " + perc.toString() +"%.";
 			}
 		} else if (N > 99){
-			document.getElementById("OverRejectionNote").innerHTML = "Note: Chance of runaway overrejection is <0.1%.";
+			document.getElementById("OverRejectionNotice").innerHTML = "Note: Chance of runaway overrejection is <0.1%.";
 		}
 		$('#OverRejectionNote').css('display','block');
 
