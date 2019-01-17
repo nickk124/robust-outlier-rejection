@@ -151,7 +151,7 @@
 
                 <div id="ButtonSection">
 
-                    <h2> Select Uncontaminated Distribution:</h2>
+                    <h2> Select Uncontaminated Distribution about y(x):</h2>
 
                     <button id="Symmetric" class="Button Distribution"> Gaussian, Mildly Peaked, or Mildly Flat-Topped (Default) </button>
                     <button id="Asymmetric" class="Button Distribution"> Mildly Asymmetric (Less Powerful) </button>
@@ -165,37 +165,37 @@
 		</div>
                 <div id="RejectionMethod">
 
-                    <h2> Selected Uncontaminated Distribution: </h2>
+                    <h2> Selected Uncontaminated Distribution about y(x): </h2>
 			<br>
       <div style="width:80%">
-        <img src="/rcr/static/symm.png" id="SymmetricImage">
-  			<img src="/rcr/static/asymm.png" id="AsymmetricImage">
+        <img src="/rcr/static/rcr1.png" id="SymmetricImage">
+  			<img src="/rcr/static/rcr2.png" id="AsymmetricImage">
       </div>
                     <h2> Selected Rejection Method: </h2>
                     <p id="Option11" class="RejectionMethods">
-                         μ: Median (§2; Maples et al. 2018) <br>
-                         σ : Broken-line technique (§3, §4) <br>
-                        Rejection proportional to σ both below and above  μ (§5)
+                         μ: Median (§2.1; Maples et al. 2018) <br>
+                         σ : Broken-line technique (§2.2, §2.3) <br>
+                        Rejection proportional to σ both below and above  μ (§3.1, §3.3.2)
                     </p>
                     <p id="Option12" class="RejectionMethods">
-												μ : Half-sample mode (§2; Maples et al. 2018)  <br>
-												σ<sub>-</sub> , σ<sub>+</sub> : 68.3%-Value technique (§3, §4)<br>
-                        Rejection proportional to min{σ<sub>-</sub> , σ<sub>+</sub>} both below and above μ (§6)
+												μ : Half-sample mode (§2.1; Maples et al. 2018)  <br>
+												σ<sub>-</sub> , σ<sub>+</sub> : 68.3%-Value technique (§2.2, §2.3)<br>
+                        Rejection proportional to min{σ<sub>-</sub> , σ<sub>+</sub>} both below and above μ (§3.2, §3.3.2)
                     </p>
                     <p id="Option13" class="RejectionMethods">
-												μ: Half-sample mode (§2; Maples et al. 2018)  <br>
-                        σ<sub>-</sub> , σ<sub>+</sub> : Broken-line technique (§3, §4)<br>
-                        Rejection proportional to min{σ<sub>-</sub> , σ<sub>+</sub>} both below and above μ (§6)
+												μ: Half-sample mode (§2.1; Maples et al. 2018)  <br>
+                        σ<sub>-</sub> , σ<sub>+</sub> : Broken-line technique (§2.2, §2.3)<br>
+                        Rejection proportional to min{σ<sub>-</sub> , σ<sub>+</sub>} both below and above μ (§3.2, §3.3.2)
                     </p>
                     <p id="Option2All" class="RejectionMethods">
-												μ: Half-sample mode (§2; Maples et al. 2018)  <br>
-                        σ<sub>-</sub> , σ<sub>+</sub> : Broken-line technique (§3, §4)<br>
-                        Rejection proportional to σ<sub>-</sub> below μ and σ<sub>+</sub> above μ (§7)
+												μ: Half-sample mode (§2.1; Maples et al. 2018)  <br>
+                        σ<sub>-</sub> , σ<sub>+</sub> : Broken-line technique (§2.2, §2.3)<br>
+                        Rejection proportional to σ<sub>-</sub> below μ and σ<sub>+</sub> above μ (§3.3.1)
                     </p>
                     <p id="Option3" class="RejectionMethods">
 			Fundamentally, RCR assumes that the uncontaminated distribution is Gaussian, or near Gaussian.  In particular, our <q>All High or All Low</q> and <q>In Between</q> contaminant type options are especially sensitive to this assumption, and should not be used if this assumption is not met.                    </p>
                     <p id="OptionAll" class="RejectionMethods">
-                        Note: Rejection method is iterative, preceded by iterative bulk rejection (§9), and proceeded by both (1) iterative "median + 68.3%-value technique" rejection, and (2) iterative "mean + standard deviation " rejection (§8).
+                        Note: Rejection method is iterative, preceded by iterative bulk rejection (§5), and proceeded by both (1) iterative "median + 68.3%-value technique" rejection, and (2) iterative "mean + standard deviation " rejection (§4).
                     </p>
 
                 </div>
