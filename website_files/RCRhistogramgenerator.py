@@ -36,8 +36,12 @@ p = Figure(plot_height = 400, plot_width = 600,
 p.quad(source = src, bottom = 0, top = 'arr_hist', left = 'left', right = 'right', fill_color = 'cornflowerblue', line_color = 'black')
 
 #defines the callback to be used:
-callback_plot = CustomJS(args=dict(src=src), code="""
+callback_plot = CustomJS(args=dict(src=src, p=p), code="""
     testCallBegin();
+
+    testLog('Initial Plot');
+
+    p.reset.emit();
 
     var y_data = getData();
 
@@ -61,6 +65,8 @@ callback_plot = CustomJS(args=dict(src=src), code="""
     }
 
     src.change.emit();
+
+    testLog([arr_hist.length, left.length, right.length]);
 
     testCallEnd();
 """)
@@ -90,8 +96,12 @@ callback_test = CustomJS(args=dict(src=src), code="""
     testCallEnd();
 """)
 
-callback_addbins = CustomJS(args=dict(src=src), code="""
+callback_addbins = CustomJS(args=dict(src=src, p=p), code="""
     testCallBegin();
+
+    testLog('Plus a bin');
+
+    p.reset.emit();
 
     var y_data = getData();
 
@@ -116,11 +126,17 @@ callback_addbins = CustomJS(args=dict(src=src), code="""
 
     src.change.emit();
 
+    testLog([arr_hist.length, left.length, right.length]);
+
     testCallEnd();
 """)
 
-callback_subtractbins = CustomJS(args=dict(src=src), code="""
+callback_subtractbins = CustomJS(args=dict(src=src, p=p), code="""
     testCallBegin();
+
+    testLog('Minus a bin');
+
+    p.reset.emit();
 
     var y_data = getData();
 
@@ -143,23 +159,152 @@ callback_subtractbins = CustomJS(args=dict(src=src), code="""
         right[i] = right_result[i];
     }
 
+    arr_hist.pop();
+    left.pop();
+    right.pop();
+
+
     src.change.emit();
+
+    testLog([arr_hist.length, left.length, right.length]);
 
     testCallEnd();
 """)
+
+callback_linear = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
+    testCallBegin();
+
+    testLog('Changing to linear');
+
+    p.reset.emit();
+
+    var y_data = getData();
+
+    var hist_result = getHistBins(y_data);
+    var arr_hist_result = hist_result[0];
+    var left_result = hist_result[1];
+    var right_result = hist_result[2];
+
+    var data = src.data;
+
+    var arr_hist = data['arr_hist'];
+    var left = data['left'];
+    var right = data['right'];
+
+    for (var i = 0; i < arr_hist_result.length; i++){
+        arr_hist[i] = arr_hist_result[i];
+        left[i] = left_result[i];
+        right[i] = right_result[i];
+    }
+
+    axis.axis_label = "y (data)";
+
+    p.change.emit()
+
+    src.change.emit();
+
+    testLog([arr_hist.length, left.length, right.length]);
+
+    testCallEnd();
+""")
+
+callback_log = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
+    testCallBegin();
+
+    testLog('Changing to logarithmic');
+
+    p.reset.emit();
+
+    var y_data = getData();
+
+    var y_trans = transformLog(y_data);
+
+    var hist_result = getHistBins(y_trans);
+    var arr_hist_result = hist_result[0];
+    var left_result = hist_result[1];
+    var right_result = hist_result[2];
+
+    var data = src.data;
+
+    var arr_hist = data['arr_hist'];
+    var left = data['left'];
+    var right = data['right'];
+
+    for (var i = 0; i < arr_hist_result.length; i++){
+        arr_hist[i] = arr_hist_result[i];
+        left[i] = left_result[i];
+        right[i] = right_result[i];
+    }
+
+    axis.axis_label = "log(y) (base 10)";
+
+    p.change.emit();
+
+    src.change.emit();
+
+    testLog([arr_hist.length, left.length, right.length]);
+
+    testCallEnd();
+""")
+
+callback_exp = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
+    testCallBegin();
+
+    testLog('Changing to exponential');
+
+    p.reset.emit();
+
+    var y_data = getData();
+
+    var y_trans = transformExp(y_data);
+
+    var hist_result = getHistBins(y_trans);
+    var arr_hist_result = hist_result[0];
+    var left_result = hist_result[1];
+    var right_result = hist_result[2];
+
+    var data = src.data;
+
+    var arr_hist = data['arr_hist'];
+    var left = data['left'];
+    var right = data['right'];
+
+    for (var i = 0; i < arr_hist_result.length; i++){
+        arr_hist[i] = arr_hist_result[i];
+        left[i] = left_result[i];
+        right[i] = right_result[i];
+    }
+
+    axis.axis_label = "10^y";
+
+    p.change.emit();
+
+    src.change.emit();
+
+    testLog([arr_hist.length, left.length, right.length]);
+
+    testCallEnd();
+""")
+
 
 button_plot = Button(label = "Plot Histogram", button_type = "primary")
 #button_test= Button(label = "Test", button_type = "success")
 
 button_addbins = Button(label = "Add Bins", button_type = "primary")
 button_subtractbins = Button(label = "Subtract Bins", button_type = "primary")
+
 button_linear = Button(label = "Linear", button_type = "primary")
 button_log = Button(label = "Logarithmic", button_type = "primary")
 button_exp = Button(label = "Exponential", button_type = "primary")
 
 button_plot.js_on_click(callback_plot)
+
 button_subtractbins.js_on_click(callback_subtractbins)
 button_addbins.js_on_click(callback_addbins)
+
+button_linear.js_on_click(callback_linear)
+button_log.js_on_click(callback_log)
+button_exp.js_on_click(callback_exp)
 
 #button_test.js_on_click(callback_test)
 
@@ -168,5 +313,5 @@ buttons_2 = row(button_linear, button_log, button_exp)
 buttons = column(buttons_1, buttons_2, sizing_mode = 'scale_width')
 layout = row(p, buttons)
 
-show(layout)
+#show(layout)
 save(layout)
