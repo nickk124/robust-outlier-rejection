@@ -1,0 +1,76 @@
+from bokeh.layouts import column
+from bokeh.models import CustomJS, ColumnDataSource, Slider, Button
+from bokeh.plotting import Figure, output_file, show, save
+
+output_file("RCRplot_functional.html")
+
+x_rejected = [] #initial data (list)
+y_rejected = []
+x_nonrejected = [] #initial data (list)
+y_nonrejected = []
+x_original = []
+y_fitted = []
+
+sourcenon = ColumnDataSource(data=dict(x_nonrejected=x_nonrejected, y_nonrejected=y_nonrejected)) #ColumnDataSource is the object where the data of the graph is stored.
+sourcerej = ColumnDataSource(data=dict(x_rejected=x_rejected, y_rejected=y_rejected)) #ColumnDataSource is the object where the data of the graph is stored.
+sourceall = ColumnDataSource(data=dict(x_original=x_original, y_fitted=y_fitted)) #ColumnDataSource is the object where the data of the graph is stored.
+
+plot = Figure(plot_width=600, plot_height=600)
+#plotting code
+plot.circle('x_nonrejected', 'y_nonrejected', source=sourcenon, size=5, color="navy", alpha=0.5, legend="nonrejected data of size")# nonrejected
+plot.circle('x_rejected', 'y_rejected', source=sourcerej, size=5, color="red", alpha=0.5, legend="rejected data")# rejected
+plot.line('x_original', 'y_fitted', source=sourceall, color="green", line_width=2, legend="fitted model")
+
+#plot.circle('x', 'y', source=source, line_width=3, line_alpha=0.6) #plotting by name
+
+#defines the callback to be used:
+callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceall=sourceall), code="""
+    console.log('Plot Generating...');
+    var datanon = sourcenon.data;
+    var datarej = sourcerej.data;
+    var dataall = sourceall.data;
+
+    var x_rejected = datarej['x_rejected']
+    var y_rejected = datarej['y_rejected']
+    var x_nonrejected = datanon['x_nonrejected']
+    var y_nonrejected = datanon['y_nonrejected']
+    var x_original = dataall['x_original']
+    var y_fitted = dataall['y_fitted']
+
+    for (var i = 0; i < x_rejected_result.length; i++) {
+        x_rejected[i] = x_rejected_result[i]
+        y_rejected[i] = y_rejected_result[i]
+    }
+    for (var i = 0; i < x_nonrejected_result.length; i++) {
+        x_nonrejected[i] = x_nonrejected_result[i]
+        y_nonrejected[i] = y_nonrejected_result[i]
+    }
+    for (var i = 0; i < x_original_result.length; i++) {
+        x_original[i] = x_original_result[i]
+        y_fitted[i] = y_fitted_result[i]
+    }
+
+    console.log(datarej['x_rejected']);
+    console.log(datarej['y_rejected']);
+    console.log(datanon['x_nonrejected']);
+    console.log(datanon['y_nonrejected']);
+    console.log(dataall['x_original']);
+    console.log(dataall['y_fitted']);
+
+    sourcenon.change.emit();
+    sourcerej.change.emit();
+    sourceall.change.emit();
+""")
+
+#slider = Slider(start=0.1, end=4, value=1, step=.1, title="power")
+#slider.js_on_change('value', callback)
+
+plot.xaxis.axis_label = 'x'
+plot.yaxis.axis_label = 'y'
+
+button = Button(label = "Plot Results", button_type = "success")
+button.js_on_click(callback)
+layout = column(button, plot)
+
+show(layout)
+save(layout)
