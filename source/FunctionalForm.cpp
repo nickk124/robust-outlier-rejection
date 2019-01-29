@@ -1874,7 +1874,9 @@ std::vector<double> FunctionalForm::regression() //determines params
 		if (flags[i]) {
 			goody.push_back(y[i]);
 			goodw.push_back(w[i]);
-			goodsigma_y.push_back(sigma_y[i]);
+			if (hasErrorBars) {
+				goodsigma_y.push_back(sigma_y[i]);
+			}
 
 			if (NDcheck) {
 				goodx_ND.push_back(x_ND[i]);
@@ -1888,23 +1890,53 @@ std::vector<double> FunctionalForm::regression() //determines params
 	if (weightedCheck && NDcheck) 
 	{
 		//result = regularGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, tolerance, w);
-		result = modifiedGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, goodsigma_y, tolerance, goodw);
+		if (hasErrorBars) {
+			result = modifiedGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, goodsigma_y, tolerance, goodw);
+		}
+		else if (!hasErrorBars) {
+			result = modifiedGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, tolerance, goodw);
+		}
 	}
 	else if (weightedCheck && (NDcheck == false))
 	{
 		//result = regularGN(f, partialsvector, goody, goodx, meanstartingpoint, tolerance, w);
-		result = modifiedGN(f, partialsvector, goody, goodx, meanstartingpoint, goodsigma_y, tolerance, goodw);
+		if (hasErrorBars) {
+			result = modifiedGN(f, partialsvector, goody, goodx, meanstartingpoint, goodsigma_y, tolerance, goodw);
+		}
+		else if (!hasErrorBars) {
+			result = modifiedGN(f, partialsvector, goody, goodx, meanstartingpoint, tolerance, goodw);
+		}
 	}
 	else if ((weightedCheck == false) && NDcheck)
 	{
 		//result = regularGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, tolerance);
-		result = modifiedGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, goodsigma_y, tolerance);
+		if (hasErrorBars) {
+			result = modifiedGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, goodsigma_y, tolerance);
+		}
+		else if (!hasErrorBars) {
+			result = modifiedGN(f_ND, NDpartialsvector, goody, goodx_ND, meanstartingpoint, tolerance);
+		}
 	}
 	else if ((weightedCheck == false) && (NDcheck == false))
 	{
 		//result = regularGN(f, partialsvector, goody, goodx, meanstartingpoint, tolerance);
-		result = modifiedGN(f, partialsvector, goody, goodx, meanstartingpoint, goodsigma_y, tolerance);
+		if (hasErrorBars) {
+			result = modifiedGN(f, partialsvector, goody, goodx, meanstartingpoint, goodsigma_y, tolerance);
+		}
+		else if (!hasErrorBars) {
+			result = modifiedGN(f, partialsvector, goody, goodx, meanstartingpoint, tolerance);
+		}
 	}
+
+	std::vector <double> new_result = result;
+	if (result.size() > M) {
+		new_result.clear();
+		for (int i = 0; i < M; i++) {
+			new_result.push_back(result[i]);
+		}
+	}
+
+	result = new_result;
 
 
 	return result; //the final parameter vector (line will be set equal to this)
