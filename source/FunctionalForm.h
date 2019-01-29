@@ -21,15 +21,61 @@ public:
 class FunctionalForm
 {
 public:
+	/*
+	Constructor Organization:
+		Non-Priors:
+			Non-weighted, with Error Bars:
+				1D
+				ND
+			Weighted, with EB:
+				1D
+				ND
+			**Non-weighted, without Error Bars
+				1D
+				ND
+			**Weighted, without Error Bars
+				1D
+				ND
+
+		With Priors:
+			Non-weighted, with Error Bars:
+				1D
+				ND
+			Weighted, with EB:
+				1D
+				ND
+			**Non-weighted, without Error Bars
+				1D
+				ND
+			**Weighted, without Error Bars
+				1D
+				ND
+	
+	
+	
+	*/
+
+
+
 	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess);
 	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess); //case of there being <1 indepedent variable (x variable) in the function
 	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w);
 	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w);
+
+	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess);
+	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w);
+	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w);
 	//PRIORS support:
 	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject);
 	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject); //case of there being <1 indepedent variable (x variable) in the function
 	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject);
 	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject);
+
+	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject);
+	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(double(*f)(double, std::vector <double>), std::vector <double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject);
+	FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector < std::vector <double> > x, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject);
 
 	//default constructor:
 	FunctionalForm();
@@ -76,6 +122,7 @@ public:
 
 	Priors priorsObject;
 	bool hasPriors;
+	bool hasErrorBars;
 
 	//double function(double x, std::vector <double> params); // 1D case
 	//double function_ND(std::vector <double> x, std::vector <double> params); // >1D case

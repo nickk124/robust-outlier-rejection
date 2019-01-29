@@ -46,6 +46,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
 	this->hasPriors = false;
+	this->hasErrorBars = true;
 }
 FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -63,6 +64,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
 	this->hasPriors = false;
+	this->hasErrorBars = true;
 }
 FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess)
 {
@@ -80,6 +82,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
 	this->hasPriors = false;
+	this->hasErrorBars = true;
 }
 FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -97,6 +100,76 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
 	this->hasPriors = false;
+	this->hasErrorBars = true;
+}
+
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess)
+{
+	this->f = (*f);
+	this->x = x;
+	this->y = y;
+	this->guess = guess;
+	this->w.resize(x.size(), 1.0);
+	this->partialsvector = partialsvector;
+	this->M = partialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = false;
+	this->weightedCheck = false;
+	this->parameters = guess; //initial 
+	this->hasPriors = false;
+	this->hasErrorBars = false;
+}
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
+{
+	this->f = (*f);
+	this->x = x;
+	this->y = y;
+	this->w = w;
+	this->guess = guess;
+	this->partialsvector = partialsvector;
+	this->M = partialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = false;
+	this->weightedCheck = true;
+	this->parameters = guess; //initial 
+	this->hasPriors = false;
+	this->hasErrorBars = false;
+}
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess)
+{
+	this->f_ND = (*f);
+	this->x_ND = x_ND;
+	this->y = y;
+	this->guess = guess;
+	this->w.resize(x.size(), 1.0);
+	this->NDpartialsvector = NDpartialsvector;
+	this->M = NDpartialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = true;
+	this->weightedCheck = false;
+	this->parameters = guess; //initial 
+	this->hasPriors = false;
+	this->hasErrorBars = false;
+}
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
+{
+	this->f_ND = (*f);
+	this->x_ND = x_ND;
+	this->y = y;
+	this->guess = guess;
+	this->w = w;
+	this->NDpartialsvector = NDpartialsvector;
+	this->M = NDpartialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = true;
+	this->weightedCheck = true;
+	this->parameters = guess; //initial 
+	this->hasPriors = false;
+	this->hasErrorBars = false;
 }
 //constructors with priors:
 FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
@@ -116,6 +189,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
 	this->hasPriors = true;
+	this->hasErrorBars = true;
 }
 FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
@@ -134,6 +208,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
 	this->hasPriors = true;
+	this->hasErrorBars = true;
 }
 FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
@@ -152,6 +227,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
 	this->hasPriors = true;
+	this->hasErrorBars = true;
 }
 FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
@@ -170,6 +246,80 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
 	this->hasPriors = true;
+	this->hasErrorBars = true;
+}
+
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+{
+	this->f = (*f);
+	this->priorsObject = priorsObject;
+	this->x = x;
+	this->y = y;
+	this->guess = guess;
+	this->w.resize(x.size(), 1.0);
+	this->partialsvector = partialsvector;
+	this->M = partialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = false;
+	this->weightedCheck = false;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+	this->hasErrorBars = false;
+}
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+{
+	this->f = (*f);
+	this->priorsObject = priorsObject;
+	this->x = x;
+	this->y = y;
+	this->w = w;
+	this->guess = guess;
+	this->partialsvector = partialsvector;
+	this->M = partialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = false;
+	this->weightedCheck = true;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+	this->hasErrorBars = false;
+}
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+{
+	this->f_ND = (*f);
+	this->priorsObject = priorsObject;
+	this->x_ND = x_ND;
+	this->y = y;
+	this->guess = guess;
+	this->w.resize(x.size(), 1.0);
+	this->NDpartialsvector = NDpartialsvector;
+	this->M = NDpartialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = true;
+	this->weightedCheck = false;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+	this->hasErrorBars = false;
+}
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+{
+	this->f_ND = (*f);
+	this->priorsObject = priorsObject;
+	this->x_ND = x_ND;
+	this->y = y;
+	this->guess = guess;
+	this->w = w;
+	this->NDpartialsvector = NDpartialsvector;
+	this->M = NDpartialsvector.size();
+	this->N = y.size();
+	this->tolerance = tolerance;
+	this->NDcheck = true;
+	this->weightedCheck = true;
+	this->parameters = guess; //initial 
+	this->hasPriors = true;
+	this->hasErrorBars = false;
 }
 
 //default constructor:
@@ -419,10 +569,11 @@ void FunctionalForm::buildModelSpace()
 	*/
 
 
-	std::vector <double> comboy, combosigma_y, comboparamset, comboparam_uncertainties;
+	std::vector <double> comboy, comboparamset, comboparam_uncertainties;
 
-	if (weightedCheck && NDcheck) //weighted and >1 dimension of independent variable in model
+	if (weightedCheck && NDcheck && hasErrorBars) //weighted and >1 dimension of independent variable in model
 	{
+		std::vector <double> combosigma_y;
 		std::vector <std::vector <double> > combox;
 		std::vector <double> combow;
 		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
@@ -556,8 +707,9 @@ void FunctionalForm::buildModelSpace()
 
 		}
 	}
-	else if (weightedCheck && (NDcheck == false)) //weighted and only 1 dimension of independent variable in model
+	else if (weightedCheck && !NDcheck && hasErrorBars) //weighted and only 1 dimension of independent variable in model
 	{
+		std::vector <double> combosigma_y;
 		std::vector <double> combox, combow;
 		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
 		{
@@ -688,8 +840,9 @@ void FunctionalForm::buildModelSpace()
 			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
 		}
 	}
-	else if ((weightedCheck == false) && NDcheck) //non-weighted but >1 dimension of independent variable in model
+	else if (!weightedCheck && NDcheck && hasErrorBars) //non-weighted but >1 dimension of independent variable in model
 	{
+		std::vector <double> combosigma_y;
 		std::vector <std::vector <double> > combox;
 		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
 		{
@@ -817,8 +970,9 @@ void FunctionalForm::buildModelSpace()
 			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
 		}
 	}
-	else if ((weightedCheck == false) && (NDcheck == false)) //non-weighted, 1 dimension of independent variable in model
+	else if (!weightedCheck && !NDcheck && hasErrorBars) //non-weighted, 1 dimension of independent variable in model
 	{
+		std::vector <double> combosigma_y;
 		std::vector <double> combox;
 		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
 		{
@@ -936,6 +1090,532 @@ void FunctionalForm::buildModelSpace()
 					double correctivesum = 0.0;
 					for (int i = 0; i < M; i++) {
 						correctivesum += 1.0 / std::pow(combosigma_y[i], 2.0);
+					}
+
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+							parameterSpace[f].push_back(comboparamset[f]);
+						}
+						else {
+							weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+							parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+						}
+					}
+				}
+			}
+			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
+		}
+	}
+
+	if (weightedCheck && NDcheck && !hasErrorBars) //weighted and >1 dimension of independent variable in model
+	{
+		std::vector <std::vector <double> > combox;
+		std::vector <double> combow;
+		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
+		{
+			std::vector <int> combo_indices = combosgood_indices[i]; //the indices of the combo to be used; initializes the combo to be used
+			combox.clear();
+			comboy.clear();
+			combow.clear();
+			comboparamset.clear();
+			comboparam_uncertainties.clear();
+
+			for (int j = 0; j < M; j++) {
+				combox.push_back(x_ND[combo_indices[j]]);
+				comboy.push_back(y[combo_indices[j]]);
+				combow.push_back(w[combo_indices[j]]);
+			}
+
+
+			comboparamset = modifiedGN(f_ND, NDpartialsvector, comboy, combox, parameters, tolerance, combow); //guess is part of the FunctionalForm Constructor
+
+
+																												   //next, checks for exceptions
+
+			if (comboparamset.size() == M) //no exceptions triggered
+			{
+				comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters, combow, wbar);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += combow[i];
+				}
+
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						parameterSpace[f].push_back(comboparamset[f]);
+					}
+					else {
+						weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+			{
+				std::vector <double> semigoodparamvec(M, 0.0);
+
+				for (int j = 0; j < M; j++) {
+					semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+				}
+
+				comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters, combow, wbar);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += combow[i];
+				}
+				for (int k = 0; k < M; k++) {
+					extraParameterSpace[k].push_back(semigoodparamvec[k]);
+				}
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+					}
+					else {
+						extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 2))
+			{
+				comboparamset = regularGN(f_ND, NDpartialsvector, comboy, combox, parameters, tolerance, combow); //uses regular GN
+
+				if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+				{
+
+					//std::cout << comboparamset[0] << "  " << comboparamset[1] << std::endl;
+
+					std::vector <double> semigoodparamvec(M, 0.0);
+
+					for (int j = 0; j < M; j++) {
+						semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+					}
+
+					comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters, combow, wbar);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += combow[i];
+					}
+					for (int k = 0; k < M; k++) {
+						extraParameterSpace[k].push_back(semigoodparamvec[k]);
+					}
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						}
+						else {
+							extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						}
+					}
+				}
+				else
+				{
+					comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters, combow, wbar);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += combow[i];
+					}
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+							parameterSpace[f].push_back(comboparamset[f]);
+						}
+						else {
+							weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+							parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+						}
+					}
+				}
+			}
+			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
+
+
+		}
+	}
+	else if (weightedCheck && !NDcheck && !hasErrorBars) //weighted and only 1 dimension of independent variable in model
+	{
+		std::vector <double> combox, combow;
+		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
+		{
+			std::vector <int> combo_indices = combosgood_indices[i]; //the indices of the combo to be used; initializes the combo to be used
+			combox.clear();
+			comboy.clear();
+			comboparamset.clear();
+			comboparam_uncertainties.clear();
+			combow.clear();
+
+
+			for (int j = 0; j < M; j++) {
+				combox.push_back(x[combo_indices[j]]);
+				comboy.push_back(y[combo_indices[j]]);
+				combow.push_back(w[combo_indices[j]]);
+			}
+
+			comboparamset = modifiedGN(f, partialsvector, comboy, combox, parameters, tolerance, combow); //guess is part of the FunctionalForm Constructor
+
+																											  //next, checks for exceptions
+
+			if (comboparamset.size() == M) //no exceptions triggered
+			{
+				comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters, combow, wbar);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += combow[i];
+				}
+
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						parameterSpace[f].push_back(comboparamset[f]);
+					}
+					else {
+						weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+			{
+				std::vector <double> semigoodparamvec(M, 0.0);
+
+				for (int j = 0; j < M; j++) {
+					semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+				}
+
+				comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters, combow, wbar);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += combow[i];
+				}
+				for (int k = 0; k < M; k++) {
+					extraParameterSpace[k].push_back(semigoodparamvec[k]);
+				}
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+					}
+					else {
+						extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 2))
+			{
+				comboparamset = regularGN(f, partialsvector, comboy, combox, parameters, tolerance, combow); //uses regular GN
+
+				if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+				{
+
+					//std::cout << comboparamset[0] << "  " << comboparamset[1] << std::endl;
+
+					std::vector <double> semigoodparamvec(M, 0.0);
+
+					for (int j = 0; j < M; j++) {
+						semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+					}
+
+					comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters, combow, wbar);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += combow[i];
+					}
+					for (int k = 0; k < M; k++) {
+						extraParameterSpace[k].push_back(semigoodparamvec[k]);
+					}
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						}
+						else {
+							extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						}
+					}
+				}
+				else
+				{
+					comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters, combow, wbar);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += combow[i];
+					}
+
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+							parameterSpace[f].push_back(comboparamset[f]);
+						}
+						else {
+							weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+							parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+						}
+					}
+				}
+			}
+			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
+		}
+	}
+	else if (!weightedCheck && NDcheck && !hasErrorBars) //non-weighted but >1 dimension of independent variable in model
+	{
+		std::vector <std::vector <double> > combox;
+		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
+		{
+			std::vector <int> combo_indices = combosgood_indices[i]; //the indices of the combo to be used; initializes the combo to be used
+			combox.clear();
+			comboy.clear();
+			comboparamset.clear();
+			comboparam_uncertainties.clear();
+
+			for (int j = 0; j < M; j++) {
+				combox.push_back(x_ND[combo_indices[j]]);
+				comboy.push_back(y[combo_indices[j]]);
+			}
+
+
+			comboparamset = modifiedGN(f_ND, NDpartialsvector, comboy, combox, parameters, tolerance); //guess is part of the FunctionalForm Constructor
+
+																												//next, checks for exceptions
+			if (comboparamset.size() == M) //no exceptions triggered
+			{
+				comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += 1.0;
+				}
+
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						parameterSpace[f].push_back(comboparamset[f]);
+					}
+					else {
+						weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+			{
+				std::vector <double> semigoodparamvec(M, 0.0);
+
+				for (int j = 0; j < M; j++) {
+					semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+				}
+
+				comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += 1.0;
+				}
+				for (int k = 0; k < M; k++) {
+					extraParameterSpace[k].push_back(semigoodparamvec[k]);
+				}
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+					}
+					else {
+						extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 2))
+			{
+				comboparamset = regularGN(f_ND, NDpartialsvector, comboy, combox, parameters, tolerance); //uses regular GN
+
+				if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+				{
+
+					//std::cout << comboparamset[0] << "  " << comboparamset[1] << std::endl;
+
+					std::vector <double> semigoodparamvec(M, 0.0);
+
+					for (int j = 0; j < M; j++) {
+						semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+					}
+
+					comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += 1.0;
+					}
+
+					for (int k = 0; k < M; k++) {
+						extraParameterSpace[k].push_back(semigoodparamvec[k]);
+					}
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						}
+						else {
+							extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						}
+					}
+				}
+				else
+				{
+					comboparam_uncertainties = paramuncertainty(NDpartialsvector, combox, parameters);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += 1.0;
+					}
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+							parameterSpace[f].push_back(comboparamset[f]);
+						}
+						else {
+							weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+							parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+						}
+					}
+				}
+			}
+			// otherwise, singlar GN matrix issue due to data; excluded from all calculations
+		}
+	}
+	else if (!weightedCheck && !NDcheck && !hasErrorBars) //non-weighted, 1 dimension of independent variable in model
+	{
+		std::vector <double> combox;
+		for (int i = 0; i < combosgood_indices.size(); i++) //using each combination
+		{
+			std::vector <int> combo_indices = combosgood_indices[i]; //the indices of the combo to be used; initializes the combo to be used
+			combox.clear();
+			comboy.clear();
+			comboparamset.clear();
+			comboparam_uncertainties.clear();
+
+			for (int j = 0; j < M; j++) {
+				combox.push_back(x[combo_indices[j]]);
+				comboy.push_back(y[combo_indices[j]]);
+			}
+
+			comboparamset = modifiedGN(f, partialsvector, comboy, combox, parameters, tolerance); //parameters is part of the FunctionalForm Constructor			
+
+
+			//next, checks for exceptions
+			if (comboparamset.size() == M) //no exceptions triggered
+			{
+
+				comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += 1.0;
+				}
+
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						weightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						parameterSpace[f].push_back(comboparamset[f]);
+					}
+					else {
+						// FOR TESTING
+
+
+
+						weightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						parameterSpace[f].push_back(comboparamset[f]); // vector of calculated vals for kth parameter
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+			{
+				//std::cout << comboparamset[0] << "  " << comboparamset[1] << std::endl;
+
+				std::vector <double> semigoodparamvec(M, 0.0);
+
+				for (int j = 0; j < M; j++) {
+					semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+				}
+
+				comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters);
+
+				double correctivesum = 0.0;
+				for (int i = 0; i < M; i++) {
+					correctivesum += 1.0;
+				}
+
+				for (int k = 0; k < M; k++) {
+					extraParameterSpace[k].push_back(semigoodparamvec[k]);
+				}
+				for (int f = 0; f < M; f++) {
+					double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+					if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+						extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+					}
+					else {
+						extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+					}
+				}
+			}
+			else if (comboparamset.size() == (M + 2))
+			{
+				comboparamset = regularGN(f, partialsvector, comboy, combox, parameters, tolerance); //uses regular GN
+
+				if (comboparamset.size() == (M + 1)) // "runaway" parameter issue; include for median calc, but not mode
+				{
+
+					//std::cout << comboparamset[0] << "  " << comboparamset[1] << std::endl;
+
+					std::vector <double> semigoodparamvec(M, 0.0);
+
+					for (int j = 0; j < M; j++) {
+						semigoodparamvec[j] = comboparamset[j]; //takes first M vals of comboparamset
+					}
+
+					comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += 1.0;
+					}
+					for (int k = 0; k < M; k++) {
+						extraParameterSpace[k].push_back(semigoodparamvec[k]);
+					}
+					for (int f = 0; f < M; f++) {
+						double testweight = std::pow(comboparam_uncertainties[f], -2.0);
+						if ((testweight != testweight) || (std::isinf(testweight)) || (testweight == 0.0)) {
+							extraWeightSpace[f].push_back(DBL_MIN * correctivesum); //if the weight is NaN , makes it the smallest possible double val
+						}
+						else {
+							extraWeightSpace[f].push_back(testweight * correctivesum); //weighting the calculated parameters
+						}
+					}
+				}
+				else
+				{
+					comboparam_uncertainties = paramuncertainty(partialsvector, combox, parameters);
+
+					double correctivesum = 0.0;
+					for (int i = 0; i < M; i++) {
+						correctivesum += 1.0;
 					}
 
 					for (int f = 0; f < M; f++) {

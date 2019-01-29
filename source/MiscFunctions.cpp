@@ -347,6 +347,44 @@ double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::v
 
 }
 
+double chiSquared(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> w, int K) // computes the chi-squared value. takes the function y=... as an argument (via pointer) 
+{ //FUNCTION MUST BE USER-PROVIDED
+	//K = 0 if nonweighted, 1 if weighted
+	int N = y.size();
+
+	if (K == 0) {
+		w.clear();
+		for (int i = 0; i < N; i++) {
+			w.push_back(1.0);
+		}
+	}
+	double sum = 0.0;
+
+	for (int i = 0; i < N; i++) {
+		sum += w[i] * std::pow(y[i] - (*f)(x[i], params), 2.0);
+	}
+	return sum;
+}
+
+double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> w, int K) // multi-dimensional independent variables case
+{ //FUNCTION MUST BE USER-PROVIDED
+	//K = 0 if nonweighted, 1 if weighted
+	int N = y.size();
+
+	if (K == 0) {
+		w.clear();
+		for (int i = 0; i < N; i++) {
+			w.push_back(1.0);
+		}
+	}
+	double sum = 0.0;
+
+	for (int i = 0; i < N; i++) {
+		sum += w[i] * std::pow(y[i] - (*f)(x[i], params), 2.0);
+	}
+	return sum;
+}
+
 std::vector <double> residuals(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params) // computes the residuals vector needed in the GN algorithm
 { //FUNCTION MUST BE USER-PROVIDED
 	int N = y.size();
@@ -406,7 +444,7 @@ std::vector < std::vector <double> > jacobian(std::vector <double(*)(std::vector
 	return jacob;
 
 };
-
+//sy, w
 std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) //1D case
 {
 	int M = params.size();
@@ -449,7 +487,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 	}
 	return sigma_params;
 }
-
+//sy, w ND
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) // >1D case
 {
 	int M = params.size();
@@ -492,7 +530,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 	}
 	return sigma_params;
 }
-
+//sy
 std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) //1D case
 {
 	int M = params.size();
@@ -533,7 +571,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 	}
 	return sigma_params;
 }
-
+// sy, ND
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y) //>1D case
 {
 	int M = params.size();
@@ -573,7 +611,175 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 	}
 	return sigma_params;
 }
-//NON-WEIGHTED:
+
+//w, no sy, ND
+std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> w, double wbar) //1D case
+{
+	int M = params.size();
+
+	std::vector <double> J_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
+
+	std::vector <double> sigma_params(M, 0.0);
+	std::vector <double> sig_y(M, 0.0);
+
+	for (int j = 0; j < M; j++) {
+		sig_y[j] = std::sqrt(wbar / w[j]);
+	}
+
+	std::vector < std::vector <double> > J = jacobian(parsvector, x, params);
+
+	std::vector < std::vector <double> > result = pivotSystem(J, sig_y);
+
+	std::vector <double> J_pivoted_vec = result[0];
+	std::vector <double> sig_y_pivoted = result[1];
+
+
+	int d = 0; //turns the outputted pivoted A vector back into an A matrix
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < M; j++) {
+			J_pivoted[i][j] = J_pivoted_vec[d];
+			d += 1;
+		}
+	}
+
+	std::vector <std::vector <double> > invJ_pivoted = LUInverse(J_pivoted);
+
+	double sm;
+	for (int k = 0; k < M; k++) {
+		sm = 0.0;
+		for (int j = 0; j < M; j++) {
+			sm += std::pow((invJ_pivoted[k][j] * sig_y_pivoted[j]), 2.0); //sums in quadrature
+		}
+		sigma_params[k] = std::sqrt(sm);
+	}
+	return sigma_params;
+}
+//w, no sy, ND
+std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> w, double wbar) // >1D case
+{
+	int M = params.size();
+
+	std::vector <double> J_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
+
+	std::vector <double> sigma_params(M, 0.0);
+	std::vector <double> sig_y(M, 0.0);
+
+	for (int j = 0; j < M; j++) {
+		sig_y[j] = std::sqrt(wbar / w[j]);
+	}
+
+	std::vector < std::vector <double> > J = jacobian(parsvector, x, params);
+
+	std::vector < std::vector <double> > result = pivotSystem(J, sig_y);
+
+	std::vector <double> J_pivoted_vec = result[0];
+	std::vector <double> sig_y_pivoted = result[1];
+
+
+	int d = 0; //turns the outputted pivoted A vector back into an A matrix
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < M; j++) {
+			J_pivoted[i][j] = J_pivoted_vec[d];
+			d += 1;
+		}
+	}
+
+	std::vector <std::vector <double> > invJ_pivoted = LUInverse(J_pivoted);
+
+	double sm;
+	for (int k = 0; k < M; k++) {
+		sm = 0.0;
+		for (int j = 0; j < M; j++) {
+			sm += std::pow((invJ_pivoted[k][j] * sig_y_pivoted[j]), 2.0); //sums in quadrature
+		}
+		sigma_params[k] = std::sqrt(sm);
+	}
+	return sigma_params;
+}
+// no w or sy
+std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params) //1D case
+{
+	int M = params.size();
+
+	std::vector <double> J_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
+
+	std::vector <double> sigma_params(M, 0.0);
+
+	std::vector <double> sig_y(M, 1.0);
+
+	std::vector < std::vector <double> > J = jacobian(parsvector, x, params);
+
+	std::vector < std::vector <double> > result = pivotSystem(J, sig_y);
+
+	std::vector <double> J_pivoted_vec = result[0];
+	std::vector <double> sig_y_pivoted = result[1];
+
+
+	int d = 0; //turns the outputted pivoted A vector back into an A matrix
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < M; j++) {
+			J_pivoted[i][j] = J_pivoted_vec[d];
+			d += 1;
+		}
+	}
+
+	std::vector <std::vector <double> > invJ_pivoted = LUInverse(J_pivoted);
+
+
+	double sm;
+	for (int k = 0; k < M; k++) {
+		sm = 0.0;
+		for (int j = 0; j < M; j++) {
+			sm += std::pow((invJ_pivoted[k][j] * sig_y_pivoted[j]), 2.0); //sums in quadrature
+		}
+		sigma_params[k] = std::sqrt(sm);
+	}
+	return sigma_params;
+}
+// no w or sy, ND
+std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //>1D case
+{
+	int M = params.size();
+
+	std::vector <double> J_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
+
+	std::vector <double> sigma_params(M, 0.0);
+
+	std::vector <double> sig_y(M, 1.0);
+
+	std::vector < std::vector <double> > J = jacobian(parsvector, x, params);
+
+	std::vector < std::vector <double> > result = pivotSystem(J, sig_y);
+
+	std::vector <double> J_pivoted_vec = result[0];
+	std::vector <double> sig_y_pivoted = result[1];
+
+
+	int d = 0; //turns the outputted pivoted A vector back into an A matrix
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < M; j++) {
+			J_pivoted[i][j] = J_pivoted_vec[d];
+			d += 1;
+		}
+	}
+
+	std::vector <std::vector <double> > invJ_pivoted = LUInverse(J_pivoted);
+
+	double sm;
+	for (int k = 0; k < M; k++) {
+		sm = 0.0;
+		for (int j = 0; j < M; j++) {
+			sm += std::pow((invJ_pivoted[k][j] * sig_y_pivoted[j]), 2.0); //sums in quadrature
+		}
+		sigma_params[k] = std::sqrt(sm);
+	}
+	return sigma_params;
+}
+//NON-WEIGHTED, with error bars:
 std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of 1 independent (x) variables in the function
 {
 	int M = parsvector.size();
@@ -773,7 +979,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	//return params_new;
 
 };
-//WEIGHTED:
+//WEIGHTED, with error bars:
 std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
 	int Nr = y.size();
@@ -987,6 +1193,428 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	//return params_new;
 
 };
+//NON-WEIGHTED, without error bars:
+std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
+{
+	int M = parsvector.size();
+	bool tolcheck = true;
+	std::vector <double> params_old = guess;
+	std::vector <double> params_new(M, 0.0); //placeholder
+	std::vector < std::vector <double> > J, A_uw, result, A_uw_pivoted_inv;
+	std::vector <double> res, b_uw, b_uw_pivoted, A_uw_pivoted_vec, incrementvect;
+	std::vector <double> A_uw_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > A_uw_pivoted(M, A_uw_pivoted_inner);
+	double newChiSq, oldChiSq;
+	double multiplier = 1.0;
+	int checkcount;
+	int itercount = 0;
+
+	while (tolcheck) {
+		checkcount = 0;
+		J = jacobian(parsvector, x, params_old);
+		res = residuals((*f), y, x, params_old);
+
+		A_uw = dot(transpose(J), J);
+		b_uw = dot(transpose(J), res);
+		result = pivotSystem(A_uw, b_uw);
+		A_uw_pivoted_vec = result[0];
+		b_uw_pivoted = result[1];
+
+		int d = 0; //turns the outputted pivoted A vector back into an A matrix
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				A_uw_pivoted[i][j] = A_uw_pivoted_vec[d];
+				d += 1;
+			}
+		}
+
+		//A_uw_pivoted_inv = inverse(A_uw_pivoted);
+		//incrementvect = dot(A_uw_pivoted_inv, b_uw_pivoted);
+		incrementvect = forwardSubstitution(A_uw_pivoted, b_uw_pivoted);
+
+		for (int i = 0; i < M; i++) // iterates over each row of the GN matrix equation
+		{
+			params_new[i] = params_old[i] - multiplier * incrementvect[i];
+		}
+
+		std::vector <double> w_temp;
+
+		oldChiSq = chiSquared((*f), y, x, params_old, w_temp, 0);
+		newChiSq = chiSquared((*f), y, x, params_new, w_temp, 0);
+
+		int samecheck = 0;
+		for (int j = 0; j < M; j++) {
+			if (params_old[j] != guess[j]) {
+				samecheck += 1;
+			}
+		}
+
+		if ((newChiSq != newChiSq) && (samecheck == 0)) //if the iteration messes up due to singular matrices (this is only true if newChiSq is NAN
+		{
+			std::vector <double> badvec;
+
+			return badvec; //returns an empty vector if this worst-case is true
+		}
+
+		else if ((newChiSq != newChiSq) && (samecheck >= 0)) // due to the data, one or more of the parameters runs off to "infinity"
+		{
+			params_old.push_back(0.0); //add an extra element to params_old to signify that this happened
+
+			return params_old;
+		}
+
+		if (std::abs(newChiSq - oldChiSq) <= tolerance) {
+
+			int sametcheck = 0;
+			for (int j = 0; j < M; j++) {
+				if (std::abs(params_new[j] - guess[j]) <= tolerance) {
+					sametcheck += 1;
+				}
+			}
+			if (sametcheck == M) { //another bad case
+				params_old.push_back(0.0);
+				params_old.push_back(0.0);
+				return params_old;
+			}
+			return params_new;
+		}
+
+		if (newChiSq <= oldChiSq) //good case
+		{
+			params_old = params_new; // applies increment vector
+		}
+		else if (newChiSq > oldChiSq && (std::abs(newChiSq - oldChiSq) > tolerance)) //bad case
+		{
+			multiplier *= 0.5;
+		}
+
+		//itercount += 1;
+		//std::cout << params_old[0] << "  " << params_old[1] << std::endl;
+	}
+	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
+
+	//return params_new;
+
+};
+
+std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
+{
+	int M = parsvector.size();
+	bool tolcheck = true;
+	std::vector <double> params_old = guess;
+	std::vector <double> params_new(M, 0.0); //placeholder
+	std::vector < std::vector <double> > J, A_uw, result, A_uw_pivoted_inv;
+	std::vector <double> res, b_uw, b_uw_pivoted, A_uw_pivoted_vec, incrementvect;
+	std::vector <double> A_uw_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > A_uw_pivoted(M, A_uw_pivoted_inner);
+	double newChiSq, oldChiSq;
+	double multiplier = 1.0;
+	int checkcount;
+	int itercount = 0;
+
+	while (tolcheck) {
+		checkcount = 0;
+		J = jacobian(parsvector, x, params_old);
+		res = residuals((*f), y, x, params_old);
+
+		A_uw = dot(transpose(J), J);
+		b_uw = dot(transpose(J), res);
+		result = pivotSystem(A_uw, b_uw);
+		A_uw_pivoted_vec = result[0];
+		b_uw_pivoted = result[1];
+
+		int d = 0; //turns the outputted pivoted A vector back into an A matrix
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				A_uw_pivoted[i][j] = A_uw_pivoted_vec[d];
+				d += 1;
+			}
+		}
+
+		//A_uw_pivoted_inv = inverse(A_uw_pivoted);
+		//incrementvect = dot(A_uw_pivoted_inv, b_uw_pivoted);
+		incrementvect = forwardSubstitution(A_uw_pivoted, b_uw_pivoted);
+
+		for (int i = 0; i < M; i++) // iterates over each row of the GN matrix equation
+		{
+			params_new[i] = params_old[i] - multiplier * incrementvect[i];
+		}
+
+		std::vector <double> w_temp;
+
+		oldChiSq = chiSquared((*f), y, x, params_old, w_temp, 0);
+		newChiSq = chiSquared((*f), y, x, params_new, w_temp, 0);
+
+
+
+		int samecheck = 0;
+		for (int j = 0; j < M; j++) {
+			if (params_old[j] != guess[j]) {
+				samecheck += 1;
+			}
+		}
+
+		if ((newChiSq != newChiSq) && (samecheck == 0)) //if the iteration messes up due to singular matrices (this is only true if newChiSq is NAN
+		{
+			std::vector <double> badvec;
+
+			return badvec; //returns an empty vector if this worst-case is true
+		}
+
+		else if ((newChiSq != newChiSq) && (samecheck >= 0)) // due to the data, one or more of the parameters runs off to "infinity"
+		{
+			params_old.push_back(0.0); //add an extra element to params_old to signify that this happened
+
+			return params_old; //returns an empty vector if this worst-case is true
+		}
+
+		if (std::abs(newChiSq - oldChiSq) <= tolerance) {
+
+			int sametcheck = 0;
+			for (int j = 0; j < M; j++) {
+				if (std::abs(params_new[j] - guess[j]) <= tolerance) {
+					sametcheck += 1;
+				}
+			}
+			if (sametcheck == M) { //another bad case
+				params_old.push_back(0.0);
+				params_old.push_back(0.0);
+				return params_old;
+			}
+			return params_new;
+		}
+
+		if (newChiSq <= oldChiSq) //good case
+		{
+			params_old = params_new; // applies increment vector
+		}
+		else if (newChiSq > oldChiSq && (std::abs(newChiSq - oldChiSq) > tolerance)) //bad case
+		{
+			multiplier *= 0.5;
+		}
+		//std::cout << params_old[0] << "  " << params_old[1] << std::endl;
+	}
+	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
+
+	//return params_new;
+
+};
+//WEIGHTED, without error bars:
+std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
+{
+	int Nr = y.size();
+	int M = parsvector.size();
+	bool tolcheck = true;
+	std::vector <double> params_old = guess;
+	std::vector <double> params_new(M, 0.0); //placeholder
+	std::vector < std::vector <double> > J, A_w, result, A_w_pivoted_inv;
+	std::vector <double> res, b_w, b_w_pivoted, A_w_pivoted_vec, incrementvect;
+	std::vector <double> A_w_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > A_w_pivoted(M, A_w_pivoted_inner);
+	double newChiSq, oldChiSq;
+	double multiplier = 1.0;
+	int checkcount;
+	int itercount = 0;
+
+	// creating weight matrix W:
+	std::vector <double> innerW(Nr, 0.0);
+	std::vector <std::vector <double> > W(Nr, innerW);
+	for (int k = 0; k < Nr; k++) {
+		W[k][k] = w[k];
+	}
+	while (tolcheck) {
+		checkcount = 0;
+		J = jacobian(parsvector, x, params_old);
+		res = residuals((*f), y, x, params_old);
+
+		A_w = dot(transpose(J), dot(W, J));
+		b_w = dot(transpose(J), dot(W, res));
+		result = pivotSystem(A_w, b_w);
+		A_w_pivoted_vec = result[0];
+		b_w_pivoted = result[1];
+
+		int d = 0; //turns the outputted pivoted A vector back into an A matrix
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				A_w_pivoted[i][j] = A_w_pivoted_vec[d];
+				d += 1;
+			}
+		}
+
+		//A_w_pivoted_inv = inverse(A_w_pivoted);
+		//incrementvect = dot(A_w_pivoted_inv, b_w_pivoted);
+		incrementvect = forwardSubstitution(A_w_pivoted, b_w_pivoted);
+
+		for (int i = 0; i < M; i++) // iterates over each row of the GN matrix equation
+		{
+			params_new[i] = params_old[i] - multiplier * incrementvect[i];
+		}
+
+		oldChiSq = chiSquared((*f), y, x, params_old, w, 1);
+		newChiSq = chiSquared((*f), y, x, params_new, w, 1);
+
+		int samecheck = 0;
+		for (int j = 0; j < M; j++) {
+			if (params_old[j] != guess[j]) {
+				samecheck += 1;
+			}
+		}
+
+		if ((newChiSq != newChiSq) && (samecheck == 0)) //if the iteration messes up due to singular matrices (this is only true if newChiSq is NAN
+		{
+			std::vector <double> badvec;
+
+			return badvec; //returns an empty vector if this worst-case is true
+		}
+
+		else if ((newChiSq != newChiSq) && (samecheck >= 0)) // due to the data, one or more of the parameters runs off to "infinity"
+		{
+			params_old.push_back(0.0); //add an extra element to params_old to signify that this happened
+
+			return params_old; //returns an empty vector if this worst-case is true
+		}
+
+		if (std::abs(newChiSq - oldChiSq) <= tolerance) {
+
+			int sametcheck = 0;
+			for (int j = 0; j < M; j++) {
+				if (std::abs(params_new[j] - guess[j]) <= tolerance) {
+					sametcheck += 1;
+				}
+			}
+			if (sametcheck == M) { //another bad case
+				params_old.push_back(0.0);
+				params_old.push_back(0.0);
+				return params_old;
+			}
+			return params_new;
+		}
+
+		if (newChiSq <= oldChiSq) //good case
+		{
+			params_old = params_new; // applies increment vector
+		}
+		else if (newChiSq > oldChiSq && (std::abs(newChiSq - oldChiSq) > tolerance)) //bad case
+		{
+			multiplier *= 0.5;
+		}
+		//std::cout << params_old[0] << "  " << params_old[1] << std::endl;
+	}
+	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
+
+	//return params_new;
+
+};
+
+std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
+{
+	int Nr = y.size();
+	int M = parsvector.size();
+	bool tolcheck = true;
+	std::vector <double> params_old = guess;
+	std::vector <double> params_new(M, 0.0); //placeholder
+	std::vector < std::vector <double> > J, A_w, result, A_w_pivoted_inv;
+	std::vector <double> res, b_w, b_w_pivoted, A_w_pivoted_vec, incrementvect;
+	std::vector <double> A_w_pivoted_inner(M, 0.0);
+	std::vector < std::vector <double> > A_w_pivoted(M, A_w_pivoted_inner);
+	double newChiSq, oldChiSq;
+	double multiplier = 1.0;
+	int checkcount;
+	int itercount = 0;
+
+	// creating weight matrix W:
+	std::vector <double> innerW(Nr, 0.0);
+	std::vector <std::vector <double> > W(Nr, innerW);
+	for (int k = 0; k < Nr; k++) {
+		W[k][k] = w[k];
+	}
+	while (tolcheck) {
+		checkcount = 0;
+		J = jacobian(parsvector, x, params_old);
+		res = residuals((*f), y, x, params_old);
+
+		A_w = dot(transpose(J), dot(W, J));
+		b_w = dot(transpose(J), dot(W, res));
+		result = pivotSystem(A_w, b_w);
+		A_w_pivoted_vec = result[0];
+		b_w_pivoted = result[1];
+
+		int d = 0; //turns the outputted pivoted A vector back into an A matrix
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				A_w_pivoted[i][j] = A_w_pivoted_vec[d];
+				d += 1;
+			}
+		}
+
+		//A_w_pivoted_inv = inverse(A_w_pivoted);
+		//incrementvect = dot(A_w_pivoted_inv, b_w_pivoted);
+		incrementvect = forwardSubstitution(A_w_pivoted, b_w_pivoted);
+
+		for (int i = 0; i < M; i++) // iterates over each row of the GN matrix equation
+		{
+			params_new[i] = params_old[i] - multiplier * incrementvect[i];
+		}
+
+		oldChiSq = chiSquared((*f), y, x, params_old, w, 1);
+		newChiSq = chiSquared((*f), y, x, params_new, w, 1);
+
+		int samecheck = 0;
+		for (int j = 0; j < M; j++) {
+			if (params_old[j] != guess[j]) {
+				samecheck += 1;
+			}
+		}
+
+		if ((newChiSq != newChiSq) && (samecheck == 0)) //if the iteration messes up due to singular matrices (this is only true if newChiSq is NAN
+		{
+			std::vector <double> badvec;
+
+			return badvec; //returns an empty vector if this worst-case is true
+		}
+
+		else if ((newChiSq != newChiSq) && (samecheck >= 0)) // due to the data, one or more of the parameters runs off to "infinity"
+		{
+			params_old.push_back(0.0); //add an extra element to params_old to signify that this happened
+
+			return params_old; //returns an empty vector if this worst-case is true
+		}
+
+		if (std::abs(newChiSq - oldChiSq) <= tolerance) {
+
+			int sametcheck = 0;
+			for (int j = 0; j < M; j++) {
+				if (std::abs(params_new[j] - guess[j]) <= tolerance) {
+					sametcheck += 1;
+				}
+			}
+			if (sametcheck == M) { //another bad case
+				params_old.push_back(0.0);
+				params_old.push_back(0.0);
+				return params_old;
+			}
+			return params_new;
+		}
+
+		if (newChiSq <= oldChiSq) //good case
+		{
+			params_old = params_new; // applies increment vector
+		}
+		else if (newChiSq > oldChiSq && (std::abs(newChiSq - oldChiSq) > tolerance)) //bad case
+		{
+			multiplier *= 0.5;
+		}
+
+		//itercount += 1;
+		//std::cout << params_old[0] << "  " << params_old[1] << std::endl;
+	}
+	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
+
+	//return params_new;
+
+};
+
+
 
 
 //for generalized mean part of code, modifications removed:

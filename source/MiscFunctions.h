@@ -41,6 +41,11 @@ double chiSquared(double (*f)(double, std::vector <double>), std::vector <double
 
 double chiSquared(double (*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> sigma_y); // multi-dimensional independent variables case
 
+double chiSquared(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> w, int K); // computes the chi-squared value. takes the function y=... as an argument (via pointer) 
+
+double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> w, int K); // multi-dimensional independent variables case
+
+
 std::vector <double> residuals(double (*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params); // computes the residuals vector needed in the GN algorithm
 
 std::vector <double> residuals(double (*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params); // multi-dimensional independent variables case
@@ -58,6 +63,15 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y); //>1D case
 
+//w, no sy, ND
+std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> w, double wbar); //1D case
+//w, no sy, ND
+std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> w, double wbar); // >1D case
+
+																																																							   // no w or sy
+std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params); //1D case
+// no w or sy, ND
+std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params); //>1D case
 //GAUSS-NEWTON ALGORITHMS
 
 //MODIFIED
@@ -69,6 +83,16 @@ std::vector <double> modifiedGN(double (*f)(std::vector <double>, std::vector <d
 std::vector <double> modifiedGN(double (*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w); //the case of 1 independent (x) variables in the function
 
 std::vector <double> modifiedGN(double (*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w); //the case of >1 independent (x) variables in the function
+
+//NON-WEIGHTED, without error bars:
+std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance); //the case of 1 independent (x) variables in the function
+
+std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance); //the case of >1 independent (x) variables in the function
+
+//WEIGHTED, without error bars:
+std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w); //the case of 1 independent (x) variables in the function
+
+std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w); //the case of >1 independent (x) variables in the function
 
 
 //REGULAR GAUSS NEWTON 
