@@ -111,3 +111,8 @@ double factorial(double n);
 double fRand(double fMin, double fMax);
 
 double gaussian(double x, double mu, double sig);
+
+double getAvg(std::vector<double> x);
+double getAvg(std::vector<double> x, std::vector <double> w);
+double getLnX_Bar(std::vector <double> x);
+double getLnX_Bar(std::vector <double> x, std::vector <double> w);

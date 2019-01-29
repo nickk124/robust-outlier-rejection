@@ -1,5 +1,6 @@
 #pragma once
 #include "MiscFunctions.h"
+#include <cfloat>
 
 enum priorTypes {CUSTOM, GAUSSIAN, CONSTRAINED, MIXED};
 

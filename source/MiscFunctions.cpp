@@ -1663,7 +1663,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 		for (int i = 0; i < M; i++) // checks for NaNs/ blowing up params
 		{
-			if ((params_new[i] != params_new[i]) || isinf(params_new[i])) {
+			if ((params_new[i] != params_new[i]) || std::isinf(params_new[i])) {
 				params_old.push_back(0.0);
 				return params_old;
 			}
@@ -1734,7 +1734,7 @@ std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <dou
 
 		for (int i = 0; i < M; i++) // checks for NaNs/ blowing up params
 		{
-			if ((params_new[i] != params_new[i]) || isinf(params_new[i])) {
+			if ((params_new[i] != params_new[i]) || std::isinf(params_new[i])) {
 				params_old.push_back(0.0);
 				return params_old;
 			}
@@ -1812,7 +1812,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 		for (int i = 0; i < M; i++) // checks for NaNs/ blowing up params
 		{
-			if ((params_new[i] != params_new[i]) || isinf(params_new[i])) {
+			if ((params_new[i] != params_new[i]) || std::isinf(params_new[i])) {
 				params_old.push_back(0.0);
 				return params_old;
 			}
@@ -1890,7 +1890,7 @@ std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <dou
 
 		for (int i = 0; i < M; i++) // checks for NaNs/ blowing up params
 		{
-			if ((params_new[i] != params_new[i]) || isinf(params_new[i])) {
+			if ((params_new[i] != params_new[i]) || std::isinf(params_new[i])) {
 				params_old.push_back(0.0);
 				return params_old;
 			}
@@ -1936,4 +1936,49 @@ double pi = 3.1415926535897932384626434;
 
 double gaussian(double x, double mu, double sig) {
 	return (std::exp((-0.5) * (std::pow((x - mu), 2.0) / (2.0 * std::pow(sig, 2.0)))) / std::sqrt(2.0*pi*std::pow(sig, 2.0)));
+}
+
+double getAvg(std::vector<double> x) {
+	double uppersum = 0.0;
+	for (int i = 0; i < x.size(); i++) {
+		uppersum += x[i];
+	}
+
+	return (uppersum / x.size());
+}
+
+double getAvg(std::vector<double> x, std::vector <double> w) {
+	double uppersum = 0.0;
+	double lowersum = 0.0;
+
+	for (int i = 0; i < x.size(); i++) {
+		uppersum += (x[i] * w[i]);
+		lowersum += w[i];
+	}
+
+	return (uppersum / lowersum);
+}
+
+double getLnX_Bar(std::vector <double> x) {
+
+	double uppersum = 0.0;
+
+	for (int i = 0; i < x.size(); i++) {
+		uppersum += std::log(x[i]);
+	}
+
+	return (uppersum / x.size());
+}
+
+double getLnX_Bar(std::vector <double> x, std::vector <double> w) {
+
+	double uppersum = 0.0;
+	double lowersum = 0.0;
+
+	for (int i = 0; i < x.size(); i++) {
+		uppersum += (std::log(x[i]) * w[i]);
+		lowersum += w[i];
+	}
+
+	return (uppersum / lowersum);
 }

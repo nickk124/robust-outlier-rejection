@@ -2,7 +2,8 @@
 #include <vector>
 #include "FunctionalForm.h"
 #include "NonParametric.h"
-#include "Demo.h"
+//#include "Demo.h"
+//#include "RCRwebutils.h"
 #include <cmath>
 
 const double PI = 3.1415926535897932384626434;
