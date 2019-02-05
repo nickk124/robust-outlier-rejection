@@ -24,8 +24,11 @@ plot.line('x_original', 'y_fitted', source=sourceall, color="green", line_width=
 #plot.circle('x', 'y', source=source, line_width=3, line_alpha=0.6) #plotting by name
 
 #defines the callback to be used:
-callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceall=sourceall), code="""
+callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceall=sourceall, p=plot), code="""
     console.log('Plot Generating...');
+
+    p.reset.emit();
+
     var datanon = sourcenon.data;
     var datarej = sourcerej.data;
     var dataall = sourceall.data;
@@ -57,6 +60,8 @@ callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceal
     console.log(dataall['x_original']);
     console.log(dataall['y_fitted']);
 
+    p.change.emit()
+
     sourcenon.change.emit();
     sourcerej.change.emit();
     sourceall.change.emit();
@@ -68,9 +73,9 @@ callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceal
 plot.xaxis.axis_label = 'x'
 plot.yaxis.axis_label = 'y'
 
-button = Button(label = "Plot Results", button_type = "success")
+button = Button(label = "Plot Results", button_type = "primary")
 button.js_on_click(callback)
 layout = column(button, plot)
 
-show(layout)
+#show(layout)
 save(layout)

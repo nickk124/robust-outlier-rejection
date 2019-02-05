@@ -29,14 +29,13 @@ right = []
 src = ColumnDataSource(data=dict(arr_hist = arr_hist, left = left, right = right))
 
 p = Figure(plot_height = 400, plot_width = 600,
-                    title = 'Histogram of Inputted Data',
-                    x_axis_label = 'y (data)',
-                    y_axis_label = 'number of datapoints')
+                    x_axis_label = 'measured value',
+                    y_axis_label = 'weighted number of measurements')
 
 p.quad(source = src, bottom = 0, top = 'arr_hist', left = 'left', right = 'right', fill_color = 'cornflowerblue', line_color = 'black')
 
 #defines the callback to be used:
-callback_plot = CustomJS(args=dict(src=src, p=p), code="""
+callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
     testCallBegin();
 
     testLog('Initial Plot');
@@ -54,17 +53,43 @@ callback_plot = CustomJS(args=dict(src=src, p=p), code="""
 
     var data = src.data;
 
-    var arr_hist = data['arr_hist'];
-    var left = data['left'];
-    var right = data['right'];
+    var arr_hist = [];
+    var left = [];
+    var right = [];
 
-    for (var i = 0; i < arr_hist_result.length; i++){
+    arr_hist = data['arr_hist'];
+    left = data['left'];
+    right = data['right'];
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
+
+    for (var i = 0; i < bincount; i++){
         arr_hist[i] = arr_hist_result[i];
         left[i] = left_result[i];
         right[i] = right_result[i];
     }
 
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
+
+    arr_hist = arr_hist.slice(0,bincount);
+    left = left.slice(0,bincount);
+    right = right.slice(0,bincount);
+
+    data['arr_hist']; arr_hist = arr_hist;
+    data['left'] = left;
+    data['right'] = right;
+
+    axis.axis_label = "measured value";
+
     src.change.emit();
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
 
     //testLog([arr_hist.length, left.length, right.length]);
 
@@ -121,17 +146,33 @@ callback_addbins = CustomJS(args=dict(src=src, p=p), code="""
 
     var data = src.data;
 
-    var arr_hist = data['arr_hist'];
-    var left = data['left'];
-    var right = data['right'];
+    var arr_hist = [];
+    var left = [];
+    var right = [];
 
-    for (var i = 0; i < arr_hist_result.length; i++){
+    arr_hist = data['arr_hist'];
+    left = data['left'];
+    right = data['right'];
+
+    for (var i = 0; i < bincount; i++){
         arr_hist[i] = arr_hist_result[i];
         left[i] = left_result[i];
         right[i] = right_result[i];
     }
 
+    arr_hist = arr_hist.slice(0,bincount);
+    left = left.slice(0,bincount);
+    right = right.slice(0,bincount);
+
+    data['arr_hist']; arr_hist = arr_hist;
+    data['left'] = left;
+    data['right'] = right;
+
     src.change.emit();
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
 
     //testLog([arr_hist.length, left.length, right.length]);
 
@@ -162,11 +203,15 @@ callback_subtractbins = CustomJS(args=dict(src=src, p=p), code="""
 
     var data = src.data;
 
-    var arr_hist = data['arr_hist'];
-    var left = data['left'];
-    var right = data['right'];
+    var arr_hist = [];
+    var left = [];
+    var right = [];
 
-    for (var i = 0; i < arr_hist_result.length; i++){
+    arr_hist = data['arr_hist'];
+    left = data['left'];
+    right = data['right'];
+
+    for (var i = 0; i < bincount; i++){
         arr_hist[i] = arr_hist_result[i];
         left[i] = left_result[i];
         right[i] = right_result[i];
@@ -176,8 +221,19 @@ callback_subtractbins = CustomJS(args=dict(src=src, p=p), code="""
     left.pop();
     right.pop();
 
+    arr_hist = arr_hist.slice(0,bincount);
+    left = left.slice(0,bincount);
+    right = right.slice(0,bincount);
+
+    data['arr_hist']; arr_hist = arr_hist;
+    data['left'] = left;
+    data['right'] = right;
 
     src.change.emit();
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
 
     //testLog([arr_hist.length, left.length, right.length]);
 
@@ -202,21 +258,37 @@ callback_linear = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
 
     var data = src.data;
 
-    var arr_hist = data['arr_hist'];
-    var left = data['left'];
-    var right = data['right'];
+    var arr_hist = [];
+    var left = [];
+    var right = [];
 
-    for (var i = 0; i < arr_hist_result.length; i++){
+    arr_hist = data['arr_hist'];
+    left = data['left'];
+    right = data['right'];
+
+    for (var i = 0; i < bincount; i++){
         arr_hist[i] = arr_hist_result[i];
         left[i] = left_result[i];
         right[i] = right_result[i];
     }
 
-    axis.axis_label = "y (data)";
+    axis.axis_label = "measured value";
 
     p.change.emit()
 
+    arr_hist = arr_hist.slice(0,bincount);
+    left = left.slice(0,bincount);
+    right = right.slice(0,bincount);
+
+    data['arr_hist']; arr_hist = arr_hist;
+    data['left'] = left;
+    data['right'] = right;
+
     src.change.emit();
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
 
     //testLog([arr_hist.length, left.length, right.length]);
 
@@ -243,21 +315,37 @@ callback_log = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
 
     var data = src.data;
 
-    var arr_hist = data['arr_hist'];
-    var left = data['left'];
-    var right = data['right'];
+    var arr_hist = [];
+    var left = [];
+    var right = [];
 
-    for (var i = 0; i < arr_hist_result.length; i++){
+    arr_hist = data['arr_hist'];
+    left = data['left'];
+    right = data['right'];
+
+    for (var i = 0; i < bincount; i++){
         arr_hist[i] = arr_hist_result[i];
         left[i] = left_result[i];
         right[i] = right_result[i];
     }
 
-    axis.axis_label = "log(y) (base 10)";
+    axis.axis_label = "log(measured value) (base 10)";
 
     p.change.emit();
 
+    arr_hist = arr_hist.slice(0,bincount);
+    left = left.slice(0,bincount);
+    right = right.slice(0,bincount);
+
+    data['arr_hist']; arr_hist = arr_hist;
+    data['left'] = left;
+    data['right'] = right;
+
     src.change.emit();
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
 
     //testLog([arr_hist.length, left.length, right.length]);
 
@@ -284,21 +372,37 @@ callback_exp = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0]), code="""
 
     var data = src.data;
 
-    var arr_hist = data['arr_hist'];
-    var left = data['left'];
-    var right = data['right'];
+    var arr_hist = [];
+    var left = [];
+    var right = [];
 
-    for (var i = 0; i < arr_hist_result.length; i++){
+    arr_hist = data['arr_hist'];
+    left = data['left'];
+    right = data['right'];
+
+    for (var i = 0; i < bincount; i++){
         arr_hist[i] = arr_hist_result[i];
         left[i] = left_result[i];
         right[i] = right_result[i];
     }
 
-    axis.axis_label = "10^y";
+    axis.axis_label = "10^(measured value)";
 
     p.change.emit();
 
+    arr_hist = arr_hist.slice(0,bincount);
+    left = left.slice(0,bincount);
+    right = right.slice(0,bincount);
+
+    data['arr_hist']; arr_hist = arr_hist;
+    data['left'] = left;
+    data['right'] = right;
+
     src.change.emit();
+
+    testLog(arr_hist);
+    testLog(left);
+    testLog(right);
 
     //testLog([arr_hist.length, left.length, right.length]);
 
