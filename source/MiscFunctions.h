@@ -112,7 +112,10 @@ double fRand(double fMin, double fMax);
 
 double gaussian(double x, double mu, double sig);
 
-double getAvg(std::vector<double> x);
-double getAvg(std::vector<double> x, std::vector <double> w);
-double getLogX_Bar(std::vector <double> x);
-double getLogX_Bar(std::vector <double> x, std::vector <double> w);
+double getAvg(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params);
+
+double getAvg_Exp(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params);
+
+double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params);
+
+double getLogXBar_Log(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params);

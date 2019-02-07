@@ -1938,16 +1938,7 @@ double gaussian(double x, double mu, double sig) {
 	return (std::exp((-0.5) * (std::pow((x - mu), 2.0) / (2.0 * std::pow(sig, 2.0)))) / std::sqrt(2.0*pi*std::pow(sig, 2.0)));
 }
 
-double getAvg(std::vector<double> x) {
-	double uppersum = 0.0;
-	for (int i = 0; i < x.size(); i++) {
-		uppersum += x[i];
-	}
-
-	return (uppersum / x.size());
-}
-
-double getAvg(std::vector<double> x, std::vector <double> w) {
+double getAvg(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
 
@@ -1959,25 +1950,43 @@ double getAvg(std::vector<double> x, std::vector <double> w) {
 	return (uppersum / lowersum);
 }
 
-double getLogX_Bar(std::vector <double> x) {
-
-	double uppersum = 0.0;
-
-	for (int i = 0; i < x.size(); i++) {
-		uppersum += std::log10(x[i]);
-	}
-
-	return (uppersum / x.size());
-}
-
-double getLogX_Bar(std::vector <double> x, std::vector <double> w) {
-
+double getAvg_Exp(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
+	double y_i;
 
 	for (int i = 0; i < x.size(); i++) {
-		uppersum += (std::log10(x[i]) * w[i]);
-		lowersum += w[i];
+		double y_i = f(x[i], params);
+		uppersum += w[i]*x[i]*std::pow(y_i, 2.0);
+		lowersum += w[i]*std::pow(10.0, -2.0*y_i);
+	}
+
+	return (uppersum / lowersum);
+}
+
+double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
+	double uppersum = 0.0;
+	double lowersum = 0.0;
+	double y_i;
+
+	for (int i = 0; i < x.size(); i++) {
+		double y_i = f(x[i], params);
+		uppersum += w[i] * std::log10(x[i]) * std::pow(y_i, 2.0);
+		lowersum += w[i] * std::pow(10.0, -2.0*y_i);
+	}
+
+	return (uppersum / lowersum);
+}
+
+double getLogXBar_Log(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
+	double uppersum = 0.0;
+	double lowersum = 0.0;
+	double y_i;
+
+	for (int i = 0; i < x.size(); i++) {
+		double y_i = f(x[i], params);
+		uppersum += w[i] * std::log10(x[i]) * std::pow(10.0, -2.0*y_i);
+		lowersum += w[i] * std::pow(10.0, -2.0*y_i);
 	}
 
 	return (uppersum / lowersum);
