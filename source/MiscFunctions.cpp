@@ -1959,24 +1959,24 @@ double getAvg(std::vector<double> x, std::vector <double> w) {
 	return (uppersum / lowersum);
 }
 
-double getLnX_Bar(std::vector <double> x) {
+double getLogX_Bar(std::vector <double> x) {
 
 	double uppersum = 0.0;
 
 	for (int i = 0; i < x.size(); i++) {
-		uppersum += std::log(x[i]);
+		uppersum += std::log10(x[i]);
 	}
 
 	return (uppersum / x.size());
 }
 
-double getLnX_Bar(std::vector <double> x, std::vector <double> w) {
+double getLogX_Bar(std::vector <double> x, std::vector <double> w) {
 
 	double uppersum = 0.0;
 	double lowersum = 0.0;
 
 	for (int i = 0; i < x.size(); i++) {
-		uppersum += (std::log(x[i]) * w[i]);
+		uppersum += (std::log10(x[i]) * w[i]);
 		lowersum += w[i];
 	}
 
