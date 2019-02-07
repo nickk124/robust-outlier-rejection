@@ -8,8 +8,8 @@ std::vector <double(*)(double, std::vector <double>)> partialsvector_powerlaw = 
 std::vector <double(*)(double, std::vector <double>)> partialsvector_exponential = { partial1_exponential, partial2_exponential };
 std::vector <double(*)(double, std::vector <double>)> partialsvector_logarithmic = { partial1_logarithmic };
 
-double xBar;
-double logx_Bar;
+//double xBar;
+//double logx_Bar;
 
 // EXAMPLE FUNCTIONS (with corresponding partials and vectors of said partials)
 
@@ -17,7 +17,7 @@ double function_linear(double x, std::vector <double> params) {
 	double a0 = params[0];
 	double a1 = params[1];
 
-	return a0 + a1 * (x - xBar);
+	return a0 + a1 * (x - bar);
 }
 
 
@@ -28,7 +28,7 @@ double partial1_linear(double x, std::vector <double> params) {
 
 double partial2_linear(double x, std::vector <double> params) {
 
-	return x - xBar;
+	return x - bar;
 }
 
 //std::vector <double(*)(double, std::vector <double>)> partialsvector_linear = { partial1_linear, partial2_linear };
@@ -40,7 +40,7 @@ double function_quadratic(double x, std::vector <double> params) {
 	double a1 = params[1];
 	double a2 = params[2];
 
-	return a0 + a1 * (x - xBar) + a2 * std::pow((x - xBar), 2.0);
+	return a0 + a1 * (x - bar) + a2 * std::pow((x - bar), 2.0);
 }
 
 double partial1_quadratic(double x, std::vector <double> params) {
@@ -50,12 +50,12 @@ double partial1_quadratic(double x, std::vector <double> params) {
 
 double partial2_quadratic(double x, std::vector <double> params) {
 
-	return x - xBar;
+	return x - bar;
 }
 
 double partial3_quadratic(double x, std::vector <double> params) {
 
-	return std::pow((x - xBar), 2.0);
+	return std::pow((x - bar), 2.0);
 }
 
 //std::vector <double(*)(double, std::vector <double>)> partialsvector_quadratic = { partial1_quadratic, partial2_quadratic, partial3_quadratic };
@@ -69,7 +69,7 @@ double function_cubic(double x, std::vector <double> params) {
 	double a2 = params[2];
 	double a3 = params[3];
 
-	return a0 + a1 * (x - xBar) + a2 * std::pow((x - xBar), 2.0) + a3 * std::pow((x - xBar), 3.0);
+	return a0 + a1 * (x - bar) + a2 * std::pow((x - bar), 2.0) + a3 * std::pow((x - bar), 3.0);
 }
 
 double partial1_cubic(double x, std::vector <double> params) {
@@ -79,17 +79,17 @@ double partial1_cubic(double x, std::vector <double> params) {
 
 double partial2_cubic(double x, std::vector <double> params) {
 
-	return x - xBar;
+	return x - bar;
 }
 
 double partial3_cubic(double x, std::vector <double> params) {
 
-	return std::pow((x - xBar), 2.0);
+	return std::pow((x - bar), 2.0);
 }
 
 double partial4_cubic(double x, std::vector <double> params) {
 
-	return std::pow((x - xBar), 3.0);
+	return std::pow((x - bar), 3.0);
 }
 
 //std::vector <double(*)(double, std::vector <double>)> partialsvector_cubic= { partial1_cubic, partial2_cubic, partial3_cubic, partial4_cubic };
@@ -101,20 +101,20 @@ double function_powerlaw(double x, std::vector <double> params) {
 	double a0 = params[0];
 	double a1 = params[1];
 
-	return a0 * std::pow((x / std::pow(10, logx_Bar)), a1);
+	return a0 * std::pow((x / std::pow(10, bar)), a1);
 }
 
 double partial1_powerlaw(double x, std::vector <double> params) {
 	double a1 = params[1];
 
-	return std::pow((x / std::pow(10, logx_Bar)), a1);
+	return std::pow((x / std::pow(10, bar)), a1);
 }
 
 double partial2_powerlaw(double x, std::vector <double> params) {
 	double a0 = params[0];
 	double a1 = params[1];
 
-	return a0 * std::pow((x / std::pow(10, logx_Bar)), a1) * std::log(x / std::pow(10, logx_Bar));
+	return a0 * std::pow((x / std::pow(10, bar)), a1) * std::log(x / std::pow(10, bar));
 }
 
 //std::vector <double(*)(double, std::vector <double>)> partialsvector_powerlaw = { partial1_powerlaw, partial2_powerlaw};
@@ -125,20 +125,20 @@ double function_exponential(double x, std::vector <double> params) {
 	double a0 = params[0];
 	double a1 = params[1];
 
-	return a0 * std::pow(10, a1*(x - xBar));
+	return a0 * std::pow(10, a1*(x - bar));
 }
 
 double partial1_exponential(double x, std::vector <double> params) {
 	double a1 = params[1];
 
-	return std::pow(10, a1*(x - xBar));
+	return std::pow(10, a1*(x - bar));
 }
 
 double partial2_exponential(double x, std::vector <double> params) {
 	double a0 = params[0];
 	double a1 = params[1];
 
-	return std::pow(10, a1*(x - xBar)) * (x - xBar) * std::log(10);
+	return std::pow(10, a1*(x - bar)) * (x - bar) * std::log(10);
 }
 
 //std::vector <double(*)(double, std::vector <double>)> partialsvector_exponential = { partial1_exponential, partial2_exponential };
@@ -148,13 +148,13 @@ double partial2_exponential(double x, std::vector <double> params) {
 double function_logarithmic(double x, std::vector <double> params) {
 	double a0 = params[0];
 
-	return a0 * std::log10(x - xBar);
+	return a0 * std::log10(x - bar);
 }
 
 double partial1_logarithmic(double x, std::vector <double> params) {
 	double a0 = params[0];
 
-	return std::log10(x - xBar);
+	return std::log10(x - bar);
 }
 
 Priors getPriors(int priorsCheck, std::vector <double> priorsParams, std::vector <int> hasPriorsVec, std::vector <double> guess) {
@@ -280,10 +280,10 @@ std::vector <double> requestHandlerUnWeighted(std::vector <double> x, std::vecto
 
 	// gets the xBar needed (or logx_bar):
 	if (fType == 4) { // power law case
-		logx_Bar = getLogX_Bar(x);
+		//logx_Bar = getLogX_Bar(x);
 	}
 	else { // otherwise
-		xBar = getAvg(x);
+		//xBar = getAvg(x);
 	}
 
 	if (fType == 1) { // linear
@@ -527,10 +527,10 @@ std::vector <double> requestHandlerWeighted(std::vector <double> x, std::vector 
 
   //gets xBar / logX_Bar
 	if (fType == 4) { // power law case
-		logx_Bar = getLogX_Bar(x, w);
+		//logx_Bar = getLogX_Bar(x, w);
 	}
 	else { // otherwise
-		xBar = getAvg(x, w);
+		//xBar = getAvg(x, w);
 	}
 
 	if (fType == 1) { // linear

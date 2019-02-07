@@ -3,8 +3,8 @@
 #include <vector>
 #include "RCR.h"
 
-extern double xBar;
-extern double lnx_Bar;
+//extern double xBar;
+//extern double logx_Bar;
 
 double function_linear(double x, std::vector <double> params);
 
