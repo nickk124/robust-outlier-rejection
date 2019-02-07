@@ -2,17 +2,9 @@
 
 #include <vector>
 #include <cmath>
+#include "RCR.h"
 
 // EXAMPLE FUNCTIONS (with corresponding partials and vectors of said partials)
-/*
-class Example {
-public:
-	double bar;
-
-	Example(double bar);
-	Example();
-};
-*/
 // LINEAR
 
 double function_linear(double x, std::vector <double> params);
@@ -83,3 +75,11 @@ double function_logarithmic(double x, std::vector <double> params);
 
 
 double partial1_logarithmic(double x, std::vector <double> params);
+
+
+extern std::vector <double(*)(double, std::vector <double>)> partialsvector_linear;
+extern std::vector <double(*)(double, std::vector <double>)> partialsvector_quadratic;
+extern std::vector <double(*)(double, std::vector <double>)> partialsvector_cubic;
+extern std::vector <double(*)(double, std::vector <double>)> partialsvector_powerlaw;
+extern std::vector <double(*)(double, std::vector <double>)> partialsvector_exponential;
+extern std::vector <double(*)(double, std::vector <double>)> partialsvector_logarithmic;
