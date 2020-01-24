@@ -1,0 +1,85 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    
+      <meta charset="utf-8">
+      <title>Bokeh Plot</title>
+      
+      
+        
+          
+        
+        
+          
+        <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.3.4.min.js"></script>
+        <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.3.4.min.js"></script>
+        <script type="text/javascript">
+            Bokeh.set_log_level("info");
+        </script>
+        
+      
+      
+    
+  </head>
+  
+  
+  <body>
+    
+      
+        
+          
+          
+            
+              <div class="bk-root" id="a096a026-da4a-4623-af6f-937d3a79c25b" data-root-id="1059"></div>
+            
+          
+        
+      
+      
+        <script type="application/json" id="1141">
+          {"021484fd-10e3-42da-91a2-efe57801d4af":{"roots":{"references":[{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1045","type":"CustomJS"},{"id":"1039","type":"CustomJS"}]},"label":"Logarithmic y Basis"},"id":"1051","type":"Button"},{"attributes":{},"id":"1067","type":"Selection"},{"attributes":{"overlay":{"id":"1068","type":"BoxAnnotation"}},"id":"1023","type":"BoxZoomTool"},{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1043","type":"CustomJS"},{"id":"1039","type":"CustomJS"}]},"label":"Exponential y Basis"},"id":"1052","type":"Button"},{"attributes":{},"id":"1024","type":"SaveTool"},{"attributes":{"args":{"p":{"id":"1002","subtype":"Figure","type":"Plot"},"src":{"id":"1001","type":"ColumnDataSource"},"xaxis":{"id":"1011","type":"LinearAxis"},"yaxis":{"id":"1016","type":"LinearAxis"}},"code":"\n    p.reset.emit();\n\n    var input_data = getData(); //getData also transforms\n    var x_data = input_data[0];\n    var y_data = input_data[1];\n\n    var data = src.data;\n\n    var x = [];\n    var y = [];\n\n    x = data['x'];\n    y = data['y'];\n\n    if (x_data.length != y_data.length){\n        testLog('Alert: inputted data must be same size');\n    }\n\n    for (var i = 0; i &lt; y_data.length; i++){\n        x[i] = x_data[i];\n        y[i] = y_data[i];\n    }\n\n    x = x.slice(0,y_data.length);\n    y = y.slice(0,y_data.length);\n\n    data['x'] = x;\n    data['y'] = y;\n\n    //xaxis.axis_label = xaxislabel;\n    //yaxis.axis_label = yaxislabel;\n    xaxislabel = 'x'\n    yaxislabel = 'y'\n\n    p.change.emit();\n    src.change.emit();\n"},"id":"1039","type":"CustomJS"},{"attributes":{"bottom_units":"screen","fill_alpha":{"value":0.5},"fill_color":{"value":"lightgrey"},"left_units":"screen","level":"overlay","line_alpha":{"value":1.0},"line_color":{"value":"black"},"line_dash":[4,4],"line_width":{"value":2},"render_mode":"css","right_units":"screen","top_units":"screen"},"id":"1068","type":"BoxAnnotation"},{"attributes":{"children":[{"id":"1050","type":"Button"},{"id":"1051","type":"Button"},{"id":"1052","type":"Button"}]},"id":"1055","type":"Row"},{"attributes":{"callback":null},"id":"1005","type":"DataRange1d"},{"attributes":{},"id":"1025","type":"ResetTool"},{"attributes":{"dimension":1,"ticker":{"id":"1017","type":"BasicTicker"}},"id":"1020","type":"Grid"},{"attributes":{"fill_alpha":{"value":0.5},"fill_color":{"value":"navy"},"line_alpha":{"value":0.5},"line_color":{"value":"navy"},"size":{"units":"screen","value":5},"x":{"field":"x"},"y":{"field":"y"}},"id":"1035","type":"Circle"},{"attributes":{"children":[{"id":"1046","type":"Button"}]},"id":"1053","type":"WidgetBox"},{"attributes":{"fill_alpha":{"value":0.1},"fill_color":{"value":"#1f77b4"},"line_alpha":{"value":0.1},"line_color":{"value":"#1f77b4"},"size":{"units":"screen","value":5},"x":{"field":"x"},"y":{"field":"y"}},"id":"1036","type":"Circle"},{"attributes":{"children":[{"id":"1047","type":"Button"},{"id":"1048","type":"Button"},{"id":"1049","type":"Button"}]},"id":"1054","type":"Row"},{"attributes":{},"id":"1026","type":"HelpTool"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_multi":null,"active_scroll":"auto","active_tap":"auto","tools":[{"id":"1021","type":"PanTool"},{"id":"1022","type":"WheelZoomTool"},{"id":"1023","type":"BoxZoomTool"},{"id":"1024","type":"SaveTool"},{"id":"1025","type":"ResetTool"},{"id":"1026","type":"HelpTool"}]},"id":"1027","type":"Toolbar"},{"attributes":{"callback":null,"data":{"x":[],"y":[]},"selected":{"id":"1067","type":"Selection"},"selection_policy":{"id":"1066","type":"UnionRenderers"}},"id":"1001","type":"ColumnDataSource"},{"attributes":{"code":"\n    x_basis = \"linear\"\n    xaxislabel = 'x'\n"},"id":"1040","type":"CustomJS"},{"attributes":{"height":70,"text":"\n&lt;br&gt;\n&lt;h1 style=\"font-size:2.5em;\"&gt;Select the Basis of the Dependent Variable&lt;/h1&gt;\n","width":800},"id":"1056","type":"Div"},{"attributes":{},"id":"1007","type":"LinearScale"},{"attributes":{"callback":null},"id":"1003","type":"DataRange1d"},{"attributes":{"below":[{"id":"1011","type":"LinearAxis"}],"center":[{"id":"1015","type":"Grid"},{"id":"1020","type":"Grid"}],"left":[{"id":"1016","type":"LinearAxis"}],"plot_height":400,"renderers":[{"id":"1037","type":"GlyphRenderer"}],"title":{"id":"1061","type":"Title"},"toolbar":{"id":"1027","type":"Toolbar"},"x_range":{"id":"1003","type":"DataRange1d"},"x_scale":{"id":"1007","type":"LinearScale"},"y_range":{"id":"1005","type":"DataRange1d"},"y_scale":{"id":"1009","type":"LinearScale"}},"id":"1002","subtype":"Figure","type":"Plot"},{"attributes":{"children":[{"id":"1002","subtype":"Figure","type":"Plot"},{"id":"1053","type":"WidgetBox"}]},"id":"1057","type":"Row"},{"attributes":{},"id":"1012","type":"BasicTicker"},{"attributes":{"code":"\n    y_basis = \"linear\"\n    yaxislabel = 'y'\n"},"id":"1041","type":"CustomJS"},{"attributes":{"children":[{"id":"1056","type":"Div"},{"id":"1054","type":"Row"},{"id":"1055","type":"Row"}]},"id":"1058","type":"Column"},{"attributes":{},"id":"1022","type":"WheelZoomTool"},{"attributes":{"children":[{"id":"1057","type":"Row"},{"id":"1058","type":"Column"}]},"id":"1059","type":"Column"},{"attributes":{"source":{"id":"1001","type":"ColumnDataSource"}},"id":"1038","type":"CDSView"},{"attributes":{},"id":"1017","type":"BasicTicker"},{"attributes":{"code":"\n    x_basis = \"exp\"\n    xaxislabel = '10^x'\n"},"id":"1042","type":"CustomJS"},{"attributes":{"data_source":{"id":"1001","type":"ColumnDataSource"},"glyph":{"id":"1035","type":"Circle"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"1036","type":"Circle"},"selection_glyph":null,"view":{"id":"1038","type":"CDSView"}},"id":"1037","type":"GlyphRenderer"},{"attributes":{"ticker":{"id":"1012","type":"BasicTicker"}},"id":"1015","type":"Grid"},{"attributes":{"code":"\n    y_basis = \"exp\"\n    yaxislabel = '10^y'\n"},"id":"1043","type":"CustomJS"},{"attributes":{"axis_label":"x","formatter":{"id":"1065","type":"BasicTickFormatter"},"ticker":{"id":"1012","type":"BasicTicker"}},"id":"1011","type":"LinearAxis"},{"attributes":{"code":"\n    x_basis = \"log\"\n    xaxislabel = 'log10(x)'\n"},"id":"1044","type":"CustomJS"},{"attributes":{"axis_label":"y(x)","formatter":{"id":"1063","type":"BasicTickFormatter"},"ticker":{"id":"1017","type":"BasicTicker"}},"id":"1016","type":"LinearAxis"},{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1042","type":"CustomJS"},{"id":"1039","type":"CustomJS"}]},"label":"Exponential x Basis"},"id":"1049","type":"Button"},{"attributes":{"code":"\n    y_basis = \"log\"\n    yaxislabel = 'log10(y)'\n"},"id":"1045","type":"CustomJS"},{"attributes":{"text":""},"id":"1061","type":"Title"},{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1044","type":"CustomJS"},{"id":"1039","type":"CustomJS"}]},"label":"Logarithmic x Basis"},"id":"1048","type":"Button"},{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1039","type":"CustomJS"}]},"label":"Plot Data"},"id":"1046","type":"Button"},{"attributes":{},"id":"1021","type":"PanTool"},{"attributes":{},"id":"1063","type":"BasicTickFormatter"},{"attributes":{},"id":"1066","type":"UnionRenderers"},{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1040","type":"CustomJS"},{"id":"1039","type":"CustomJS"}]},"label":"Linear x Basis"},"id":"1047","type":"Button"},{"attributes":{},"id":"1065","type":"BasicTickFormatter"},{"attributes":{},"id":"1009","type":"LinearScale"},{"attributes":{"button_type":"primary","callback":null,"icon":null,"js_event_callbacks":{"button_click":[{"id":"1041","type":"CustomJS"},{"id":"1039","type":"CustomJS"}]},"label":"Linear y Basis"},"id":"1050","type":"Button"}],"root_ids":["1059"]},"title":"Bokeh Application","version":"1.3.4"}}
+        </script>
+        <script type="text/javascript">
+          (function() {
+            var fn = function() {
+              Bokeh.safely(function() {
+                (function(root) {
+                  function embed_document(root) {
+                    
+                  var docs_json = document.getElementById('1141').textContent;
+                  var render_items = [{"docid":"021484fd-10e3-42da-91a2-efe57801d4af","roots":{"1059":"a096a026-da4a-4623-af6f-937d3a79c25b"}}];
+                  root.Bokeh.embed.embed_items(docs_json, render_items);
+                
+                  }
+                  if (root.Bokeh !== undefined) {
+                    embed_document(root);
+                  } else {
+                    var attempts = 0;
+                    var timer = setInterval(function(root) {
+                      if (root.Bokeh !== undefined) {
+                        embed_document(root);
+                        clearInterval(timer);
+                      }
+                      attempts++;
+                      if (attempts > 100) {
+                        console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                        clearInterval(timer);
+                      }
+                    }, 10, root)
+                  }
+                })(window);
+              });
+            };
+            if (document.readyState != "loading") fn();
+            else document.addEventListener("DOMContentLoaded", fn);
+          })();
+        </script>
+    
+  </body>
+  
+</html>
