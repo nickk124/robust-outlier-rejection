@@ -7,7 +7,7 @@
 std::vector<std::vector<double> > getCofactor(std::vector<std::vector <double> > A, int p, int q)
 {
 	int i = 0, j = 0;
-	int M = A[0].size();
+	int M = (int) A[0].size();
 	std::vector <double> innertemp(M - 1, 0.0);
 	std::vector<std::vector <double> > temp(M - 1, innertemp);
 
@@ -39,7 +39,7 @@ std::vector<std::vector<double> > getCofactor(std::vector<std::vector <double> >
 //n is current dimension of A[][].
 double determinant(std::vector < std::vector <double> > A)
 {
-	int M = A[0].size();
+	int M = (int) A[0].size();
 	double D = 0; // Initialize result
 
 				  //  Base case : if matrix contains single element
@@ -69,7 +69,7 @@ double determinant(std::vector < std::vector <double> > A)
 // Function to get adjoint of A[M][M] in adj[M][M].
 std::vector<std::vector<double> > adjoint(std::vector < std::vector <double> > A)
 {
-	int M = A[0].size();
+	int M = (int) A[0].size();
 	if (M == 1)
 	{
 		std::vector<std::vector<double> > result = { { 1.0 } };
@@ -109,7 +109,7 @@ std::vector<std::vector<double> > adjoint(std::vector < std::vector <double> > A
 // matrix is singular
 std::vector<std::vector <double> > inverse(std::vector < std::vector <double> > A)
 {
-	int M = A[0].size();
+	int M = (int) A[0].size();
 	// Find determinant of A[][]
 	double det = determinant(A);
 	//std::cout << "Determinant = " << det << std::endl;
@@ -137,7 +137,7 @@ std::vector<std::vector <double> > inverse(std::vector < std::vector <double> > 
 
 std::vector<std::vector<double> > pivotSystem(std::vector <std::vector<double> >Amatrix, std::vector<double> b) // columnCount is number of columns in the matrix A
 {
-	int columnCount = Amatrix[0].size();
+	int columnCount = (int) Amatrix[0].size();
 
 	std::vector <double> A; //vector form of the matrix A
 
@@ -206,8 +206,8 @@ std::vector<std::vector<double> > pivotSystem(std::vector <std::vector<double> >
 
 std::vector < std::vector <double> > transpose(std::vector < std::vector <double> > array) { //takes the transpose of some input array
 
-	int n = array.size();
-	int m = array[0].size();
+	int n = (int) array.size();
+	int m = (int) array[0].size();
 
 	std::vector<double> innertransposedArray(n, 0.0);
 	std::vector <std::vector <double> > transposedArray(m, innertransposedArray);
@@ -220,8 +220,8 @@ std::vector < std::vector <double> > transpose(std::vector < std::vector <double
 
 std::vector <double> dot(std::vector< std::vector <double> > A, std::vector <double> b) // simple square matrix-vector multiplication function
 {
-	int n = A.size(); //dimensionality of square matrix/vector
-	int m = b.size();
+	int n = (int) A.size(); //dimensionality of square matrix/vector
+	int m = (int) b.size();
 	std::vector <double> c; //vector result
 
 	for (int i = 0; i < n; i++) {
@@ -236,9 +236,9 @@ std::vector <double> dot(std::vector< std::vector <double> > A, std::vector <dou
 
 std::vector< std::vector <double> > dot(std::vector< std::vector <double> > A, std::vector <std::vector <double> > B) // multiplication of two matrices (can be non-square)
 {
-	int n = A.size();
-	int m = A[0].size();
-	int p = B[0].size();
+	int n = (int) A.size();
+	int m = (int) A[0].size();
+	int p = (int) B[0].size();
 	std::vector <double> innerC(p, 0.0);
 	std::vector< std::vector <double> > C(n, innerC); //Matrix result C
 	double sum;
@@ -259,7 +259,7 @@ std::vector< std::vector <double> > dot(std::vector< std::vector <double> > A, s
 std::vector <double> forwardSubstitution(std::vector <std::vector <double> > A, std::vector <double> b)
 {
 	std::vector <double> x;
-	int N = b.size();
+	int N = (int) b.size();
 
 	x.push_back(b[0] / A[0][0]);
 	for (int m = 1; m < N; m++) {
@@ -275,7 +275,7 @@ std::vector <double> forwardSubstitution(std::vector <std::vector <double> > A, 
 
 std::vector <std::vector <double> > LUInverse(std::vector <std::vector <double> > A)
 {
-	int m = A.size();
+	int m = (int) A.size();
 
 	std::vector <double> innerresult_transposed;
 	std::vector< std::vector <double > > result_transposed(m, innerresult_transposed);
@@ -326,7 +326,7 @@ return result;
 */
 double chiSquared(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) // computes the chi-squared value. takes the function y=... as an argument (via pointer) 
 { //FUNCTION MUST BE USER-PROVIDED
-	int N = y.size();
+	int N = (int) y.size();
 	double sum = 0.0;
 
 	for (int i = 0; i < N; i++) {
@@ -337,7 +337,7 @@ double chiSquared(double(*f)(double, std::vector <double>), std::vector <double>
 
 double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> sigma_y) // multi-dimensional independent variables case
 { //FUNCTION MUST BE USER-PROVIDED
-	int N = y.size();
+	int N = (int) y.size();
 	double sum = 0.0;
 
 	for (int i = 0; i < N; i++) {
@@ -350,7 +350,7 @@ double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::v
 double chiSquared(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> w, int K) // computes the chi-squared value. takes the function y=... as an argument (via pointer) 
 { //FUNCTION MUST BE USER-PROVIDED
 	//K = 0 if nonweighted, 1 if weighted
-	int N = y.size();
+	int N = (int) y.size();
 
 	if (K == 0) {
 		w.clear();
@@ -369,7 +369,7 @@ double chiSquared(double(*f)(double, std::vector <double>), std::vector <double>
 double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> w, int K) // multi-dimensional independent variables case
 { //FUNCTION MUST BE USER-PROVIDED
 	//K = 0 if nonweighted, 1 if weighted
-	int N = y.size();
+	int N = (int) y.size();
 
 	if (K == 0) {
 		w.clear();
@@ -387,7 +387,7 @@ double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::v
 
 std::vector <double> residuals(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params) // computes the residuals vector needed in the GN algorithm
 { //FUNCTION MUST BE USER-PROVIDED
-	int N = y.size();
+	int N = (int) y.size();
 	std::vector <double> result(N, 0.0); // placeholder
 
 	for (int i = 0; i < N; i++) {
@@ -398,7 +398,7 @@ std::vector <double> residuals(double(*f)(double, std::vector <double>), std::ve
 
 std::vector <double> residuals(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params) // multi-dimensional independent variables case
 { //FUNCTION MUST BE USER-PROVIDED
-	int N = y.size();
+	int N = (int) y.size();
 	std::vector <double> result(N, 0.0); // placeholder
 
 	for (int i = 0; i < N; i++) {
@@ -409,8 +409,8 @@ std::vector <double> residuals(double(*f)(std::vector <double>, std::vector <dou
 
 std::vector < std::vector <double> > jacobian(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params) //Jacobian matrix, CASE of 1 independent var, takes argument of vector of parameters. USER INPUTTED.
 {
-	int M = params.size(); //dimensionality
-	int N = x.size();
+	int M = (int) params.size(); //dimensionality
+	int N = (int) x.size();
 
 	std::vector <double> jacobrow(M, 0.0); //initializing the Jacobian
 	std::vector < std::vector <double> > jacob(N, jacobrow);
@@ -428,8 +428,8 @@ std::vector < std::vector <double> > jacobian(std::vector <double(*)(double, std
 
 std::vector < std::vector <double> > jacobian(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //Jacobian matrix, CASE of >1 independent var, takes argument of vector of parameters. USER INPUTTED.
 {
-	int M = params.size(); //dimensionality
-	int N = x.size();
+	int M = (int) params.size(); //dimensionality
+	int N = (int) x.size();
 
 	std::vector <double> jacobrow(M, 0.0); //initializing the Jacobian
 	std::vector < std::vector <double> > jacob(N, jacobrow);
@@ -447,7 +447,7 @@ std::vector < std::vector <double> > jacobian(std::vector <double(*)(std::vector
 //sy, w
 std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) //1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -490,7 +490,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 //sy, w ND
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) // >1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -533,7 +533,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 //sy
 std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) //1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -574,7 +574,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 // sy, ND
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y) //>1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -615,7 +615,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 //w, no sy, ND
 std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> w, double wbar) //1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -658,7 +658,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 //w, no sy, ND
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> w, double wbar) // >1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -701,7 +701,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 // no w or sy
 std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params) //1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -742,7 +742,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 // no w or sy, ND
 std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //>1D case
 {
-	int M = params.size();
+	int M = (int) params.size();
 
 	std::vector <double> J_pivoted_inner(M, 0.0);
 	std::vector < std::vector <double> > J_pivoted(M, J_pivoted_inner);
@@ -782,7 +782,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 //NON-WEIGHTED, with error bars:
 std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of 1 independent (x) variables in the function
 {
-	int M = parsvector.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -793,7 +793,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	while (tolcheck) {
 		checkcount = 0;
@@ -877,13 +877,13 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 
 std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of >1 independent (x) variables in the function
 {
-	int M = parsvector.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -894,7 +894,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	while (tolcheck) {
 		checkcount = 0;
@@ -976,14 +976,14 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 //WEIGHTED, with error bars:
 std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
-	int Nr = y.size();
-	int M = parsvector.size();
+	int Nr = (int) y.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -994,7 +994,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	// creating weight matrix W:
 	std::vector <double> innerW(Nr, 0.0);
@@ -1082,14 +1082,14 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 
 std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
 {
-	int Nr = y.size();
-	int M = parsvector.size();
+	int Nr = (int) y.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1100,7 +1100,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	// creating weight matrix W:
 	std::vector <double> innerW(Nr, 0.0);
@@ -1190,13 +1190,13 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 //NON-WEIGHTED, without error bars:
 std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
 {
-	int M = parsvector.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1207,7 +1207,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	while (tolcheck) {
 		checkcount = 0;
@@ -1293,13 +1293,13 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 
 std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
 {
-	int M = parsvector.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1310,7 +1310,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	while (tolcheck) {
 		checkcount = 0;
@@ -1396,14 +1396,14 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 //WEIGHTED, without error bars:
 std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
-	int Nr = y.size();
-	int M = parsvector.size();
+	int Nr = (int) y.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1414,7 +1414,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
+//	int itercount = 0;
 
 	// creating weight matrix W:
 	std::vector <double> innerW(Nr, 0.0);
@@ -1502,14 +1502,14 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 
 std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
 {
-	int Nr = y.size();
-	int M = parsvector.size();
+	int Nr = (int) y.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1520,7 +1520,6 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	double newChiSq, oldChiSq;
 	double multiplier = 1.0;
 	int checkcount;
-	int itercount = 0;
 
 	// creating weight matrix W:
 	std::vector <double> innerW(Nr, 0.0);
@@ -1610,7 +1609,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	}
 	//std::cout << "Modified Gauss-Newton completed in " << itercount << " iterations.\n";
 
-	//return params_new;
+	return params_new;
 
 };
 
@@ -1621,7 +1620,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 //NON-WEIGHTED:
 std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
 {
-	int M = parsvector.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1693,7 +1692,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
 {
-	int M = parsvector.size();
+	int M = (int) parsvector.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1764,8 +1763,8 @@ std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <dou
 //WEIGHTED:
 std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
-	int M = parsvector.size();
-	int Nr = y.size();
+	int M = (int) parsvector.size();
+	int Nr = (int) y.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1842,8 +1841,8 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
 {
-	int M = parsvector.size();
-	int Nr = y.size();
+	int M = (int) parsvector.size();
+	int Nr = (int) y.size();
 	bool tolcheck = true;
 	std::vector <double> params_old = guess;
 	std::vector <double> params_new(M, 0.0); //placeholder
@@ -1953,7 +1952,6 @@ double getAvg(std::vector<double> x, std::vector <double> w, double(*f)(double, 
 double getAvg_Exp(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
-	double y_i;
 
 	for (int i = 0; i < x.size(); i++) {
 		double y_i = f(x[i], params);
@@ -1967,8 +1965,6 @@ double getAvg_Exp(std::vector<double> x, std::vector <double> w, double(*f)(doub
 double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
-	double y_i;
-
 	for (int i = 0; i < x.size(); i++) {
 		double y_i = f(x[i], params);
 		uppersum += w[i] * std::log10(x[i]) * std::pow(y_i, 2.0);
@@ -1981,7 +1977,6 @@ double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, double
 double getLogXBar_Log(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
-	double y_i;
 
 	for (int i = 0; i < x.size(); i++) {
 		double y_i = f(x[i], params);

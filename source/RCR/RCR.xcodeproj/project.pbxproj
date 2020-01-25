@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		609CB9EB23DCB81A002AF2FE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 609CB9EA23DCB81A002AF2FE /* main.cpp */; };
+		609CB9FA23DCB830002AF2FE /* NonParametric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 609CB9F123DCB830002AF2FE /* NonParametric.cpp */; };
+		609CB9FB23DCB830002AF2FE /* RCRstarterfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 609CB9F323DCB830002AF2FE /* RCRstarterfile.cpp */; };
+		609CB9FC23DCB830002AF2FE /* MiscFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 609CB9F423DCB830002AF2FE /* MiscFunctions.cpp */; };
+		609CB9FD23DCB830002AF2FE /* FunctionalForm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 609CB9F623DCB830002AF2FE /* FunctionalForm.cpp */; };
+		609CB9FE23DCB830002AF2FE /* RCR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 609CB9F923DCB830002AF2FE /* RCR.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +28,15 @@
 
 /* Begin PBXFileReference section */
 		609CB9E723DCB81A002AF2FE /* RCR */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RCR; sourceTree = BUILT_PRODUCTS_DIR; };
-		609CB9EA23DCB81A002AF2FE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		609CB9F123DCB830002AF2FE /* NonParametric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonParametric.cpp; path = ../../NonParametric.cpp; sourceTree = "<group>"; };
+		609CB9F223DCB830002AF2FE /* NonParametric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonParametric.h; path = ../../NonParametric.h; sourceTree = "<group>"; };
+		609CB9F323DCB830002AF2FE /* RCRstarterfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RCRstarterfile.cpp; path = ../../RCRstarterfile.cpp; sourceTree = "<group>"; };
+		609CB9F423DCB830002AF2FE /* MiscFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MiscFunctions.cpp; path = ../../MiscFunctions.cpp; sourceTree = "<group>"; };
+		609CB9F523DCB830002AF2FE /* FunctionalForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunctionalForm.h; path = ../../FunctionalForm.h; sourceTree = "<group>"; };
+		609CB9F623DCB830002AF2FE /* FunctionalForm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FunctionalForm.cpp; path = ../../FunctionalForm.cpp; sourceTree = "<group>"; };
+		609CB9F723DCB830002AF2FE /* MiscFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiscFunctions.h; path = ../../MiscFunctions.h; sourceTree = "<group>"; };
+		609CB9F823DCB830002AF2FE /* RCR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCR.h; path = ../../RCR.h; sourceTree = "<group>"; };
+		609CB9F923DCB830002AF2FE /* RCR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RCR.cpp; path = ../../RCR.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +69,15 @@
 		609CB9E923DCB81A002AF2FE /* RCR */ = {
 			isa = PBXGroup;
 			children = (
-				609CB9EA23DCB81A002AF2FE /* main.cpp */,
+				609CB9F623DCB830002AF2FE /* FunctionalForm.cpp */,
+				609CB9F523DCB830002AF2FE /* FunctionalForm.h */,
+				609CB9F423DCB830002AF2FE /* MiscFunctions.cpp */,
+				609CB9F723DCB830002AF2FE /* MiscFunctions.h */,
+				609CB9F123DCB830002AF2FE /* NonParametric.cpp */,
+				609CB9F223DCB830002AF2FE /* NonParametric.h */,
+				609CB9F923DCB830002AF2FE /* RCR.cpp */,
+				609CB9F823DCB830002AF2FE /* RCR.h */,
+				609CB9F323DCB830002AF2FE /* RCRstarterfile.cpp */,
 			);
 			path = RCR;
 			sourceTree = "<group>";
@@ -119,7 +139,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				609CB9EB23DCB81A002AF2FE /* main.cpp in Sources */,
+				609CB9FB23DCB830002AF2FE /* RCRstarterfile.cpp in Sources */,
+				609CB9FA23DCB830002AF2FE /* NonParametric.cpp in Sources */,
+				609CB9FE23DCB830002AF2FE /* RCR.cpp in Sources */,
+				609CB9FC23DCB830002AF2FE /* MiscFunctions.cpp in Sources */,
+				609CB9FD23DCB830002AF2FE /* FunctionalForm.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 #include "RCR.h"
-#include "RCRwebutils.h"
+//#include "RCRwebutils.h"
 #include <iostream>
 #include <iterator>
 #include <fstream>
@@ -323,18 +323,20 @@ int main()
 
     //example of usage with >1 independent ("x") variable (weighted data, with priors, but no error bars)
 
+    
+    
 
-    std::vector <double> result;
-    std::vector <double> xt = { 1,2,3,4,5,6,7,8,9 };
-    std::vector <double> yt = { 1.0, 2.95, 5.55, 8.69, 12.31, 16.37, 20.81, 25.63, 51.0 };
-    std::vector <double> wt = { 1,1.1,0.9,1,1.1,0.9,1.2,1,0.1 };
-    double bt = 1.1;
-    std::vector <double> gt = { 1.0,2.0};
-    std::vector <double> pP;
-    std::vector <int> hP;
-    int funcInt = 4;
-    int rejTech = 2;
-    result = requestHandlerWeighted(xt, yt, gt, wt, funcInt, xt.size(), rejTech, 0, pP, hP, bt);
+//    std::vector <double> result;
+//    std::vector <double> xt = { 1,2,3,4,5,6,7,8,9 };
+//    std::vector <double> yt = { 1.0, 2.95, 5.55, 8.69, 12.31, 16.37, 20.81, 25.63, 51.0 };
+//    std::vector <double> wt = { 1,1.1,0.9,1,1.1,0.9,1.2,1,0.1 };
+//    double bt = 1.1;
+//    std::vector <double> gt = { 1.0,2.0};
+//    std::vector <double> pP;
+//    std::vector <int> hP;
+//    int funcInt = 4;
+//    int rejTech = 2;
+//    result = requestHandlerWeighted(xt, yt, gt, wt, funcInt, xt.size(), rejTech, 0, pP, hP, bt);
 
 
 
