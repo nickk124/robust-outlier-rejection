@@ -52,7 +52,7 @@ callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceal
     x_original = [];
     y_fitted = [];
 
-    console.log(x_original_result.length);
+    // console.log(x_original_result.length);
 
     for (var i = 0; i < x_original_result.length; i++) {
         x_original.push(x_original_result[i]);
@@ -66,8 +66,8 @@ callback = CustomJS(args=dict(sourcenon=sourcenon, sourcerej=sourcerej, sourceal
     dataall['x_original'] = x_original;
     dataall['y_fitted'] = y_fitted;
 
-    console.log(dataall['x_original']);
-    console.log(dataall['y_fitted']);
+    // console.log(dataall['x_original']);
+    // console.log(dataall['y_fitted']);
 
     sourcenon.change.emit();
     sourcerej.change.emit();

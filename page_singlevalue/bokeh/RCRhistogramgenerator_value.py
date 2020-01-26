@@ -4,6 +4,7 @@ from bokeh.layouts import column, row, widgetbox
 from bokeh.models import CustomJS, ColumnDataSource, Slider, Button, BoxZoomTool, Div
 from bokeh.plotting import Figure, output_file, show, save
 from bokeh.models.tools import HoverTool
+from copy import copy
 
 import numpy as np
 
@@ -12,14 +13,14 @@ output_file("RCRhistogram_value.html")
 arr_hist = []
 left = []
 right = []
-xMin = 0
-xMax = 1
+#xMin = 0
+#xMax = 1
 
 src = ColumnDataSource(data=dict(arr_hist = arr_hist, left = left, right = right))
 
 TOOLS="xpan,xwheel_zoom, xzoom_in, xzoom_out, reset"
 
-p = Figure(plot_height = 400, plot_width = 600, x_range = (xMin, xMax),
+p = Figure(plot_height = 400, plot_width = 600, x_range = (0, 1), # x_range must be manually initialized to avoid Bokeh's auto-ranging
                     x_axis_label = 'measured value',
                     y_axis_label = 'weighted number of measurements', 
                     tools = TOOLS, 
@@ -81,19 +82,42 @@ callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0], x_range=p.x_ra
     if (canChangeRange){
         x_range.start = left[0];
         x_range.end = right[bincount-1];
-
         xMin = x_range.start;
         xMax = x_range.end;
+
+        //console.log("Changed range based off of hist, stored:", xMin, xMax);
     } else {
         p.x_range.start = xMin 
         p.x_range.end = xMax;
+        x_range.start = xMin 
+        x_range.end = xMax;
+
+        //console.log("Fixed range to previous stored:", xMin, xMax)
     }
 
-    p.change.emit();
     src.change.emit();
+    p.change.emit();
 """)
 
-callback_addbins = CustomJS(code="""
+callback_plot2 = copy(callback_plot)
+
+callback_store_range = CustomJS(args=dict(x_range=p.x_range), code="""
+    xMin = x_range.start;
+    xMax = x_range.end;
+    console.log("stored range:", xMin, xMax);
+""")
+
+callback_maintain_range = CustomJS(args=dict(x_range=p.x_range), code="""
+    x_range.start = xMin;
+    x_range.end = xMax;
+
+    //console.log("Using:", xMin, xMax);
+    //console.log(", range changed to:", x_range.start, x_range.end);
+    
+    x_range.change.emit();
+""")
+
+callback_addbins = CustomJS(args=dict(x_range=p.x_range), code="""
     bincount += 1;
     canChangeBins = true;
     canChangeRange = false;
@@ -109,7 +133,6 @@ callback_changetolinear = CustomJS(code="""
     basis = "linear"
     xaxislabel = 'measured value'
     canChangeBins = true;
-    canChangeRange = false;
 """)
 
 callback_changetolog= CustomJS(code="""
@@ -139,12 +162,17 @@ button_log = Button(label = "Logarithmic Basis", button_type = "primary")
 button_exp = Button(label = "Exponential Basis", button_type = "primary")
 
 button_plot.js_on_click(callback_plot)
+button_plot.js_on_click(callback_plot2)
 button_plot.js_on_click(callback_resetrange)
 
+button_subtractbins.js_on_click(callback_store_range)
+button_addbins.js_on_click(callback_store_range)
 button_subtractbins.js_on_click(callback_subtractbins)
 button_addbins.js_on_click(callback_addbins)
 button_subtractbins.js_on_click(callback_plot)
 button_addbins.js_on_click(callback_plot)
+button_subtractbins.js_on_click(callback_maintain_range)
+button_addbins.js_on_click(callback_maintain_range)
 
 button_linear.js_on_click(callback_changetolinear)
 button_log.js_on_click(callback_changetolog)
@@ -163,11 +191,11 @@ buttons_2 = row(button_linear, button_log, button_exp, sizing_mode = 'fixed')#, 
 
 basisLabel = Div(text="""
 <br>
-<h2 style="position:absolute; left:-25px;>Select Basis</h2>
+<h2 style="position:absolute; left:-25px;">Select Basis:</h2>
 """,
 width=200, height=70)
 
 layoutplot = column(row(p, buttons), column(basisLabel, buttons_2))
 
-# show(layoutplot)
+#show(layoutplot)
 save(layoutplot)

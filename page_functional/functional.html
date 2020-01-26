@@ -1527,18 +1527,18 @@ function performFunctionalRCR(){
                   //x_original_result = makeXPlotData(xDataContents);
 
                   // gets array of weights, as numbers in order:
-                  var weights_result = [];
-                  if (hasWeights){
-                    var mainDataContents_arr = mainDataContents.split("\n");
+                  // var weights_result = [];
+                  // if (hasWeights){
+                  //   var mainDataContents_arr = mainDataContents.split("\n");
 
-                    for (var i = 0; i < x_original_result.length; i++){
-                      var dataSet = mainDataContents_arr[i].split("\t");
-                      if (dataSet.length < 2){ //if not tab seperated, try space seperated
-                        dataSet = mainDataContents_arr[i].split(" ");
-                      }
-                      weights_result.push(Number(dataSet[2]));
-                    }
-                  }
+                  //   for (var i = 0; i < x_original_result.length; i++){
+                  //     var dataSet = mainDataContents_arr[i].split("\t");
+                  //     if (dataSet.length < 2){ //if not tab seperated, try space seperated
+                  //       dataSet = mainDataContents_arr[i].split(" ");
+                  //     }
+                  //     weights_result.push(Number(dataSet[2]));
+                  //   }
+                  // }
 
 
                   //creates data for fitted model (y_fitted_result)

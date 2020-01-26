@@ -1447,7 +1447,7 @@ std::vector<double> getNDMode(FunctionalForm &f)
 					check += 1;
 				}
 			}
-			if (check = f.parameterSpace.size()) {
+			if (check == f.parameterSpace.size()) {
 				for (int j = 0; j < f.parameterSpace.size(); j++) {
 					sortedYVec[j].push_back(f.parameterSpace[j][i]);
 					sortedWVec[j].push_back(f.weightSpace[j][i]);
