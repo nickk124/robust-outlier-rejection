@@ -4,6 +4,7 @@ from bokeh.layouts import column, row, widgetbox
 from bokeh.models import CustomJS, ColumnDataSource, Slider, Button, BoxZoomTool, Div
 from bokeh.plotting import Figure, output_file, show, save
 from bokeh.models.tools import HoverTool
+from bokeh.events import LODEnd
 from copy import copy
 
 import numpy as np
@@ -50,7 +51,7 @@ callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0], x_range=p.x_ra
     axis.axis_label = xaxislabel;
 
     makeDefaultBinCount(y_data); //if this callback was activated by a bin changer button, this doesn't reset bincount
-
+    
     var arr_hist_result = hist_result[0];
     var left_result = hist_result[1];
     var right_result = hist_result[2];
@@ -244,6 +245,22 @@ callback_resetrange = CustomJS(code="""
     canChangeRange = true;
 """)
 
+callback_adjust_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
+    let bincount_prev = bincount;
+    let xrange_displayed = x_range.end - x_range.start;
+    let xrange_data = xMaxData - xMinData;
+    let bincount_displayed = Math.round(bincount_default * xrange_displayed / xrange_data)
+    console.log("current displayed bincount:", bincount_displayed); // this is correct, I checked
+    
+    let binwidth = xrange_displayed / bincount_displayed; // also correct
+    console.log("current (displayed) binwidth:", binwidth); 
+
+    console.log("default bincount:", bincount_default);
+    bincount = Math.round(bincount_default * xrange_data / xrange_displayed);
+    canChangeBins = true;
+    canChangeRange = false;
+    console.log("Autoadjusting bincount from:", bincount_prev, "to:", bincount);
+""")
 #interactivity
 
 button_plot = Button(label = "Plot Histogram", button_type = "primary")
@@ -286,7 +303,10 @@ button_linear.js_on_click(callback_maintain_range_basis)
 button_log.js_on_click(callback_maintain_range_basis)
 button_exp.js_on_click(callback_maintain_range_basis)
 
-#p.js_on_event(Pan, callbackPlot)
+p.js_on_event(LODEnd, callback_store_range)
+p.js_on_event(LODEnd, callback_adjust_visible_bins)
+p.js_on_event(LODEnd, callback_plot)
+p.js_on_event(LODEnd, callback_maintain_range)
 
 # layout
 buttons_0 = widgetbox(button_plot)
