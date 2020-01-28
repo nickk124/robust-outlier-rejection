@@ -80,10 +80,12 @@ callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0], x_range=p.x_ra
     data['right'] = right;
 
     if (canChangeRange){
-        x_range.start = left[0];
-        x_range.end = right[bincount-1];
-        xMin = x_range.start;
-        xMax = x_range.end;
+        if (!currentlyChangingBasis){
+            x_range.start = left[0];
+            x_range.end = right[bincount-1];
+        }
+        // xMin = x_range.start;
+        // xMax = x_range.end;
 
         //console.log("Changed range based off of hist, stored:", xMin, xMax);
     } else {
@@ -104,17 +106,102 @@ callback_plot2 = copy(callback_plot)
 callback_store_range = CustomJS(args=dict(x_range=p.x_range), code="""
     xMin = x_range.start;
     xMax = x_range.end;
-    console.log("stored range:", xMin, xMax);
+    console.log("storing range as:", xMin, xMax);
 """)
 
 callback_maintain_range = CustomJS(args=dict(x_range=p.x_range), code="""
-    x_range.start = xMin;
-    x_range.end = xMax;
-
-    //console.log("Using:", xMin, xMax);
-    //console.log(", range changed to:", x_range.start, x_range.end);
-    
+    let xMinNew = xMin;
+    let xMaxNew = xMax;
+    x_range.start = xMinNew;
+    x_range.end = xMaxNew;
     x_range.change.emit();
+""")
+
+callback_maintain_range_basis = CustomJS(args=dict(x_range=p.x_range), code="""
+    console.log("prev. range:", xMin, xMax);
+    let xMinNew = xMin;
+    let xMaxNew = xMax;
+    if (xMinNew == 0){
+        xMinNew = Number.MIN_VALUE;
+    }
+    if (xMaxNew == 0){
+        xMaxNew = Number.MIN_VALUE;
+    }
+
+    console.log(prevbasis);
+    console.log(basis);
+    switch (prevbasis){
+        case "linear":
+            switch (basis){
+                case "linear":
+                    break;
+                case "log":
+                    xMinNew = Math.log10(xMinNew);
+                    xMaxNew = Math.log10(xMaxNew);
+                    break;
+                case "exp":
+                    xMinNew = Math.pow(10, xMinNew);
+                    xMaxNew = Math.pow(10, xMaxNew);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "exp":
+            switch (basis){
+                case "linear":
+                    xMinNew = Math.log10(xMinNew);
+                    xMaxNew = Math.log10(xMaxNew);
+                    break;
+                case "log":
+                    xMinNew = Math.log10(Math.log10(xMinNew));
+                    xMaxNew = Math.log10(Math.log10(xMaxNew));
+                    break;
+                case "exp":
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "log":
+            switch (basis){
+                case "linear":
+                    xMinNew = Math.pow(10, xMinNew);
+                    xMaxNew = Math.pow(10, xMaxNew);
+                    break;
+                case "log":
+                    break;
+                case "exp":
+                    xMinNew = Math.pow(10, Math.pow(10, xMinNew));
+                    xMaxNew = Math.pow(10, Math.pow(10, xMaxNew));
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+	}
+
+    if (isNaN(xMinNew)){
+        xMinNew = 0;
+    }
+
+    if (isNaN(xMaxNew)){
+        xMaxNew = 1;
+    }
+
+    if (!isFinite(xMinNew) || !isFinite(xMaxNew)){
+        alert("Error: Datapoint too large for exponential basis!");
+        xMinNew = 0;
+        xMaxNew = 1;
+    }
+
+    x_range.start = xMinNew;
+    x_range.end = xMaxNew;
+    console.log("new range:", xMinNew, xMaxNew);
+    x_range.change.emit();
+    currentlyChangingBasis = false;
 """)
 
 callback_addbins = CustomJS(args=dict(x_range=p.x_range), code="""
@@ -130,18 +217,24 @@ callback_subtractbins = CustomJS(code="""
 """)
 
 callback_changetolinear = CustomJS(code="""
+    currentlyChangingBasis = true;
+    prevbasis = basis
     basis = "linear"
     xaxislabel = 'measured value'
     canChangeBins = true;
 """)
 
 callback_changetolog= CustomJS(code="""
+    currentlyChangingBasis = true;
+    prevbasis = basis
     basis = "log"
     xaxislabel = 'log10(measured value)'
     canChangeBins = true;
 """)
 
 callback_changetoexp = CustomJS(code="""
+    currentlyChangingBasis = true;
+    prevbasis = basis
     basis = "exp"
     xaxislabel = '10^(measured value)'
     canChangeBins = true;
@@ -167,19 +260,31 @@ button_plot.js_on_click(callback_resetrange)
 
 button_subtractbins.js_on_click(callback_store_range)
 button_addbins.js_on_click(callback_store_range)
+
 button_subtractbins.js_on_click(callback_subtractbins)
 button_addbins.js_on_click(callback_addbins)
+
 button_subtractbins.js_on_click(callback_plot)
 button_addbins.js_on_click(callback_plot)
+
 button_subtractbins.js_on_click(callback_maintain_range)
 button_addbins.js_on_click(callback_maintain_range)
+
+button_linear.js_on_click(callback_store_range)
+button_log.js_on_click(callback_store_range)
+button_exp.js_on_click(callback_store_range)
 
 button_linear.js_on_click(callback_changetolinear)
 button_log.js_on_click(callback_changetolog)
 button_exp.js_on_click(callback_changetoexp)
+
 button_linear.js_on_click(callback_plot)
 button_log.js_on_click(callback_plot)
 button_exp.js_on_click(callback_plot)
+
+button_linear.js_on_click(callback_maintain_range_basis)
+button_log.js_on_click(callback_maintain_range_basis)
+button_exp.js_on_click(callback_maintain_range_basis)
 
 #p.js_on_event(Pan, callbackPlot)
 
