@@ -1,3 +1,6 @@
+![](example_imgs/before_after_singlevalue.png)
+*Left: data distribution heavily saturated with one-sided outliers/contaminants. Right: remaining distribution after single-value RCR outlier removal.*
+
 # What is RCR?
 RCR is advanced, but easy to use, outlier rejection.
 
@@ -9,6 +12,9 @@ Robust Chauvenet Rejection (RCR) instead first makes use of robust replacements 
 
 RCR has been carefully calibrated, and extensively simulated (see [Maples et al. 2018](https://arxiv.org/abs/1807.05276)). It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
 
+![](example_imgs/before_after_functional.png)
+*Left: Data distribution about quadratic model, heavily saturated with one-sided outliers/contaminants. Right: remaining distribution after functional RCR outlier removal.*
+
 # How do I use RCR?
 We have boiled it down to two simple user choices:
 
@@ -18,7 +24,16 @@ We have boiled it down to two simple user choices:
 
 RCR can be applied to weighted data, to functional data (e.g., x vs. y), and we have incorporated bulk rejection to decrease computation times with large samples.
 
-Besides the source code here, try our online calculators ([single value](https://skynet.unc.edu/rcr/calculator/value) and [functional](https://skynet.unc.edu/rcr/calculator/functional)).
+The C++ source code is included here in `/source`, with documentation in `/documentation`. We also offer easy-to-use online calculators for [single value](https://skynet.unc.edu/rcr/calculator/value) and [functional](https://skynet.unc.edu/rcr/calculator/functional) (model-fitting) RCR. The source code, however, is equipped with the maximum degree of customizability for using RCR, most notably with the functional form/model-fitting portion of the algorithm. In addition to the features offered by the online calculator, the full functional RCR source code also includes support for:
+
+**1.** Running RCR on any custom model function with any number of independent ("x") variables and model function parameters;
+
+**2.** Custom prior distribution functions for any or all of the model function parameters;
+
+**3.** Support for model functions with custom "pivot point" variables that control correlation between model parameters, e.g. x<sub>0</sub> for the linear model y(x)=b+m(x-x<sub>0</sub>);
+
+and more.
+
 
 # Licensing and Citation
 
