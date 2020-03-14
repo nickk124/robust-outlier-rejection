@@ -7,7 +7,7 @@ However, both sigma clipping and traditional Chauvenet rejection make use of non
 
 Robust Chauvenet Rejection (RCR) instead first makes use of robust replacements for the mean, such as the median and the half-sample mode, and similar robust replacements that we have developed for the standard deviation.
 
-RCR has been carefully calibrated, and extensively simulated (see [Maples et al. 2020](https://arxiv.org/abs/1807.05276)). It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
+RCR has been carefully calibrated, and extensively simulated (see [Maples et al. 2018](https://arxiv.org/abs/1807.05276)). It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
 
 # How do I use RCR?
 We have boiled it down to two simple user choices:
@@ -22,7 +22,7 @@ Besides the source code here, try our online calculators ([single value](https:/
 
 # Licensing and Citation
 
-RCR is free to use for academic and non-commercial applications (see license in this repository). We only ask that you cite [Maples et al. 2020](https://arxiv.org/abs/1807.05276).
+RCR is free to use for academic and non-commercial applications (see license in this repository). We only ask that you cite [Maples et al. 2018](https://arxiv.org/abs/1807.05276).
 
 For commercial applications, or consultation, feel free to contact us.
 
