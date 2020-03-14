@@ -1,0 +1,1 @@
+Test data for functional RCR with combined outlier and non-outlier distributions.
