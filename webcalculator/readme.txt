@@ -1,1 +1,1 @@
-Front-end files for RCR calculator webpage
+Front-end files for RCR calculator webpages (https://skynet.unc.edu/rcr/calculator/value) and (https://skynet.unc.edu/rcr/calculator/functional)
