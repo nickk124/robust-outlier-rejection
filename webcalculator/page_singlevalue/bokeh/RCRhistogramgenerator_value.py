@@ -21,7 +21,7 @@ src = ColumnDataSource(data=dict(arr_hist = arr_hist, left = left, right = right
 
 TOOLS="xpan,xwheel_zoom, xzoom_in, xzoom_out, reset"
 
-p = Figure(plot_height = 400, plot_width = 600, x_range = (0, 1), # x_range must be manually initialized to avoid Bokeh's auto-ranging
+p = Figure(plot_height = 400, plot_width = 600, x_range = (0, 1),# x_range must be manually initialized to avoid Bokeh's auto-ranging
                     x_axis_label = 'measured value',
                     y_axis_label = 'weighted number of measurements', 
                     tools = TOOLS, 
@@ -33,7 +33,7 @@ p.add_tools(HoverTool(tooltips=[("count", "@arr_hist")]))
 p.quad(source = src, bottom = 0, top = 'arr_hist', left = 'left', right = 'right', fill_color = 'cornflowerblue', line_color = 'black')
 
 #defines the callback to be used:
-callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0], x_range=p.x_range), code="""
+callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0], x_range=p.x_range, y_range=p.y_range), code="""
     p.reset.emit();
 
     hasWeights = $('#Weighted').data('clicked');
@@ -97,6 +97,8 @@ callback_plot = CustomJS(args=dict(src=src, p=p, axis=p.xaxis[0], x_range=p.x_ra
 
         //console.log("Fixed range to previous stored:", xMin, xMax)
     }
+
+    y_range.start = 0;
 
     src.change.emit();
     p.change.emit();
@@ -205,17 +207,17 @@ callback_maintain_range_basis = CustomJS(args=dict(x_range=p.x_range), code="""
     currentlyChangingBasis = false;
 """)
 
-callback_addbins = CustomJS(args=dict(x_range=p.x_range), code="""
-    bincount += 1;
-    canChangeBins = true;
-    canChangeRange = false;
-""")
+# callback_addbins = CustomJS(args=dict(x_range=p.x_range), code="""
+#     bincount += 1;
+#     canChangeBins = true;
+#     canChangeRange = false;
+# """)
 
-callback_subtractbins = CustomJS(code="""
-    bincount -= 1;
-    canChangeBins = true;
-    canChangeRange = false;
-""")
+# callback_subtractbins = CustomJS(code="""
+#     bincount -= 1;
+#     canChangeBins = true;
+#     canChangeRange = false;
+# """)
 
 callback_changetolinear = CustomJS(code="""
     currentlyChangingBasis = true;
@@ -245,7 +247,7 @@ callback_resetrange = CustomJS(code="""
     canChangeRange = true;
 """)
 
-callback_adjust_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
+callback_add_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
     let bincount_prev = bincount;
     let xrange_displayed = x_range.end - x_range.start;
     let xrange_data = xMaxData - xMinData;
@@ -256,7 +258,24 @@ callback_adjust_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
     console.log("current (displayed) binwidth:", binwidth); 
 
     console.log("default bincount:", bincount_default);
-    bincount = Math.round(bincount_default * xrange_data / xrange_displayed);
+    bincount = Math.round((bincount_default + 1) * xrange_data / xrange_displayed);
+    canChangeBins = true;
+    canChangeRange = false;
+    console.log("Autoadjusting bincount from:", bincount_prev, "to:", bincount);
+""")
+
+callback_subtract_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
+    let bincount_prev = bincount;
+    let xrange_displayed = x_range.end - x_range.start;
+    let xrange_data = xMaxData - xMinData;
+    // let bincount_displayed = Math.round(bincount_default * xrange_displayed / xrange_data)
+    // console.log("current displayed bincount:", bincount_displayed); // this is correct, I checked
+    
+    // let binwidth = xrange_displayed / bincount_displayed; // also correct
+    // console.log("current (displayed) binwidth:", binwidth); 
+
+    // console.log("default bincount:", bincount_default);
+    bincount = Math.round((bincount_default - 1) * xrange_data / xrange_displayed);
     canChangeBins = true;
     canChangeRange = false;
     console.log("Autoadjusting bincount from:", bincount_prev, "to:", bincount);
@@ -271,21 +290,21 @@ button_linear = Button(label = "Linear Basis (Default)", button_type = "primary"
 button_log = Button(label = "Logarithmic Basis", button_type = "primary")
 button_exp = Button(label = "Exponential Basis", button_type = "primary")
 
+button_plot.js_on_click(callback_resetrange)
 button_plot.js_on_click(callback_plot)
 button_plot.js_on_click(callback_plot2)
-button_plot.js_on_click(callback_resetrange)
 
-button_subtractbins.js_on_click(callback_store_range)
-button_addbins.js_on_click(callback_store_range)
+# button_subtractbins.js_on_click(callback_store_range)
+# button_addbins.js_on_click(callback_store_range)
 
-button_subtractbins.js_on_click(callback_subtractbins)
-button_addbins.js_on_click(callback_addbins)
+# button_subtractbins.js_on_click(callback_subtractbins)
+# button_addbins.js_on_click(callback_addbins)
 
-button_subtractbins.js_on_click(callback_plot)
-button_addbins.js_on_click(callback_plot)
+# button_subtractbins.js_on_click(callback_plot)
+# button_addbins.js_on_click(callback_plot)
 
-button_subtractbins.js_on_click(callback_maintain_range)
-button_addbins.js_on_click(callback_maintain_range)
+# button_subtractbins.js_on_click(callback_maintain_range)
+# button_addbins.js_on_click(callback_maintain_range)
 
 button_linear.js_on_click(callback_store_range)
 button_log.js_on_click(callback_store_range)
@@ -303,10 +322,17 @@ button_linear.js_on_click(callback_maintain_range_basis)
 button_log.js_on_click(callback_maintain_range_basis)
 button_exp.js_on_click(callback_maintain_range_basis)
 
-p.js_on_event(LODEnd, callback_store_range)
-p.js_on_event(LODEnd, callback_adjust_visible_bins)
-p.js_on_event(LODEnd, callback_plot)
-p.js_on_event(LODEnd, callback_maintain_range)
+# autoadjust bins upon adding/subtracting
+
+button_subtractbins.js_on_click(callback_store_range)
+button_subtractbins.js_on_click(callback_subtract_visible_bins)
+button_subtractbins.js_on_click(callback_plot)
+button_subtractbins.js_on_click(callback_maintain_range)
+
+button_addbins.js_on_click(callback_store_range)
+button_addbins.js_on_click(callback_add_visible_bins)
+button_addbins.js_on_click(callback_plot)
+button_addbins.js_on_click(callback_maintain_range)
 
 # layout
 buttons_0 = widgetbox(button_plot)
@@ -316,7 +342,7 @@ buttons_2 = row(button_linear, button_log, button_exp, sizing_mode = 'fixed')#, 
 
 basisLabel = Div(text="""
 <br>
-<h2 style="position:absolute; left:-25px;">Select Basis:</h2>
+<h2 style="position:absolute; left:-25px; font-size:1.66666666667em;">Select Basis:</h2>
 """,
 width=200, height=70)
 
