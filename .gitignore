@@ -1,2 +1,12 @@
 source/RCR
 *.xcodeproj/
+.vscode/settings.json
+source/RCR/RCR.xcodeproj/project.pbxproj
+source/RCR/RCR.xcodeproj/project.xcworkspace/xcuserdata/nickk124.xcuserdatad/UserInterfaceState.xcuserstate
+source/RCR/RCR.xcodeproj/xcuserdata/nickk124.xcuserdatad/xcschemes/xcschememanagement.plist
+source/ExampleModels.cpp
+source/ExampleModels.h
+source/RCRstarterfile.cpp
+source/RCR/RCR.xcodeproj/project.pbxproj
+source/RCR/RCR.xcodeproj/project.xcworkspace/xcuserdata/nickk124.xcuserdatad/UserInterfaceState.xcuserstate
+source/RCR/RCR.xcodeproj/xcuserdata/nickk124.xcuserdatad/xcschemes/xcschememanagement.plist

@@ -27,7 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		609CB9E723DCB81A002AF2FE /* RCR */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RCR; sourceTree = BUILT_PRODUCTS_DIR; };
+		609CB9E723DCB81A002AF2FE /* RCR */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = RCR; sourceTree = BUILT_PRODUCTS_DIR; };
 		609CB9F123DCB830002AF2FE /* NonParametric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonParametric.cpp; path = ../../NonParametric.cpp; sourceTree = "<group>"; };
 		609CB9F223DCB830002AF2FE /* NonParametric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonParametric.h; path = ../../NonParametric.h; sourceTree = "<group>"; };
 		609CB9F323DCB830002AF2FE /* RCRstarterfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RCRstarterfile.cpp; path = ../../RCRstarterfile.cpp; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 		609CB9DF23DCB81A002AF2FE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Skynet;
 				TargetAttributes = {
 					609CB9E623DCB81A002AF2FE = {
@@ -262,6 +262,7 @@
 		609CB9EF23DCB81A002AF2FE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BZ8467666S;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -272,6 +273,7 @@
 		609CB9F023DCB81A002AF2FE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = BZ8467666S;
 				ENABLE_HARDENED_RUNTIME = YES;

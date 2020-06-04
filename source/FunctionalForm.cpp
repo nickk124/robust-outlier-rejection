@@ -1,35 +1,34 @@
 //#include "stdafx.h"
 #include "FunctionalForm.h"
-#include <iostream>
 //std::vector <double>(*p)(std::vector <double>)
 
 double bar; //see declaration in FunctionalForm.h for explanation as to why this needs to be global.
 std::vector <double> bar_ND;
 
 // Constructors
-Priors::Priors(priorTypes priorType, std::vector <double>(*p)(std::vector <double>, std::vector <double>)) { //custom priors
+RCRPriors::RCRPriors(RCRpriorTypes priorType, std::vector <double>(*p)(std::vector <double>, std::vector <double>)) { //custom priors
 	this->priorType = priorType;
 	this->p = (*p);
 };
 
-Priors::Priors(priorTypes priorType, std::vector < std::vector <double> > params) { //Gaussian or bounded priors only
+RCRPriors::RCRPriors(RCRpriorTypes priorType, std::vector < std::vector <double> > params) { //Gaussian or bounded priors only
 	this->priorType = priorType;
-	if (priorType == GAUSSIAN) {
+	if (priorType == GAUSSIAN_PRIORS) {
 		this->gaussianParams = params;
 	}
-	else if (priorType == CONSTRAINED) {
+	else if (priorType == CONSTRAINED_PRIORS) {
 		this->paramBounds = params;
 	}
 };
 
-Priors::Priors(priorTypes priorType, std::vector < std::vector <double> > gaussianParams, std::vector < std::vector <double> > paramBounds) { //mixed
+RCRPriors::RCRPriors(RCRpriorTypes priorType, std::vector < std::vector <double> > gaussianParams, std::vector < std::vector <double> > paramBounds) { //mixed
 	this->priorType = priorType;
 	this->paramBounds = paramBounds;
 	this->gaussianParams = gaussianParams;
 };
 
 //default constructor
-Priors::Priors() {
+RCRPriors::RCRPriors() {
 
 };
 
@@ -42,7 +41,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
+	this->M = (int) partialsvector.size();
 	this->N = y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
@@ -183,7 +182,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->customBarCheck = false;
 }
 //constructors with priors:
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -203,7 +202,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->hasErrorBars = true;
 	this->customBarCheck = false;
 }
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -223,7 +222,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->hasErrorBars = true;
 	this->customBarCheck = false;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -243,7 +242,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->hasErrorBars = true;
 	this->customBarCheck = false;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -264,7 +263,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->customBarCheck = false;
 }
 
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -283,7 +282,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->hasErrorBars = false;
 	this->customBarCheck = false;
 }
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -302,7 +301,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->hasErrorBars = false;
 	this->customBarCheck = false;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -321,7 +320,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->hasErrorBars = false;
 	this->customBarCheck = false;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -517,7 +516,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	bar_ND = bar_ND_guess;
 }
 //constructors with priors:
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -540,7 +539,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 
 	bar = bar_guess;
 }
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -563,7 +562,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 
 	bar = bar_guess;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -586,7 +585,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 
 	bar_ND = bar_ND_guess;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -610,7 +609,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	bar_ND = bar_ND_guess;
 }
 
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -632,7 +631,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 
 	bar = bar_guess;
 }
-FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
+FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::vector<double> x, std::vector<double> y, std::vector <double(*)(double, std::vector <double>)> partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject, double(*gB)(std::vector<double>, std::vector <double>, double(*)(double, std::vector <double>), std::vector<double>), double bar_guess)
 {
 	this->f = (*f);
 	this->priorsObject = priorsObject;
@@ -654,7 +653,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 
 	bar = bar_guess;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, RCRPriors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -676,7 +675,7 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 
 	bar_ND = bar_ND_guess;
 }
-FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <double>), std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <double(*)(std::vector <double>, std::vector <double>)> NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, RCRPriors priorsObject, std::vector<double>(*gB_ND)(std::vector<std::vector<double> >, std::vector <double>, double(*)(std::vector <double>, std::vector <double>), std::vector<double>), std::vector <double> bar_ND_guess)
 {
 	this->f_ND = (*f);
 	this->priorsObject = priorsObject;
@@ -2087,7 +2086,7 @@ void FunctionalForm::buildModelSpace()
 		std::vector <double> boundsSet;
 
 		switch (priorsObject.priorType) {
-		case CUSTOM:
+		case CUSTOM_PRIORS:
 			// weight space
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdWeights.clear();
@@ -2115,7 +2114,7 @@ void FunctionalForm::buildModelSpace()
 				}
 			}
 			break;
-		case GAUSSIAN:
+		case GAUSSIAN_PRIORS:
 			// weight space
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
@@ -2149,7 +2148,7 @@ void FunctionalForm::buildModelSpace()
 				}
 			}
 			break;
-		case CONSTRAINED:
+		case CONSTRAINED_PRIORS:
 			// weight space
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
@@ -2226,7 +2225,7 @@ void FunctionalForm::buildModelSpace()
 			}
 
 			break;
-		case MIXED:
+		case MIXED_PRIORS:
 			// weight space
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();

@@ -1,6 +1,5 @@
 //#include "stdafx.h"
 #include "NonParametric.h"
-#include <vector>
 
 NonParametric::NonParametric()
 {
