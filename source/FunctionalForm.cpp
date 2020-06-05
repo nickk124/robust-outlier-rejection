@@ -42,7 +42,7 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
 	this->M = (int) partialsvector.size();
-	this->N = y.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -60,8 +60,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -79,8 +79,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -98,8 +98,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -117,8 +117,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -135,8 +135,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->w = w;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -153,8 +153,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -171,8 +171,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -192,8 +192,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -212,8 +212,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -232,8 +232,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -252,8 +252,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -272,8 +272,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -291,8 +291,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->w = w;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -310,8 +310,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -329,8 +329,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -351,8 +351,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -373,8 +373,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -395,8 +395,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -417,8 +417,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -439,8 +439,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -460,8 +460,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->w = w;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -481,8 +481,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -502,8 +502,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -526,8 +526,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -549,8 +549,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->sigma_y = sigma_y;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -572,8 +572,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -595,8 +595,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -618,8 +618,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = false;
@@ -640,8 +640,8 @@ FunctionalForm::FunctionalForm(double(*f)(double, std::vector <double>), std::ve
 	this->w = w;
 	this->guess = guess;
 	this->partialsvector = partialsvector;
-	this->M = partialsvector.size();
-	this->N = y.size();
+	this->M = (int) partialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = false;
 	this->weightedCheck = true;
@@ -662,8 +662,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w.resize(x.size(), 1.0);
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = false;
@@ -684,8 +684,8 @@ FunctionalForm::FunctionalForm(double(*f)(std::vector <double>, std::vector <dou
 	this->guess = guess;
 	this->w = w;
 	this->NDpartialsvector = NDpartialsvector;
-	this->M = NDpartialsvector.size();
-	this->N = y.size();
+	this->M = (int) NDpartialsvector.size();
+	this->N = (int) y.size();
 	this->tolerance = tolerance;
 	this->NDcheck = true;
 	this->weightedCheck = true;
@@ -760,7 +760,7 @@ void FunctionalForm::setTrueVec(std::vector<bool> &flags, std::vector<double> &w
 	}
 	trueY = trueYVec;
 	trueW = trueWVec;
-	this->trueW = trueW;
+//	this->trueW = trueW;
 	indices = indicesVec;
 }
 void FunctionalForm::setTrueVec(std::vector<bool> &flags, std::vector<double> &y)
@@ -831,8 +831,6 @@ void FunctionalForm::buildModelSpace()
 		}
 	}
 
-	int offset = 0;
-
 	parameterSpace.clear();
 	weightSpace.clear();
 	extraParameterSpace.clear();
@@ -900,7 +898,7 @@ void FunctionalForm::buildModelSpace()
 	// the below limits the number of combos used if the criteria from the paper is met (chooses random eigthed draws instead of directly using all of combosgood_indices
 	int combolimit = 20000;
 	double frac = 0.5;
-	int combosgoodcount = combosgood_indices.size();
+	int combosgoodcount = (int) combosgood_indices.size();
 
 	std::vector <double> combosweights;
 	std::vector <std::vector <int> > chosencomboindices; // (the indices of) combos that will be used, drawn randomly with weights
@@ -950,7 +948,7 @@ void FunctionalForm::buildModelSpace()
 
 		//getting rid of duplicates:
 		std::set <std::vector <int> > s;
-		unsigned size = chosencomboindices.size();
+		unsigned size = (int) chosencomboindices.size();
 		for (unsigned i = 0; i < size; ++i) s.insert(chosencomboindices[i]);
 		chosencomboindices.assign(s.begin(), s.end());
 

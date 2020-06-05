@@ -130,22 +130,22 @@ namespace RCRLib {
     }
     void sort(std::vector<double> &y)
     {
-        QS(0, y.size() - 1, y);
+        QS(0, (int) y.size() - 1, y);
     }
     void sort(std::vector<double> &w, std::vector<double> &y)
     {
-        QS(0, y.size() - 1, w, y);
+        QS(0, (int) y.size() - 1, w, y);
     }
     void sort(std::vector<int> &w, std::vector<double> &y)
     {
-        QS(0, y.size() - 1, w, y);
+        QS(0, (int) y.size() - 1, w, y);
     }
 
 
     //FN & CF Models:
     double getCFRatio(std::vector<double> &w)
     {
-        int size = w.size();
+        int size = (int) w.size();
         double mean = 0, stDev = 0;
         for (int i = 0; i < size; i++)
         {
@@ -213,7 +213,7 @@ namespace RCRLib {
     }
     bool distinctValuesCheck(std::vector<bool> &flags, std::vector<double>& y)
     {
-        int i = 0, size = y.size();
+        int i = 0, size = (int) y.size();
         double a, b;
 
         while (!flags[i])
@@ -297,7 +297,7 @@ namespace RCRLib {
             {
                 trueWVec[currentIndex] = (w[i]);
                 trueYVec[currentIndex] = (y[i]);
-                indicesVec[currentIndex] = i;
+                indicesVec[currentIndex] = (int) i;
 
                 currentIndex += 1;
             }
@@ -326,7 +326,7 @@ namespace RCRLib {
             if (flags[i])
             {
                 trueYVec[currentIndex] = (y[i]);
-                indicesVec[currentIndex] = i;
+                indicesVec[currentIndex] = (int) i;
                 currentIndex += 1;
             }
         }
@@ -360,7 +360,7 @@ namespace RCRLib {
         if (searchUp)
         {
             low = minimumIndex;
-            high = toSearch.size();
+            high = (int) toSearch.size();
         }
         else
         {
@@ -560,7 +560,7 @@ namespace RCRLib {
                 if ((sVec[i] < halfWeightSum) || isEqual(sVec[i],halfWeightSum))
                 {
                     total = sVec[i] + halfWeightSum;
-                    k = i; // was 0
+                    k = (int) i; // was 0
                     while (k < sVec.size() && ((sVec[k] < total) || isEqual(sVec[k], total)))
                     {
                         k++;
@@ -577,14 +577,14 @@ namespace RCRLib {
                     else if (total < minDist)
                     {
                         minDist = total;
-                        finalLower = i + lowerLimit;
+                        finalLower = (int) i + lowerLimit;
                         finalUpper = k + lowerLimit;
                     }
                 }
                 if ((sVec[i] > halfWeightSum) || isEqual(sVec[i], halfWeightSum))
                 {
                     total = sVec[i] - halfWeightSum;
-                    k = i; // was svec.size() - 1
+                    k = (int) i; // was svec.size() - 1
                     while (k > -1 && ((sVec[k] > total) || isEqual(sVec[k], total)))
                     {
                         k--;
@@ -602,7 +602,7 @@ namespace RCRLib {
                     {
                         minDist = total;
                         finalLower = k + lowerLimit;
-                        finalUpper = i + lowerLimit;
+                        finalUpper = (int) i + lowerLimit;
                     }
                 }
             }
@@ -615,7 +615,7 @@ namespace RCRLib {
 
         std::vector<double> newValues(y.begin() + lowerLimit, y.begin() + upperLimit + 1);
         std::vector<double> newWeights(w.begin() + lowerLimit, w.begin() + upperLimit + 1);
-        return getMedian(newWeights.size(), newWeights, newValues);
+        return getMedian((int) newWeights.size(), newWeights, newValues);
     }
     double getMode(int trueCount, std::vector<double> &y)
     {
@@ -651,7 +651,7 @@ namespace RCRLib {
                     k++;
                     }
                     k--;*/
-                    k = binarySearch(true, i, total, sVec);
+                    k = binarySearch(true, (int) i, total, sVec);
                     total = std::abs(y[k + lowerLimit] - y[i + lowerLimit]);
 
 
@@ -663,7 +663,7 @@ namespace RCRLib {
                     else if (total < minDist)
                     {
                         minDist = total;
-                        finalLower = i + lowerLimit;
+                        finalLower = (int) i + lowerLimit;
                         finalUpper = k + lowerLimit;
                     }
                 }
@@ -676,7 +676,7 @@ namespace RCRLib {
                     k--;
                     }
                     k++;*/
-                    k = binarySearch(false, i, total, sVec);
+                    k = binarySearch(false, (int) i, total, sVec);
 
                     total = std::abs(y[i + lowerLimit] - y[k + lowerLimit]);
 
@@ -689,7 +689,7 @@ namespace RCRLib {
                     {
                         minDist = total;
                         finalLower = k + lowerLimit;
-                        finalUpper = i + lowerLimit;
+                        finalUpper = (int) i + lowerLimit;
                     }
 
                 }
@@ -875,7 +875,7 @@ namespace RCRLib {
     }
     double getStDev(double delta, std::vector<double> &w, std::vector<double> &y)
     {
-        int size = w.size();
+        int size = (int) w.size();
         double top = 0, wSum = 0, wSumSq = 0, weight;
         for (int i = 0; i < size; i++)
         {
@@ -888,7 +888,7 @@ namespace RCRLib {
     }
     double getStDev(double delta, std::vector<double> &y)
     {
-        int size = y.size();
+        int size = (int) y.size();
         double top = 0;
         for (int i = 0; i < size; i++)
         {
@@ -899,7 +899,7 @@ namespace RCRLib {
     double get68th(std::vector<double> &w, std::vector<double> &y)
     {
         size_t sumCounter = 0;
-        double stDev = 0, totalSum = 0, runningSum, temp = 0, weightTemp = 0;
+        double stDev = 0, totalSum = 0, runningSum; //, temp = 0, weightTemp = 0;
         sort(w, y);
         for (size_t i = 0; i < y.size(); i++)
         {
@@ -932,7 +932,7 @@ namespace RCRLib {
     double get68th(std::vector<double> &y)
     {
         size_t sumCounter = 0;
-        double stDev = 0, totalSum = 0, runningSum, temp = 0, weightTemp = 0;
+        double stDev = 0, totalSum = 0, runningSum; //, temp = 0, weightTemp = 0;
         sort(y);
         for (size_t i = 0; i < y.size(); i++)
         {
@@ -1068,7 +1068,7 @@ namespace RCRLib {
         sortedY = y;
         sortedWX = xW;
         sortedWY = yW;
-        int xLowIndex = 0, xHighIndex = sortedX.size() - 1, yLowIndex = 0, yHighIndex = sortedY.size() - 1, xLowIndexIn = -1, xHighIndexIn = -1, yLowIndexIn = -1, yHighIndexIn = -1;
+        int xLowIndex = 0, xHighIndex = (int) sortedX.size() - 1, yLowIndex = 0, yHighIndex = (int) sortedY.size() - 1, xLowIndexIn = -1, xHighIndexIn = -1, yLowIndexIn = -1, yHighIndexIn = -1;
         double xLowValue, xHighValue, yLowValue, yHighValue;
         bool nullSet = false;
         while (!nullSet && (xLowIndex != xLowIndexIn || xHighIndex != xHighIndexIn || yLowIndex != yLowIndexIn || yHighIndex != yHighIndexIn))
@@ -1080,7 +1080,7 @@ namespace RCRLib {
             yHighIndexIn = yHighIndex;
 
             sort(sortedWX, sortedX);
-            xBounds = getHalfSampleBounds(0, sortedX.size() - 1, sortedWX, sortedX);
+            xBounds = getHalfSampleBounds(0, (int) sortedX.size() - 1, sortedWX, sortedX);
             xLowIndex = xBounds[0];
             xHighIndex = xBounds[1];
             xLowValue = sortedX[xLowIndex];
@@ -1088,7 +1088,7 @@ namespace RCRLib {
 
 
             sort(sortedWY, sortedY);
-            yBounds = getHalfSampleBounds(0, sortedY.size() - 1, sortedWY, sortedY);
+            yBounds = getHalfSampleBounds(0, (int) sortedY.size() - 1, sortedWY, sortedY);
             yLowIndex = yBounds[0];
             yHighIndex = yBounds[1];
             yLowValue = sortedY[yLowIndex];
@@ -1129,7 +1129,7 @@ namespace RCRLib {
         sort(sortedWX, sortedX);
         sort(sortedWY, sortedY);
         std::vector<double> toRet;
-        double m = getMedian(sortedX.size(), sortedWX, sortedX), b = getMedian(sortedY.size(), sortedWY, sortedY);
+        double m = getMedian((int) sortedX.size(), sortedWX, sortedX), b = getMedian((int) sortedY.size(), sortedWY, sortedY);
         //std::cout << "MODE        a: " << m << "\t" << "b: " << b << "\n";
         toRet.push_back(m);
         toRet.push_back(b);
@@ -1162,7 +1162,7 @@ namespace RCRLib {
         sort(sortedWY, sortedY);
 
         std::vector<double> toRet;
-        double m = getMedian(sortedX.size(), sortedWX, sortedX), b = getMedian(sortedY.size(), sortedWY, sortedY);
+        double m = getMedian((int) sortedX.size(), sortedWX, sortedX), b = getMedian((int) sortedY.size(), sortedWY, sortedY);
         //std::cout << "MEDIAN        a: " << m << "\t" << "b: " << b << "\n";
         toRet.push_back(m);
         toRet.push_back(b);
@@ -1186,7 +1186,7 @@ namespace RCRLib {
         sortedXW = xw;
         sortedYW = yw;
         sortedZW = zw;
-        int xLowIndex = 0, xHighIndex = sortedX.size() - 1, yLowIndex = 0, yHighIndex = sortedY.size() - 1, zLowIndex = 0, zHighIndex = sortedZ.size() - 1;
+        int xLowIndex = 0, xHighIndex = (int) sortedX.size() - 1, yLowIndex = 0, yHighIndex = (int) sortedY.size() - 1, zLowIndex = 0, zHighIndex = (int) sortedZ.size() - 1;
         int xLowIndexIn = -1, xHighIndexIn = -1, yLowIndexIn = -1, yHighIndexIn = -1, zLowIndexIn = -1, zHighIndexIn = -1;
         double xLowValue, xHighValue, yLowValue, yHighValue, zLowValue, zHighValue;
         bool nullSet = false;
@@ -1201,7 +1201,7 @@ namespace RCRLib {
             zHighIndexIn = zHighIndex;
 
             sort(sortedXW, sortedX);
-            xBounds = getHalfSampleBounds(0, sortedX.size() - 1, sortedXW, sortedX);
+            xBounds = getHalfSampleBounds(0, (int) sortedX.size() - 1, sortedXW, sortedX);
             xLowIndex = xBounds[0];
             xHighIndex = xBounds[1];
             xLowValue = sortedX[xLowIndex];
@@ -1209,14 +1209,14 @@ namespace RCRLib {
 
 
             sort(sortedYW, sortedY);
-            yBounds = getHalfSampleBounds(0, sortedY.size() - 1, sortedYW, sortedY);
+            yBounds = getHalfSampleBounds(0, (int) sortedY.size() - 1, sortedYW, sortedY);
             yLowIndex = yBounds[0];
             yHighIndex = yBounds[1];
             yLowValue = sortedY[yLowIndex];
             yHighValue = sortedY[yHighIndex];
 
             sort(sortedZW, sortedZ);
-            zBounds = getHalfSampleBounds(0, sortedZ.size() - 1, sortedZW, sortedZ);
+            zBounds = getHalfSampleBounds(0, (int) sortedZ.size() - 1, sortedZW, sortedZ);
             zLowIndex = zBounds[0];
             zHighIndex = zBounds[1];
             zLowValue = sortedZ[zLowIndex];
@@ -1272,7 +1272,7 @@ namespace RCRLib {
         sort(sortedYW, sortedY);
         sort(sortedZW, sortedZ);
         std::vector<double> toRet;
-        double b = getMedian(sortedX.size(), sortedXW, sortedX), m = getMedian(sortedY.size(), sortedYW, sortedY), xNot = getMedian(sortedZ.size(), sortedZW, sortedZ);
+        double b = getMedian((int) sortedX.size(), sortedXW, sortedX), m = getMedian((int) sortedY.size(), sortedYW, sortedY), xNot = getMedian((int) sortedZ.size(), sortedZW, sortedZ);
         //std::cout << "MODE        A: " << b << "\t" << "B: " << m << "\tC: " << xNot << "\n";
         toRet.push_back(b);
         toRet.push_back(m);
@@ -1312,7 +1312,7 @@ namespace RCRLib {
         sort(sortedZW, sortedZ);
 
         std::vector<double> toRet;
-        double b = getMedian(sortedX.size(), sortedXW, sortedX), m = getMedian(sortedY.size(), sortedYW, sortedY), xNot = getMedian(sortedZ.size(), sortedZW, sortedZ);
+        double b = getMedian((int) sortedX.size(), sortedXW, sortedX), m = getMedian((int) sortedY.size(), sortedYW, sortedY), xNot = getMedian((int) sortedZ.size(), sortedZW, sortedZ);
         //std::cout << "MEDIAN        A: " << b << "\t" << "B: " << m << "\tC: " << xNot << "\n";
         toRet.push_back(b);
         toRet.push_back(m);
@@ -1345,7 +1345,7 @@ namespace RCRLib {
 
             sort(sortedWHold, sortedYHold);
 
-            nDimMedian[i] = getMedian(sortedYHold.size(), sortedWHold, sortedYHold);
+            nDimMedian[i] = getMedian((int) sortedYHold.size(), sortedWHold, sortedYHold);
         }
 
         f.meanstartingpoint = nDimMedian; //used for the guess for the generalized mean calculation
@@ -1377,12 +1377,14 @@ namespace RCRLib {
             sortedW = sortedWVec[j];
 
             //indexBounds = getHalfSampleBounds(0, sortedY.size() - 1, sortedW, sortedY);
-            paramBound.lowIndex = 0, paramBound.highIndex = sortedY.size() - 1;
+            paramBound.lowIndex = 0;
+            paramBound.highIndex = (int) sortedY.size() - 1;
 
             //paramBound.lowValue = sortedY[indexBounds[0]];
             //paramBound.highValue = sortedY[indexBounds[1]];
 
-            paramBoundIn.lowIndex = -1, paramBoundIn.highIndex = -1;
+            paramBoundIn.lowIndex = -1;
+            paramBoundIn.highIndex = -1;
 
             
 
@@ -1418,7 +1420,7 @@ namespace RCRLib {
 
                 sort(sortedW, sortedY);
 
-                indexBounds = getHalfSampleBounds(0, sortedY.size() - 1, sortedW, sortedY);
+                indexBounds = getHalfSampleBounds(0, (int) sortedY.size() - 1, sortedW, sortedY);
                 paramBound.lowIndex = indexBounds[0];
                 paramBound.highIndex = indexBounds[1];
                 paramBound.lowValue = sortedY[indexBounds[0]];
@@ -1477,7 +1479,7 @@ namespace RCRLib {
 
         for (int j = 0; j < f.parameterSpace.size(); j++)
         {
-            toRet.push_back(getMedian(sortedYVec[j].size(), sortedWVec[j], sortedYVec[j]));
+            toRet.push_back(getMedian((int) sortedYVec[j].size(), sortedWVec[j], sortedYVec[j]));
         }
 
         return toRet;
@@ -1504,7 +1506,7 @@ namespace RCRLib {
                 if (std::abs(models[i][0] - model[0]) < .0001 && std::abs(models[i][1] - model[1]) < .0001)// && std::abs(models[i][2] - model[2]) < .0001)
                 {
                     found = true;
-                    indexFound = i;
+                    indexFound = (int) i;
                 }
             }
             if (!found)
@@ -1512,7 +1514,7 @@ namespace RCRLib {
                 models.push_back(model);
             }
         }
-        double mSum = 0, bSum = 0, xSum = 0;
+        double mSum = 0, bSum = 0; //, xSum = 0;
         for (size_t i = indexFound; i < models.size(); i++)
         {
             bSum += models[i][0];
@@ -5091,7 +5093,7 @@ namespace RCRLib {
 
         std::vector<double> cleanYHold = this->result.cleanY, cleanYAboveMeanHold, cleanYBelowMeanHold;
         std::vector<double> cleanWHold = this->result.cleanW, cleanWAboveMeanHold, cleanWBelowMeanHold;
-        double meanHold = getMean(cleanYHold.size(), cleanWHold, cleanYHold);
+        double meanHold = getMean((int) cleanYHold.size(), cleanWHold, cleanYHold);
         for (size_t i = 0; i < cleanYHold.size(); i++)
         {
             cleanYHold[i] -= meanHold;
@@ -5140,7 +5142,7 @@ namespace RCRLib {
         this->result.rejectedY = rejectedY;
         std::vector<double> cleanYHold = this->result.cleanY, cleanYAboveMeanHold, cleanYBelowMeanHold;
         std::vector<double> cleanWAboveMeanHold, cleanWBelowMeanHold;
-        double meanHold = getMean(cleanYHold.size(), cleanYHold);
+        double meanHold = getMean((int) cleanYHold.size(), cleanYHold);
         for (size_t i = 0; i < cleanYHold.size(); i++)
         {
             cleanYHold[i] -= meanHold;
@@ -5749,8 +5751,8 @@ namespace RCRLib {
     }
     bool RCR::bulkReject(int paramCount, std::vector<bool> &flags, std::vector<int> &index, std::vector<double> &max, std::vector<double> &y)
     {
-        bool noPointsRejected = true, threeDistinct = true;
-        int size = max.size();
+        bool noPointsRejected = true; //, threeDistinct = true;
+        int size = (int) max.size();
         int i = size - 1;
         while (distinctValuesCheck(paramCount, flags, y) && size*erfcCustom(max[i]) < .5)
         {
@@ -5763,8 +5765,8 @@ namespace RCRLib {
     }
     bool RCR::bulkReject(std::vector<bool> &flags, std::vector<int> &index, std::vector<double> &max, std::vector<double> &y)
     {
-        bool noPointsRejected = true, threeDistinct = true;
-        int size = max.size();
+        bool noPointsRejected = true; //, threeDistinct = true;
+        int size = (int) max.size();
         int i = size - 1;
         while (distinctValuesCheck(flags, y) && size*erfcCustom(max[i]) < .5)
         {
@@ -5905,13 +5907,13 @@ namespace RCRLib {
         switch (muTech)
         {
         case MEAN:
-            return getMean(w.size(), w, y);
+            return getMean((int) w.size(), w, y);
         case MEDIAN:
             sort(w, y);
-            return getMedian(w.size(), w, y);
+            return getMedian((int) w.size(), w, y);
         case MODE:
             sort(w, y);
-            return 	getMode(w.size(), w, y);
+            return 	getMode((int) w.size(), w, y);
         }
         return -1;
     }
@@ -5981,9 +5983,9 @@ namespace RCRLib {
 
     double RCR::handleSigmaTechSelect(int counter, std::vector<double> &w, std::vector<double> &y)
     {
-        std::vector<double> x = getXVec(y.size(), w);
+        std::vector<double> x = getXVec((int) y.size(), w);
         int xBelow1Count = countAmountLessThanOne(x);
-        double nCorrection = nCorrect(counter, w);
+//        double nCorrection = nCorrect(counter, w);
         switch (sigmaTech)
         {
         case STANDARD_DEVIATION:
@@ -6000,9 +6002,9 @@ namespace RCRLib {
     }
     double RCR::handleSigmaTechSelect(int counter, std::vector<double> &y)
     {
-        std::vector<double> x = getXVec(y.size());
+        std::vector<double> x = getXVec((int) y.size());
         int xBelow1Count = countAmountLessThanOne(x);
-        double nCorrection = nCorrect(counter);
+//        double nCorrection = nCorrect(counter);
         switch (sigmaTech)
         {
         case STANDARD_DEVIATION:
@@ -6019,7 +6021,7 @@ namespace RCRLib {
     }
     double RCR::handleBulkSigmaTechSelect(int counter, std::vector<double> &w, std::vector<double> &y)
     {
-        std::vector<double> x = getXVec(y.size(), w);
+        std::vector<double> x = getXVec((int) y.size(), w);
         int xBelowOne = countAmountLessThanOne(x);
         if (xBelowOne > 2)
         {
@@ -6036,7 +6038,7 @@ namespace RCRLib {
     }
     double RCR::handleBulkSigmaTechSelect(int counter, std::vector<double> &y)
     {
-        std::vector<double> x = getXVec(y.size());
+        std::vector<double> x = getXVec((int) y.size());
         int xBelowOne = countAmountLessThanOne(x);
         if (xBelowOne > 2)
         {
@@ -6057,7 +6059,7 @@ namespace RCRLib {
     void RCR::iterativeSingleSigmaRCR(std::vector<double> &w, std::vector<double> &y)
     {
         bool stop = false;
-        int maxIndex, trueCount = w.size();
+        int maxIndex, trueCount = (int) w.size();
         double mu, stDev, sigma, hold, max; max = -99999;
 
         std::vector<bool> localFlags = result.flags;
@@ -6116,7 +6118,7 @@ namespace RCRLib {
                 trueY = trueYHold;
             }
 
-            trueCount = trueW.size();
+            trueCount = (int) trueW.size();
             max = -99999;
             trueW = trueWHold;
             trueY = trueYHold;
@@ -6143,7 +6145,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = reject(this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
+                stop = reject((int) this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
             }
             else
             {
@@ -6159,7 +6161,7 @@ namespace RCRLib {
     void RCR::iterativeSingleSigmaRCR(std::vector<double> &y)
     {
         bool stop = false;
-        int maxIndex, trueCount = y.size();
+        int maxIndex, trueCount = (int) y.size();
         double mu, stDev, sigma, hold, max; max = -99999;
 
         std::vector<bool> localFlags = result.flags;
@@ -6191,7 +6193,7 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
                 //indices = this->nonParametricModel->indices;
@@ -6202,14 +6204,14 @@ namespace RCRLib {
                 setTrueVec(localFlags, indices, y, trueY);
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
             }
             //trueY = handleMuTechSelect();
             //mu = 0;
 
-            trueCount = trueY.size();
+            trueCount = (int) trueY.size();
             //std::cout << trueCount << "\n";
 
             max = -99999;
@@ -6236,7 +6238,7 @@ namespace RCRLib {
             indices.clear();
             if (this->muType == PARAMETRIC)
             {
-                stop = reject(this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
+                stop = reject((int) this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
             }
             else
             {
@@ -6253,7 +6255,7 @@ namespace RCRLib {
     {
         bool stop = false, nonzeroAbove, nonzeroBelow;
         int maxIndex, trueCount;
-        double mu, stDev, sigma, hold, max, sigmaBelow = 0, sigmaAbove = 0, nCorrection, stDevAbove, stDevBelow;
+        double mu, stDev, sigma, hold, max, nCorrection, stDevAbove, stDevBelow; // , sigmaBelow = 0, sigmaAbove = 0,
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6305,7 +6307,7 @@ namespace RCRLib {
             }
 
 
-            trueCount = trueW.size();
+            trueCount = (int) trueW.size();
             max = -99999;
             diffBelow.reserve(trueCount);
             diffAbove.reserve(trueCount);
@@ -6381,7 +6383,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = reject(this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
+                stop = reject((int) this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
             }
             else
             {
@@ -6400,7 +6402,7 @@ namespace RCRLib {
     {
         bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
         int maxIndex, trueCount, belowSplitIndex, aboveSplitIndex;
-        double mu, sigma, hold, max, sigmaBelow = 0, sigmaAbove = 0, stDev, nCorrection, stDevAbove, stDevBelow;
+        double mu, sigma, hold, max, stDev, nCorrection, stDevAbove, stDevBelow; // sigmaBelow = 0, sigmaAbove = 0,
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6427,7 +6429,7 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
                 indices = this->nonParametricModel->indices;
@@ -6438,11 +6440,11 @@ namespace RCRLib {
                 setTrueVec(localFlags, indices, y, trueY);
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
             }
-            trueCount = trueY.size();
+            trueCount = (int) trueY.size();
             //std::cout << trueCount << "\n";
 
             max = -99999;
@@ -6462,8 +6464,8 @@ namespace RCRLib {
                     diffBelow.push_back(hold);
                     diffAbove.push_back(hold);
                     split = true;
-                    belowSplitIndex = diffBelow.size() - 1;
-                    aboveSplitIndex = diffAbove.size() - 1;
+                    belowSplitIndex = (int) diffBelow.size() - 1;
+                    aboveSplitIndex = (int) diffAbove.size() - 1;
                 }
                 else if (trueY[i] > mu)
                 {
@@ -6529,7 +6531,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = reject(this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
+                stop = reject((int) this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max / sigma, localFlags, trueY);
             }
             else
             {
@@ -6599,7 +6601,7 @@ namespace RCRLib {
                 trueY = trueYHold;
             }
 
-            trueCount = trueW.size();
+            trueCount = (int) trueW.size();
             diffBelow.reserve(trueCount);
             diffAbove.reserve(trueCount);
             wBelow.reserve(trueCount);
@@ -6661,12 +6663,12 @@ namespace RCRLib {
                     if (y[i] < mu && (hold / sigmaBelow) > max)
                     {
                         max = hold / sigmaBelow;
-                        maxIndex = i;
+                        maxIndex = (int) i;
                     }
                     if (y[i] > mu && (hold / sigmaAbove) > max)
                     {
                         max = hold / sigmaAbove;
-                        maxIndex = i;
+                        maxIndex = (int) i;
                     }
                 }
             }
@@ -6678,7 +6680,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = reject(this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max, localFlags, trueY);
+                stop = reject((int) this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max, localFlags, trueY);
             }
             else
             {
@@ -6726,7 +6728,7 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
                 indices = this->nonParametricModel->indices;
@@ -6737,12 +6739,12 @@ namespace RCRLib {
                 setTrueVec(localFlags, indices, y, trueY);
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
             }
 
-            trueCount = trueY.size();
+            trueCount = (int) trueY.size();
             diffBelow.reserve(trueCount);
             diffAbove.reserve(trueCount);
             split = false;
@@ -6754,8 +6756,8 @@ namespace RCRLib {
                     diffBelow.push_back(hold);
                     diffAbove.push_back(hold);
                     split = true;
-                    belowSplitIndex = diffBelow.size() - 1;
-                    aboveSplitIndex = diffAbove.size() - 1;
+                    belowSplitIndex = (int) diffBelow.size() - 1;
+                    aboveSplitIndex = (int) diffAbove.size() - 1;
                 }
                 else if (trueY[i] > mu)
                 {
@@ -6807,12 +6809,12 @@ namespace RCRLib {
                     if (y[i] < mu && (hold / sigmaBelow) > max)
                     {
                         max = hold / sigmaBelow;
-                        maxIndex = i;
+                        maxIndex = (int) i;
                     }
                     if (y[i] > mu && (hold / sigmaAbove) > max)
                     {
                         max = hold / sigmaAbove;
-                        maxIndex = i;
+                        maxIndex = (int) i;
                     }
                 }
             }
@@ -6824,7 +6826,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = reject(this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max, localFlags, trueY);
+                stop = reject((int) this->parametricModel->parameterSpace.size(), trueCount, maxIndex, max, localFlags, trueY);
             }
             else
             {
@@ -6846,7 +6848,7 @@ namespace RCRLib {
     void RCR::bulkSingleSigmaRCR(std::vector<double> &w, std::vector<double> &y)
     {
         bool stop = false;
-        int trueCount = w.size();
+        int trueCount = (int) w.size();
         double mu, sigma, hold;
 
         std::vector<bool> localFlags = result.flags;
@@ -6903,7 +6905,7 @@ namespace RCRLib {
             }
 
 
-            trueCount = trueW.size();
+            trueCount = (int) trueW.size();
             diff.reserve(trueCount);
 
             for (size_t i = 0; i < trueY.size(); i++)
@@ -6925,7 +6927,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = bulkReject(this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
+                stop = bulkReject((int) this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
             }
             else
             {
@@ -6940,7 +6942,7 @@ namespace RCRLib {
     void RCR::bulkSingleSigmaRCR(std::vector<double> &y)
     {
         bool stop = false;
-        int trueCount = y.size();
+        int trueCount = (int) y.size();
         double mu, sigma, hold;
 
         std::vector<bool> localFlags = result.flags;
@@ -6974,7 +6976,7 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
                 //indices = this->nonParametricModel->indices;
@@ -6986,12 +6988,12 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
             }
 
-            trueCount = trueY.size();
+            trueCount = (int) trueY.size();
             //std::cout << trueCount << "\n";
 
             //indices = this->parametricModel->indices;
@@ -7016,7 +7018,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = bulkReject(this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
+                stop = bulkReject((int) this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
             }
             else
             {
@@ -7030,7 +7032,7 @@ namespace RCRLib {
     void RCR::bulkLowerSigmaRCR(std::vector<double> &w, std::vector<double> &y)
     {
         bool stop = false, nonzeroAbove, nonzeroBelow;
-        int trueCount = w.size();
+        int trueCount = (int) w.size();
         double mu, sigma, hold;
 
         std::vector<bool> localFlags = result.flags;
@@ -7078,7 +7080,7 @@ namespace RCRLib {
             }
 
 
-            trueCount = trueW.size();
+            trueCount = (int) trueW.size();
             diffHold.reserve(trueCount);
             diffBelow.reserve(trueCount);
             diffAbove.reserve(trueCount);
@@ -7145,7 +7147,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = bulkReject(this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
+                stop = bulkReject((int) this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
             }
             else
             {
@@ -7164,7 +7166,7 @@ namespace RCRLib {
     void RCR::bulkLowerSigmaRCR(std::vector<double> &y)
     {
         bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
-        int trueCount = y.size(), belowSplitIndex, aboveSplitIndex;
+        int trueCount = (int) y.size(), belowSplitIndex, aboveSplitIndex;
         double mu, sigma, hold;
 
         std::vector<bool> localFlags = result.flags;
@@ -7189,7 +7191,7 @@ namespace RCRLib {
                 this->nonParametricModel->muFunc(localFlags, indices, y, trueY);
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
                 indices = this->nonParametricModel->indices;
 
                 trueY = trueYHold;
@@ -7199,7 +7201,7 @@ namespace RCRLib {
                 setTrueVec(localFlags, indices, y, trueY);
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
             }
@@ -7215,8 +7217,8 @@ namespace RCRLib {
                 {
                     diffBelow.push_back(hold);
                     diffAbove.push_back(hold);
-                    belowSplitIndex = diffBelow.size() - 1;
-                    aboveSplitIndex = diffAbove.size() - 1;
+                    belowSplitIndex = (int) diffBelow.size() - 1;
+                    aboveSplitIndex = (int) diffAbove.size() - 1;
                     split = true;
                 }
                 else if (trueY[i] > mu)
@@ -7273,7 +7275,7 @@ namespace RCRLib {
             }
             if (this->muType == PARAMETRIC)
             {
-                stop = bulkReject(this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
+                stop = bulkReject((int) this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
             }
             else
             {
@@ -7292,8 +7294,8 @@ namespace RCRLib {
     void RCR::bulkEachSigmaRCR(std::vector<double> &w, std::vector<double> &y)
     {
         bool stop = false, nonzeroBelow, nonzeroAbove;
-        int trueCount = w.size();
-        double mu, sigmaBelow, sigmaAbove, hold, max = -99999;
+        int trueCount = (int) w.size();
+        double mu, sigmaBelow, sigmaAbove, hold; //, max = -99999;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -7352,7 +7354,7 @@ namespace RCRLib {
             }
 
 
-            trueCount = trueW.size();
+            trueCount = (int) trueW.size();
             diffHold.reserve(trueCount);
             diffBelow.reserve(trueCount);
             diffAbove.reserve(trueCount);
@@ -7417,7 +7419,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = bulkReject(this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
+                stop = bulkReject((int) this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
             }
             else
             {
@@ -7436,8 +7438,8 @@ namespace RCRLib {
     void RCR::bulkEachSigmaRCR(std::vector<double> &y)
     {
         bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
-        int trueCount = y.size(), belowSplitIndex, aboveSplitIndex;
-        double mu, sigmaBelow, sigmaAbove, hold, max = -99999;
+        int trueCount = (int) y.size(), belowSplitIndex, aboveSplitIndex;
+        double mu, sigmaBelow, sigmaAbove, hold; //, max = -99999;
 
         std::vector<bool> localFlags = result.flags;
 
@@ -7471,7 +7473,7 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
                 //indices = this->nonParametricModel->indices;
@@ -7483,12 +7485,12 @@ namespace RCRLib {
 
                 trueYHold = trueY;
 
-                mu = handleMuTechSelect(trueY.size(), trueY);
+                mu = handleMuTechSelect((int) trueY.size(), trueY);
 
                 trueY = trueYHold;
             }
 
-            trueCount = trueY.size();
+            trueCount = (int) trueY.size();
 
             split = false;
             diffHold.reserve(trueCount);
@@ -7502,8 +7504,8 @@ namespace RCRLib {
                 {
                     diffBelow.push_back(hold);
                     diffAbove.push_back(hold);
-                    belowSplitIndex = diffBelow.size() - 1;
-                    aboveSplitIndex = diffAbove.size() - 1;
+                    belowSplitIndex = (int) diffBelow.size() - 1;
+                    aboveSplitIndex = (int) diffAbove.size() - 1;
                     split = true;
                 }
                 else if (trueY[i] > mu)
@@ -7561,7 +7563,7 @@ namespace RCRLib {
 
             if (this->muType == PARAMETRIC)
             {
-                stop = bulkReject(this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
+                stop = bulkReject((int) this->parametricModel->parameterSpace.size(), localFlags, indices, diffHold, trueY);
             }
             else
             {
