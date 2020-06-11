@@ -528,7 +528,7 @@ namespace RCRLib {
     }
     double getMode(int trueCount, std::vector<double> &w, std::vector<double> &y)
     {
-        int k, lowerLimit = 0, upperLimit = trueCount - 1, lowerLimitIn = -1, upperLimitIn = -1, finalLower, finalUpper, size;
+        int k, lowerLimit = 0, upperLimit = trueCount - 1, lowerLimitIn = -1, upperLimitIn = -1, finalLower = -1, finalUpper = -1, size;
         double halfWeightSum = 0, sSum, total, minDist = 999999;
         std::vector<double> sVec;
 
@@ -619,7 +619,7 @@ namespace RCRLib {
     }
     double getMode(int trueCount, std::vector<double> &y)
     {
-        int k, lowerLimit = 0, upperLimit = trueCount - 1, lowerLimitIn = -1, upperLimitIn = -1, finalLower, finalUpper, size;
+        int k, lowerLimit = 0, upperLimit = trueCount - 1, lowerLimitIn = -1, upperLimitIn = -1, finalLower = -1, finalUpper = -1, size;
         double halfWeightSum = 0, sSum, total, minDist = 999999;
         std::vector<double> sVec;
         while (lowerLimit != lowerLimitIn || upperLimit != upperLimitIn)
@@ -728,7 +728,7 @@ namespace RCRLib {
     double mFinder(int low, int high, int lastXUnderOne, int increment, std::vector<double> &w, std::vector<double> &x, std::vector<double> &y)
     {
         bool stop = false;
-        int bestM, mLow, mHigh;
+        int bestM = -1, mLow = -1, mHigh = -1;
         double a, b, c, d, e, f, error, xAtM, xAtIxAtMDiff, wAtI, wxProd, tau, sigma, factor, minError = DBL_MAX;
         while (!stop)
         {
@@ -803,7 +803,7 @@ namespace RCRLib {
     double mFinder(int low, int high, int lastXUnderOne, int increment, std::vector<double> &x, std::vector<double> &y)
     {
         bool stop = false;
-        int bestM, mLow, mHigh;
+        int bestM = -1, mLow = -1, mHigh = -1;
         double a, b, c, d, e, f, error, xAtM, xAtIxAtMDiff, tau, sigma, factor, minError = 999999;
         while (!stop)
         {
@@ -6060,7 +6060,7 @@ namespace RCRLib {
     {
         bool stop = false;
         int maxIndex, trueCount = (int) w.size();
-        double mu, stDev, sigma, hold, max; max = -99999;
+        double mu = -1, stDev = -1, sigma = -1, hold, max; max = -99999;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6162,7 +6162,7 @@ namespace RCRLib {
     {
         bool stop = false;
         int maxIndex, trueCount = (int) y.size();
-        double mu, stDev, sigma, hold, max; max = -99999;
+        double mu = -1, stDev = -1, sigma = -1, hold, max; max = -99999;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6255,7 +6255,7 @@ namespace RCRLib {
     {
         bool stop = false, nonzeroAbove, nonzeroBelow;
         int maxIndex, trueCount;
-        double mu, stDev, sigma, hold, max, nCorrection, stDevAbove, stDevBelow; // , sigmaBelow = 0, sigmaAbove = 0,
+        double mu = -1, stDev = -1, sigma = -1, hold, max, nCorrection, stDevAbove = -1, stDevBelow = -1; // , sigmaBelow = 0, sigmaAbove = 0,
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6401,8 +6401,8 @@ namespace RCRLib {
     void RCR::iterativeLowerSigmaRCR(std::vector<double> &y)
     {
         bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
-        int maxIndex, trueCount, belowSplitIndex, aboveSplitIndex;
-        double mu, sigma, hold, max, stDev, nCorrection, stDevAbove, stDevBelow; // sigmaBelow = 0, sigmaAbove = 0,
+        int maxIndex, trueCount, belowSplitIndex = -1, aboveSplitIndex = -1;
+        double mu = -1, sigma = -1, hold, max, stDev = -1, nCorrection, stDevAbove = -1, stDevBelow = -1; // sigmaBelow = 0, sigmaAbove = 0,
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6551,7 +6551,7 @@ namespace RCRLib {
     {
         bool stop = false, nonzeroAbove, nonzeroBelow;
         int maxIndex, trueCount;
-        double mu, sigmaBelow, sigmaAbove, stDevBelow, stDevAbove, nCorrection, hold, max = -99999;
+        double mu = -1, sigmaBelow = -1, sigmaAbove = -1, stDevBelow = -1, stDevAbove = -1, nCorrection, hold, max = -99999;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -6700,8 +6700,8 @@ namespace RCRLib {
     void RCR::iterativeEachSigmaRCR(std::vector<double> &y)
     {
         bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
-        int maxIndex, trueCount, belowSplitIndex, aboveSplitIndex;
-        double mu, sigmaBelow, sigmaAbove, stDevAbove, stDevBelow, nCorrection, hold, max = -99999;
+        int maxIndex, trueCount, belowSplitIndex = -1, aboveSplitIndex = -1;
+        double mu = -1, sigmaBelow = -1, sigmaAbove = -1, stDevAbove = -1, stDevBelow = -1, nCorrection, hold, max = -99999;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -7033,7 +7033,7 @@ namespace RCRLib {
     {
         bool stop = false, nonzeroAbove, nonzeroBelow;
         int trueCount = (int) w.size();
-        double mu, sigma, hold;
+        double mu, sigma = -1, hold;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -7166,8 +7166,8 @@ namespace RCRLib {
     void RCR::bulkLowerSigmaRCR(std::vector<double> &y)
     {
         bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
-        int trueCount = (int) y.size(), belowSplitIndex, aboveSplitIndex;
-        double mu, sigma, hold;
+        int trueCount = (int) y.size(), belowSplitIndex = -1, aboveSplitIndex = -1;
+        double mu, sigma = -1, hold;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -7295,7 +7295,7 @@ namespace RCRLib {
     {
         bool stop = false, nonzeroBelow, nonzeroAbove;
         int trueCount = (int) w.size();
-        double mu, sigmaBelow, sigmaAbove, hold; //, max = -99999;
+        double mu, sigmaBelow = -1, sigmaAbove = -1, hold; //, max = -99999;
 
         std::vector<bool> localFlags = result.flags;
         std::vector<int> indices;
@@ -7437,9 +7437,9 @@ namespace RCRLib {
     }
     void RCR::bulkEachSigmaRCR(std::vector<double> &y)
     {
-        bool stop = false, split = false, nonzeroAbove, nonzeroBelow;
-        int trueCount = (int) y.size(), belowSplitIndex, aboveSplitIndex;
-        double mu, sigmaBelow, sigmaAbove, hold; //, max = -99999;
+        bool stop = false, split = false, nonzeroAbove = -1, nonzeroBelow = -1;
+        int trueCount = (int) y.size(), belowSplitIndex = -1, aboveSplitIndex = -1;
+        double mu, sigmaBelow = -1, sigmaAbove = -1, hold; //, max = -99999;
 
         std::vector<bool> localFlags = result.flags;
 
