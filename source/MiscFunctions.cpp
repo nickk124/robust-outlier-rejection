@@ -1,4 +1,9 @@
-//#include "stdafx.h"
+/*
+ Robust Chauvenet Rejection (RCR) Official Codebase
+ Active Author: Nick C. Konz
+ Former Author: Michael Maples
+ See license at https://github.com/nickk124/RCR
+ */
 #include "MiscFunctions.h"
 
 // Function to get cofactor of A[p][q] in temp[][]. n is current
@@ -324,30 +329,30 @@ return result;
 }
 
 */
-double chiSquared(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) // computes the chi-squared value. takes the function y=... as an argument (via pointer) 
+double chiSquared(std::function <double(double, std::vector <double> )> f, std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) // computes the chi-squared value. takes the function y=... as an argument (via pointer)
 { //FUNCTION MUST BE USER-PROVIDED
 	int N = (int) y.size();
 	double sum = 0.0;
 
 	for (int i = 0; i < N; i++) {
-		sum += std::pow(((y[i] - (*f)(x[i], params) ) / sigma_y[i]), 2.0);
+		sum += std::pow(((y[i] - f(x[i], params) ) / sigma_y[i]), 2.0);
 	}
 	return sum;
 }
 
-double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> sigma_y) // multi-dimensional independent variables case
+double chiSquared(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> sigma_y) // multi-dimensional independent variables case
 { //FUNCTION MUST BE USER-PROVIDED
 	int N = (int) y.size();
 	double sum = 0.0;
 
 	for (int i = 0; i < N; i++) {
-		sum += std::pow(((y[i] - (*f)(x[i], params) )/ sigma_y[i]), 2.0);
+		sum += std::pow(((y[i] - f(x[i], params) )/ sigma_y[i]), 2.0);
 	}
 	return sum;
 
 }
 
-double chiSquared(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> w, int K) // computes the chi-squared value. takes the function y=... as an argument (via pointer) 
+double chiSquared(std::function <double(double, std::vector <double> )> f, std::vector <double> y, std::vector <double> x, std::vector <double> params, std::vector <double> w, int K) // computes the chi-squared value. takes the function y=... as an argument (via pointer)
 { //FUNCTION MUST BE USER-PROVIDED
 	//K = 0 if nonweighted, 1 if weighted
 	int N = (int) y.size();
@@ -361,12 +366,12 @@ double chiSquared(double(*f)(double, std::vector <double>), std::vector <double>
 	double sum = 0.0;
 
 	for (int i = 0; i < N; i++) {
-		sum += w[i] * std::pow(y[i] - (*f)(x[i], params), 2.0);
+		sum += w[i] * std::pow(y[i] - f(x[i], params), 2.0);
 	}
 	return sum;
 }
 
-double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> w, int K) // multi-dimensional independent variables case
+double chiSquared(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params, std::vector <double> w, int K) // multi-dimensional independent variables case
 { //FUNCTION MUST BE USER-PROVIDED
 	//K = 0 if nonweighted, 1 if weighted
 	int N = (int) y.size();
@@ -380,34 +385,34 @@ double chiSquared(double(*f)(std::vector <double>, std::vector <double>), std::v
 	double sum = 0.0;
 
 	for (int i = 0; i < N; i++) {
-		sum += w[i] * std::pow(y[i] - (*f)(x[i], params), 2.0);
+		sum += w[i] * std::pow(y[i] - f(x[i], params), 2.0);
 	}
 	return sum;
 }
 
-std::vector <double> residuals(double(*f)(double, std::vector <double>), std::vector <double> y, std::vector <double> x, std::vector <double> params) // computes the residuals vector needed in the GN algorithm
+std::vector <double> residuals(std::function <double(double, std::vector <double> )> f, std::vector <double> y, std::vector <double> x, std::vector <double> params) // computes the residuals vector needed in the GN algorithm
 { //FUNCTION MUST BE USER-PROVIDED
 	int N = (int) y.size();
 	std::vector <double> result(N, 0.0); // placeholder
 
 	for (int i = 0; i < N; i++) {
-		result[i] = ((*f)(x[i], params) - y[i]);
+		result[i] = (f(x[i], params) - y[i]);
 	}
 	return result;
 }
 
-std::vector <double> residuals(double(*f)(std::vector <double>, std::vector <double>), std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params) // multi-dimensional independent variables case
+std::vector <double> residuals(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <double> y, std::vector <std::vector<double> > x, std::vector <double> params) // multi-dimensional independent variables case
 { //FUNCTION MUST BE USER-PROVIDED
 	int N = (int) y.size();
 	std::vector <double> result(N, 0.0); // placeholder
 
 	for (int i = 0; i < N; i++) {
-		result[i] = ((*f)(x[i], params) - y[i]);
+		result[i] = (f(x[i], params) - y[i]);
 	}
 	return result;
 }
 
-std::vector < std::vector <double> > jacobian(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params) //Jacobian matrix, CASE of 1 independent var, takes argument of vector of parameters. USER INPUTTED.
+std::vector < std::vector <double> > jacobian(std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> x, std::vector <double> params) //Jacobian matrix, CASE of 1 independent var, takes argument of vector of parameters. USER INPUTTED.
 {
 	int M = (int) params.size(); //dimensionality
 	int N = (int) x.size();
@@ -426,7 +431,7 @@ std::vector < std::vector <double> > jacobian(std::vector <double(*)(double, std
 
 };
 
-std::vector < std::vector <double> > jacobian(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //Jacobian matrix, CASE of >1 independent var, takes argument of vector of parameters. USER INPUTTED.
+std::vector < std::vector <double> > jacobian(std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //Jacobian matrix, CASE of >1 independent var, takes argument of vector of parameters. USER INPUTTED.
 {
 	int M = (int) params.size(); //dimensionality
 	int N = (int) x.size();
@@ -445,7 +450,7 @@ std::vector < std::vector <double> > jacobian(std::vector <double(*)(std::vector
 
 };
 //sy, w
-std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) //1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) //1D case
 {
 	int M = (int) params.size();
 
@@ -488,7 +493,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 	return sigma_params;
 }
 //sy, w ND
-std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) // >1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y, std::vector <double> w, double wbar) // >1D case
 {
 	int M = (int) params.size();
 
@@ -531,7 +536,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 	return sigma_params;
 }
 //sy
-std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) //1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> sigma_y) //1D case
 {
 	int M = (int) params.size();
 
@@ -572,7 +577,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 	return sigma_params;
 }
 // sy, ND
-std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y) //>1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> sigma_y) //>1D case
 {
 	int M = (int) params.size();
 
@@ -613,7 +618,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 }
 
 //w, no sy, ND
-std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> w, double wbar) //1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> x, std::vector <double> params, std::vector <double> w, double wbar) //1D case
 {
 	int M = (int) params.size();
 
@@ -656,7 +661,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 	return sigma_params;
 }
 //w, no sy, ND
-std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> w, double wbar) // >1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector< std::vector <double> > x, std::vector <double> params, std::vector <double> w, double wbar) // >1D case
 {
 	int M = (int) params.size();
 
@@ -699,7 +704,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 	return sigma_params;
 }
 // no w or sy
-std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> x, std::vector <double> params) //1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> x, std::vector <double> params) //1D case
 {
 	int M = (int) params.size();
 
@@ -740,7 +745,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(double, std::vector
 	return sigma_params;
 }
 // no w or sy, ND
-std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //>1D case
+std::vector <double> paramuncertainty(std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector< std::vector <double> > x, std::vector <double> params) //>1D case
 {
 	int M = (int) params.size();
 
@@ -780,7 +785,7 @@ std::vector <double> paramuncertainty(std::vector <double(*)(std::vector <double
 	return sigma_params;
 }
 //NON-WEIGHTED, with error bars:
-std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of 1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(double, std::vector <double> )> f, std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of 1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	bool tolcheck = true;
@@ -798,7 +803,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_uw = dot(transpose(J), J);
 		b_uw = dot(transpose(J), res);
@@ -823,8 +828,8 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 			params_new[i] = params_old[i] - multiplier * incrementvect[i];
 		}
 
-		oldChiSq = chiSquared((*f), y, x, params_old, sigma_y);
-		newChiSq = chiSquared((*f), y, x, params_new, sigma_y);
+		oldChiSq = chiSquared(f, y, x, params_old, sigma_y);
+		newChiSq = chiSquared(f, y, x, params_new, sigma_y);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -881,7 +886,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 
 };
 
-std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of >1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance) //the case of >1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	bool tolcheck = true;
@@ -899,7 +904,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_uw = dot(transpose(J), J);
 		b_uw = dot(transpose(J), res);
@@ -924,8 +929,8 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 			params_new[i] = params_old[i] - multiplier * incrementvect[i];
 		}
 
-		oldChiSq = chiSquared((*f), y, x, params_old, sigma_y);
-		newChiSq = chiSquared((*f), y, x, params_new, sigma_y);
+		oldChiSq = chiSquared(f, y, x, params_old, sigma_y);
+		newChiSq = chiSquared(f, y, x, params_new, sigma_y);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -980,7 +985,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 
 };
 //WEIGHTED, with error bars:
-std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(double, std::vector <double> )> f, std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
 	int Nr = (int) y.size();
 	int M = (int) parsvector.size();
@@ -1005,7 +1010,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_w = dot(transpose(J), dot(W, J));
 		b_w = dot(transpose(J), dot(W, res));
@@ -1030,8 +1035,8 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 			params_new[i] = params_old[i] - multiplier * incrementvect[i];
 		}
 
-		oldChiSq = chiSquared((*f), y, x, params_old, sigma_y);
-		newChiSq = chiSquared((*f), y, x, params_new, sigma_y);
+		oldChiSq = chiSquared(f, y, x, params_old, sigma_y);
+		newChiSq = chiSquared(f, y, x, params_new, sigma_y);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -1086,7 +1091,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 
 };
 
-std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, std::vector <double> sigma_y, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
 {
 	int Nr = (int) y.size();
 	int M = (int) parsvector.size();
@@ -1111,7 +1116,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_w = dot(transpose(J), dot(W, J));
 		b_w = dot(transpose(J), dot(W, res));
@@ -1136,8 +1141,8 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 			params_new[i] = params_old[i] - multiplier * incrementvect[i];
 		}
 
-		oldChiSq = chiSquared((*f), y, x, params_old, sigma_y);
-		newChiSq = chiSquared((*f), y, x, params_new, sigma_y);
+		oldChiSq = chiSquared(f, y, x, params_old, sigma_y);
+		newChiSq = chiSquared(f, y, x, params_new, sigma_y);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -1194,7 +1199,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 
 };
 //NON-WEIGHTED, without error bars:
-std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(double, std::vector <double> )> f, std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	bool tolcheck = true;
@@ -1212,7 +1217,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_uw = dot(transpose(J), J);
 		b_uw = dot(transpose(J), res);
@@ -1239,8 +1244,8 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 
 		std::vector <double> w_temp;
 
-		oldChiSq = chiSquared((*f), y, x, params_old, w_temp, 0);
-		newChiSq = chiSquared((*f), y, x, params_new, w_temp, 0);
+		oldChiSq = chiSquared(f, y, x, params_old, w_temp, 0);
+		newChiSq = chiSquared(f, y, x, params_new, w_temp, 0);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -1297,7 +1302,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 
 };
 
-std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	bool tolcheck = true;
@@ -1315,7 +1320,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_uw = dot(transpose(J), J);
 		b_uw = dot(transpose(J), res);
@@ -1342,8 +1347,8 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 
 		std::vector <double> w_temp;
 
-		oldChiSq = chiSquared((*f), y, x, params_old, w_temp, 0);
-		newChiSq = chiSquared((*f), y, x, params_new, w_temp, 0);
+		oldChiSq = chiSquared(f, y, x, params_old, w_temp, 0);
+		newChiSq = chiSquared(f, y, x, params_new, w_temp, 0);
 
 
 
@@ -1400,7 +1405,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 
 };
 //WEIGHTED, without error bars:
-std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(double, std::vector <double> )> f, std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
 	int Nr = (int) y.size();
 	int M = (int) parsvector.size();
@@ -1425,7 +1430,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_w = dot(transpose(J), dot(W, J));
 		b_w = dot(transpose(J), dot(W, res));
@@ -1450,8 +1455,8 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 			params_new[i] = params_old[i] - multiplier * incrementvect[i];
 		}
 
-		oldChiSq = chiSquared((*f), y, x, params_old, w, 1);
-		newChiSq = chiSquared((*f), y, x, params_new, w, 1);
+		oldChiSq = chiSquared(f, y, x, params_old, w, 1);
+		newChiSq = chiSquared(f, y, x, params_new, w, 1);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -1506,7 +1511,7 @@ std::vector <double> modifiedGN(double(*f)(double, std::vector <double>), std::v
 
 };
 
-std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
+std::vector <double> modifiedGN(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
 {
 	int Nr = (int) y.size();
 	int M = (int) parsvector.size();
@@ -1530,7 +1535,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_w = dot(transpose(J), dot(W, J));
 		b_w = dot(transpose(J), dot(W, res));
@@ -1555,8 +1560,8 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 			params_new[i] = params_old[i] - multiplier * incrementvect[i];
 		}
 
-		oldChiSq = chiSquared((*f), y, x, params_old, w, 1);
-		newChiSq = chiSquared((*f), y, x, params_new, w, 1);
+		oldChiSq = chiSquared(f, y, x, params_old, w, 1);
+		newChiSq = chiSquared(f, y, x, params_new, w, 1);
 
 		int samecheck = 0;
 		for (int j = 0; j < M; j++) {
@@ -1618,7 +1623,7 @@ std::vector <double> modifiedGN(double(*f)(std::vector <double>, std::vector <do
 
 //for generalized mean part of code, modifications removed:
 //NON-WEIGHTED:
-std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
+std::vector <double> regularGN(std::function <double(double, std::vector <double> )> f, std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance) //the case of 1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	bool tolcheck = true;
@@ -1634,7 +1639,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_uw = dot(transpose(J), J);
 		b_uw = dot(transpose(J), res);
@@ -1690,7 +1695,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 };
 
-std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
+std::vector <double> regularGN(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance) //the case of >1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	bool tolcheck = true;
@@ -1706,7 +1711,7 @@ std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <dou
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_uw = dot(transpose(J), J);
 		b_uw = dot(transpose(J), res);
@@ -1761,7 +1766,7 @@ std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <dou
 
 };
 //WEIGHTED:
-std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::vector <double(*)(double, std::vector <double>)> parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
+std::vector <double> regularGN(std::function <double(double, std::vector <double> )> f, std::vector <std::function <double(double, std::vector <double>)> > parsvector, std::vector <double> y, std::vector <double> x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of 1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	int Nr = (int) y.size();
@@ -1784,7 +1789,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_w = dot(transpose(J), dot(W, J));
 		b_w = dot(transpose(J), dot(W, res));
@@ -1839,7 +1844,7 @@ std::vector <double> regularGN(double(*f)(double, std::vector <double>), std::ve
 
 };
 
-std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <double>), std::vector <double(*)(std::vector <double>, std::vector <double>)> parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
+std::vector <double> regularGN(std::function <double(std::vector <double>, std::vector <double>)> f, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > parsvector, std::vector <double> y, std::vector< std::vector <double> > x, std::vector <double> guess, double tolerance, std::vector <double> w) //the case of >1 independent (x) variables in the function
 {
 	int M = (int) parsvector.size();
 	int Nr = (int) y.size();
@@ -1862,7 +1867,7 @@ std::vector <double> regularGN(double(*f)(std::vector <double>, std::vector <dou
 	while (tolcheck) {
 		checkcount = 0;
 		J = jacobian(parsvector, x, params_old);
-		res = residuals((*f), y, x, params_old);
+		res = residuals(f, y, x, params_old);
 
 		A_w = dot(transpose(J), dot(W, J));
 		b_w = dot(transpose(J), dot(W, res));
@@ -1937,7 +1942,7 @@ double gaussian(double x, double mu, double sig) {
 	return (std::exp((-0.5) * (std::pow((x - mu), 2.0) / (2.0 * std::pow(sig, 2.0)))) / std::sqrt(2.0*pi*std::pow(sig, 2.0)));
 }
 
-double getAvg(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
+double getAvg(std::vector<double> x, std::vector <double> w, std::function <double(double, std::vector <double> )> f, std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
 
@@ -1949,7 +1954,7 @@ double getAvg(std::vector<double> x, std::vector <double> w, double(*f)(double, 
 	return (uppersum / lowersum);
 }
 
-double getAvg_Exp(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
+double getAvg_Exp(std::vector<double> x, std::vector <double> w, std::function <double(double, std::vector <double> )> f, std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
 
@@ -1962,7 +1967,7 @@ double getAvg_Exp(std::vector<double> x, std::vector <double> w, double(*f)(doub
 	return (uppersum / lowersum);
 }
 
-double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
+double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, std::function <double(double, std::vector <double> )> f, std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
 	for (int i = 0; i < x.size(); i++) {
@@ -1974,7 +1979,7 @@ double getLogXBar_PowerLaw(std::vector<double> x, std::vector <double> w, double
 	return (uppersum / lowersum);
 }
 
-double getLogXBar_Log(std::vector<double> x, std::vector <double> w, double(*f)(double, std::vector <double>), std::vector<double> params) {
+double getLogXBar_Log(std::vector<double> x, std::vector <double> w, std::function <double(double, std::vector <double> )> f, std::vector<double> params) {
 	double uppersum = 0.0;
 	double lowersum = 0.0;
 

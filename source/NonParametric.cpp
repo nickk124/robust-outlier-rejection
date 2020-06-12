@@ -1,4 +1,9 @@
-//#include "stdafx.h"
+/*
+ Robust Chauvenet Rejection (RCR) Official Codebase
+ Active Author: Nick C. Konz
+ Former Author: Michael Maples
+ See license at https://github.com/nickk124/RCR
+ */
 #include "NonParametric.h"
 
 NonParametric::NonParametric()

@@ -1,4 +1,9 @@
-//#pragma once
+/*
+ Robust Chauvenet Rejection (RCR) Official Codebase
+ Active Author: Nick C. Konz
+ Former Author: Michael Maples
+ See license at https://github.com/nickk124/RCR
+ */
 #include <vector>
 #include <cmath>
 #include <cmath>
@@ -7,12 +12,15 @@
 #include <float.h>
 #include <iterator>
 
-#include "FunctionalForm.h"
-#include "NonParametric.h"
 //#include "Demo.h"
 //#include "RCRwebutils.h"
+#include "FunctionalForm.h"
+#include "NonParametric.h"
 
 namespace RCRLib {
+
+//    #include "FunctionalForm.h"
+//    #include "NonParametric.h"
 
     const double PI = 3.1415926535897932384626434;
     const double inverfMult = (8.0 * (PI - 3.0)) / (3 * PI*(4.0 - PI));

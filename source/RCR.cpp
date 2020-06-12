@@ -1,4 +1,9 @@
-//#include "stdafx.h"
+/*
+ Robust Chauvenet Rejection (RCR) Official Codebase
+ Active Author: Nick C. Konz
+ Former Author: Michael Maples
+ See license at https://github.com/nickk124/RCR
+ */
 #include "RCR.h"
 
 namespace RCRLib {
@@ -485,18 +490,15 @@ namespace RCRLib {
             if (sumCounter == 0)
             {
                 median = y[0];
-                std::cout << median << std::endl;
             }
             else
             {
                 median = y[sumCounter - 1] + (.5*totalSum - (runningSum - (w[sumCounter - 1] * .5 + w[sumCounter] * .5))) / (w[sumCounter - 1] * .5 + w[sumCounter] * .5)*(y[sumCounter] - y[sumCounter - 1]);
-                std::cout << median << std::endl;
             }
         }
         else
         {
             median = y[0];
-            std::cout << median << std::endl;
         }
         return median;
     }
