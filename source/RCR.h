@@ -73,8 +73,8 @@ namespace RCRLib {
         void performBulkRejection(std::vector<double> &y);
         void performRejection(std::vector<double> &w, std::vector<double> &y);
         void performBulkRejection(std::vector<double> &w, std::vector<double> &y);
-        void setParametricModel(FunctionalForm&);
-        void setNonParametricModel(NonParametric&);
+        void setParametricModel(FunctionalForm&); // used to initialize functional form objects
+        void setNonParametricModel(NonParametric&); // used to initialize non parametric objects
 
         //void revertMuType();
         void setInitialModel(std::vector<double> &);

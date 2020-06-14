@@ -14,7 +14,33 @@ This file houses all of the RCR functionality that needs to be exposed to Python
 namespace py = pybind11;
 using namespace RCRLib;
 
-PYBIND11_MODULE(rcr, m) {
+using namespace pybind11::literals;
+
+// variable argument constructor handler
+FunctionalForm handle_FunctionalForm(py::args args, py::kwargs kwargs){
+    FunctionalForm FFobj;
+
+    std::vector <double> arg0 = py::cast<std::vector <double> >(args[0]);
+    double test = py::cast<double>(kwargs["test"]);
+
+
+    std::cout << test << std::endl;
+
+    for (int i = 0; i < arg0.size(); i++){
+        std::cout << arg0[i] << std::endl;
+    }
+
+    
+
+    //FFobj
+
+    return FFobj;
+}
+
+
+// python binding functions
+
+PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
     m.doc() = "RCR plugin";
 
     // enums that need to be exposed to python
@@ -51,11 +77,11 @@ PYBIND11_MODULE(rcr, m) {
 
 
 
-    // main class
+    // main (single value) class
     py::class_<RCR>(m, "RCR", "Master class used to initialize and run RCR procedures")
         // constructors
+        .def(py::init<RejectionTechs>(), py::arg("RejectionTechnique"))
         .def(py::init<>())
-        .def(py::init<RejectionTechs>())
         
         // main methods
         .def("setRejectionTech", &RCR::setRejectionTech,
@@ -78,4 +104,79 @@ PYBIND11_MODULE(rcr, m) {
 
         // results
         .def_readwrite("result", &RCR::result, "Results from RCR");
+
+    
+    // functional form/model fitting RCR
+    py::class_<FunctionalForm>(m, "FunctionalForm", "Class used to initialize functional form/model-fitting RCR")
+    //     // constructors
+        .def(py::init(&handle_FunctionalForm));
+    //     // .def(
+    //     //     py::init<
+    //     //         std::function <double(double, std::vector <double> )>,
+    //     //         std::vector <double>,
+    //     //         std::vector<double>,
+    //     //         std::vector<double>, 
+    //     //         std::vector <std::function <double(double, std::vector <double>)> >, 
+    //     //         double, 
+    //     //         std::vector <double>
+    //     //     >(),
+    //     //     py::arg("model_func"),
+    //     //     py::arg("x"),
+    //     //     py::arg("y"),
+    //     //     py::arg("error_y"),
+    //     //     py::arg("model_partials"),
+    //     //     py::arg("tolerance"),
+    //     //     py::arg("parameters_guess")
+    //     // )
+        
+    //     // .def(
+    //     //     py::init<
+    //     //         std::function <double(std::vector <double>, std::vector <double>)>, 
+    //     //         std::vector < std::vector <double> >, 
+    //     //         std::vector<double>, 
+    //     //         std::vector<double>, 
+    //     //         std::vector <std::function <double(std::vector <double>, std::vector <double>)> >, 
+    //     //         double, 
+    //     //         std::vector <double>
+
+    //     //     >(),
+    //     //     py::arg("model_func"),
+    //     //     py::arg("x"),
+    //     //     py::arg("y"),
+    //     //     py::arg("error_y"),
+    //     //     py::arg("model_partials"),
+    //     //     py::arg("tolerance"),
+    //     //     py::arg("parameters_guess")
+    //     // );
+
+    // parameter prior probability distributions
+    py::enum_<priorTypes>(m, "priorsTypes", py::arithmetic(), "Parameter prior probability distribution types")
+        .value("CUSTOM_PRIORS", CUSTOM_PRIORS, "Custom, function-defined prior probability distribution(s)")
+        .value("GAUSSIAN_PRIORS", GAUSSIAN_PRIORS, "Gaussian (normal) prior probability distribution(s)")
+        .value("CONSTRAINED_PRIORS", CONSTRAINED_PRIORS, "Bounded/hard-constrained prior probability distribution(s)")
+        .value("MIXED_PRIORS", MIXED_PRIORS, "A mixture of gaussian (normal), hard-constrained, and uninformative (uniform/flat) prior probability distributions")
+        .export_values();
+
+
+    py::class_<Priors>(m, "Priors", "Class of prior probability distribution functions that can be applied to model parameters")
+        // constructors , std::function <std::vector <double>(std::vector <double>, std::vector <double>)> 
+        .def(py::init< priorTypes, std::function <std::vector <double>(std::vector <double>, std::vector <double>)> >()) // custom priors
+        .def(py::init< priorTypes, std::vector < std::vector <double> > >()) // only Gaussian or only bounded/hard constraints
+        .def(py::init< priorTypes, std::vector < std::vector <double> >, std::vector < std::vector <double> > >()) // mixed priors
+        .def(py::init<>())
+
+        // members
+        .def_readwrite("priorType", &Priors::priorType, "Type of prior")
+        .def_readwrite("p", &Priors::p, "a function that takes in a parameters vector and a weights vector and modifies the weights given the prior probability distirbution")
+        .def_readwrite("gaussianParams", &Priors::gaussianParams, "A list that contains a list of mu and sigma for the guassian prior of each param. If no prior, then just use NANs.")
+        .def_readwrite("paramBounds", &Priors::paramBounds, "a list that contains lists of the bounds of each param. If not bounded, use NANs, and if there's only one bound, use NAN for the other \"bound\".");
+
+}
+
+int main(){
+    py::tuple args = py::make_tuple(1234, "hello");
+
+    // py::dict kwargs = py::dict("number"_a=1234);
+
+    return 0;
 }
