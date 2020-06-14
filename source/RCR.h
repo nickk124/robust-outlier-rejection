@@ -69,10 +69,10 @@ namespace RCRLib {
 
         //standard procedures
         void setRejectionTech(RejectionTechs);
-        void performRejection(std::vector<double> &);
-        void performBulkRejection(std::vector<double> &);
-        void performRejection(std::vector<double> &, std::vector<double> &);
-        void performBulkRejection(std::vector<double> &, std::vector<double> &);
+        void performRejection(std::vector<double> &y);
+        void performBulkRejection(std::vector<double> &y);
+        void performRejection(std::vector<double> &w, std::vector<double> &y);
+        void performBulkRejection(std::vector<double> &w, std::vector<double> &y);
         void setParametricModel(FunctionalForm&);
         void setNonParametricModel(NonParametric&);
 

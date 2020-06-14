@@ -12,3 +12,5 @@ source/RCR/RCR.xcodeproj/project.xcworkspace/xcuserdata/nickk124.xcuserdatad/Use
 source/RCR/RCR.xcodeproj/xcuserdata/nickk124.xcuserdatad/xcschemes/xcschememanagement.plist
 source/example.cpp
 source/example.cpython-37m-darwin.so
+source/rcr.cpython-37m-darwin.so
+source/test.py
