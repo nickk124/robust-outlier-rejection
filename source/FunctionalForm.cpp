@@ -7,8 +7,8 @@
 #include "FunctionalForm.h"
 //std::vector <double>(*p)(std::vector <double>)
 
-double bar; //see declaration in FunctionalForm.h for explanation as to why this needs to be global.
-std::vector <double> bar_ND;
+double pivot; //see declaration in FunctionalForm.h for explanation as to why this needs to be global.
+std::vector <double> pivot_ND;
 
 // Constructors
 Priors::Priors(priorTypes priorType, std::function <std::vector <double>(std::vector <double>, std::vector <double>)> p) { //custom priors
@@ -52,9 +52,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -71,9 +71,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess)
 {
@@ -90,9 +90,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -109,9 +109,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess)
@@ -128,9 +128,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -146,9 +146,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess)
 {
@@ -164,9 +164,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w)
 {
@@ -182,9 +182,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 //constructors with priors:
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
@@ -203,9 +203,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
@@ -223,9 +223,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
@@ -243,9 +243,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
@@ -263,9 +263,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
@@ -283,9 +283,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
@@ -302,9 +302,9 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
@@ -321,9 +321,9 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
@@ -340,14 +340,14 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = false;
+	this->hasCustomPivot = false;
 }
 
-//support for custom bar/average value:
+//support for custom pivot/average value:
 
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->x = x;
@@ -362,14 +362,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->x = x;
@@ -384,14 +384,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->x_ND = x_ND;
@@ -406,14 +406,14 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->x_ND = x_ND;
@@ -428,15 +428,15 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
 
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->x = x;
@@ -450,14 +450,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->x = x;
@@ -471,14 +471,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->x_ND = x_ND;
@@ -492,14 +492,14 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->x_ND = x_ND;
@@ -513,15 +513,15 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = false;
+	this->has_priors = false;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
 //constructors with priors:
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->priorsObject = priorsObject;
@@ -537,14 +537,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->priorsObject = priorsObject;
@@ -560,14 +560,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->priorsObject = priorsObject;
@@ -583,14 +583,14 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->priorsObject = priorsObject;
@@ -606,15 +606,15 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = true;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
 
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->priorsObject = priorsObject;
@@ -629,14 +629,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess)
+FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
 	this->priorsObject = priorsObject;
@@ -651,14 +651,14 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 	this->NDcheck = false;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB = gB;
+	this->hasCustomPivot = true;
+	this->pivotFunc = pivotFunc;
 
-	bar = bar_guess;
+	pivot = pivot_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->priorsObject = priorsObject;
@@ -673,14 +673,14 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = false;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
-FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess)
+FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
 	this->priorsObject = priorsObject;
@@ -695,12 +695,12 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 	this->NDcheck = true;
 	this->weightedCheck = true;
 	this->parameters = guess; //initial 
-	this->hasPriors = true;
+	this->has_priors = true;
 	this->hasErrorBars = false;
-	this->customBarCheck = true;
-	this->gB_ND = gB_ND;
+	this->hasCustomPivot = true;
+	this->pivotFunc_ND = pivotFunc_ND;
 
-	bar_ND = bar_ND_guess;
+	pivot_ND = pivot_ND_guess;
 }
 
 
@@ -711,7 +711,7 @@ FunctionalForm::FunctionalForm() {
 
 /*
 void FunctionalForm::initializeBar() {
-	if (customBarCheck) {
+	if (hasCustomPivot) {
 		std::vector <double> w_temp;
 		for (int i = 0; i < x.size(); i++) {
 			if (!weightedCheck) {
@@ -722,12 +722,12 @@ void FunctionalForm::initializeBar() {
 			}
 		}
 
-		if (NDcheck) { //computes the bar value for this iteration.
-			bar_ND = gB_ND(x_ND, w_temp, f_ND, parameters);
+		if (NDcheck) { //computes the pivot value for this iteration.
+			pivot_ND = pivotFunc_ND(x_ND, w_temp, f_ND, parameters);
 		}
 		else if (!NDcheck) {
 
-			bar = gB(x, w_temp, f, parameters);
+			pivot = pivotFunc(x, w_temp, f, parameters);
 		}
 	}
 };
@@ -799,12 +799,12 @@ void FunctionalForm::setTrueVec(std::vector<bool> &flags, std::vector<double> &y
 }
 void FunctionalForm::buildModelSpace()
 {
-	if (customBarCheck) {
+	if (hasCustomPivot) {
 		std::vector <double> truex;
 		std::vector < std::vector <double> > truexND;
 		std::vector <double> truew;
 
-		if (NDcheck) { //computes the bar value for this iteration.
+		if (NDcheck) { //computes the pivot value for this iteration.
 			for (int i = 0; i < N; i++) {
 				if (flags[i]) {
 					truexND.push_back(x_ND[i]);
@@ -816,8 +816,8 @@ void FunctionalForm::buildModelSpace()
 					}
 				}
 			}
-			bar_ND = gB_ND(truexND, truew, f_ND, parameters);
-			bar_ND_result = bar_ND;
+			pivot_ND = pivotFunc_ND(truexND, truew, f_ND, parameters);
+			pivot_ND_result = pivot_ND;
 		}
 		else if (!NDcheck) {
 			for (int i = 0; i < N; i++) {
@@ -831,8 +831,8 @@ void FunctionalForm::buildModelSpace()
 					}
 				}
 			}
-			bar = gB(truex, truew, f, parameters);
-			bar_result = bar;
+			pivot = pivotFunc(truex, truew, f, parameters);
+			pivot_result = pivot;
 		}
 	}
 
@@ -2077,7 +2077,7 @@ void FunctionalForm::buildModelSpace()
 
 
 	//Now the parameter space is constructed, apply the priors (if there are any):
-	if (hasPriors) {
+	if (has_priors) {
 
 		std::vector <double> innerPostWeightSpace (weightSpace[0].size(), 0.0);
 		std::vector <double> innerPostExtraWeightSpace (extraWeightSpace[0].size(), 0.0);

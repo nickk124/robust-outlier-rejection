@@ -9,8 +9,8 @@
 
 enum priorTypes {CUSTOM_PRIORS, GAUSSIAN_PRIORS, CONSTRAINED_PRIORS, MIXED_PRIORS};
 
-extern double bar; //xBar, logxBar; etc. Needs to be defined globally, not just as a member of a FunctionalForm instance, so that it isn't just continually updated, but can be computed within model function and partials without adding it as an extra argument.
-extern std::vector <double> bar_ND; //vector of bar values, one for each of the multiple indep variables
+extern double pivot; //xBar, logxBar; etc. Needs to be defined globally, not just as a member of a FunctionalForm instance, so that it isn't just continually updated, but can be computed within model function and partials without adding it as an extra argument.
+extern std::vector <double> pivot_ND; //vector of pivot values, one for each of the multiple indep variables
 
 class Priors
 {
@@ -88,25 +88,25 @@ public:
 
 	//support for xBar/ (logx)Bar/any other custom average value:
 
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess);
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess);
 
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess);
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess);
 	//PRIORS support:
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess);
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess);
 
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
-	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB, double bar_guess);
-	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND, std::vector <double> bar_ND_guess);
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess); //case of there being <1 indepedent variable (x variable) in the function
+	FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector <double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess);
+	FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector < std::vector <double> > x, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector <double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess);
 
 
 
@@ -115,7 +115,7 @@ public:
 
 	~FunctionalForm();
 
-
+	// below need to be public for usage by RCR class
 	void buildModelSpace();
 	void setTrueVec(std::vector<bool>&, std::vector<double>&, std::vector<double>&);
 	void setTrueVec(std::vector<bool>&, std::vector<double>&);
@@ -125,11 +125,12 @@ public:
 	void setModel(std::vector<double>);
 
 	//void initializeBar();
-	double bar_result; //xBar, logxBar, etc; this is not used by the model function directly (as that needs to be defined globally), so this is just used as the final bar result.
-	std::vector <double> bar_ND_result, trueW;
+	double pivot_result; //xBar, logxBar, etc; this is not used by the model function directly (as that needs to be defined globally), so this is just used as the final pivot result.
+	std::vector <double> pivot_ND_result, trueW;
 	std::vector<bool> flags;
 	std::vector <double> parameters, meanstartingpoint;
 	bool NDcheck;
+    bool has_priors;
 	std::vector<int> indices;
 
 	std::vector<std::vector<double> > parameterSpace, weightSpace, extraParameterSpace, extraWeightSpace; //generalized x vector of vectors, for >1D cases
@@ -149,7 +150,7 @@ private:
 	std::vector <std::function <double(double, std::vector <double>)> > partialsvector;
 	std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector;
 	int M, N; //number of params for GN, and the total number of points
-	double tolerance; //wanted tolerance for GN
+	double tolerance = 1e-6; //wanted tolerance for GN
 	//1D case in x:
 	std::vector < std::vector <double> > combos;
 	std::vector < std::vector <int> > combos_indices;
@@ -160,17 +161,16 @@ private:
 	std::vector < std::vector <double> > NDcombination;
 	std::vector < std::vector <int> > combosgood_indices;
 	//check to see if this is ND case or not:
-	bool weightedCheck, customBarCheck;
+	bool weightedCheck, hasCustomPivot;
 	//actual modeled function: (these are pointers to the function)
 	std::function <double(double, std::vector <double> )> f;
     std::function <double(std::vector <double>, std::vector <double>)> f_ND;
-	//custom function for computing bar value (xbar, logxBar, etc)
-	std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > gB;
+	//custom function for computing pivot value (xbar, logxBar, etc)
+	std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc;
 	//ND case
-	std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >gB_ND;
+	std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) > pivotFunc_ND;
 
 	Priors priorsObject;
-	bool hasPriors;
 	bool hasErrorBars;
 
 	//double function(double x, std::vector <double> params); // 1D case
