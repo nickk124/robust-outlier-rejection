@@ -115,6 +115,10 @@ public:
 
 	~FunctionalForm();
 
+	// priors
+	Priors priors;
+	bool has_priors;
+
 	// below need to be public for usage by RCR class
 	void buildModelSpace();
 	void setTrueVec(std::vector<bool>&, std::vector<double>&, std::vector<double>&);
@@ -130,10 +134,15 @@ public:
 	std::vector<bool> flags;
 	std::vector <double> parameters, meanstartingpoint;
 	bool NDcheck;
-    bool has_priors;
 	std::vector<int> indices;
 
 	std::vector<std::vector<double> > parameterSpace, weightSpace, extraParameterSpace, extraWeightSpace; //generalized x vector of vectors, for >1D cases
+
+	//custom function for computing pivot value (xbar, logxBar, etc)
+	std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc;
+	//ND case
+	std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) > pivotFunc_ND;
+
 
 
 private: 
@@ -165,12 +174,11 @@ private:
 	//actual modeled function: (these are pointers to the function)
 	std::function <double(double, std::vector <double> )> f;
     std::function <double(std::vector <double>, std::vector <double>)> f_ND;
-	//custom function for computing pivot value (xbar, logxBar, etc)
-	std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc;
-	//ND case
-	std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) > pivotFunc_ND;
+	// //custom function for computing pivot value (xbar, logxBar, etc)
+	// std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc;
+	// //ND case
+	// std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) > pivotFunc_ND;
 
-	Priors priorsObject;
 	bool hasErrorBars;
 
 	//double function(double x, std::vector <double> params); // 1D case

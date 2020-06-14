@@ -190,7 +190,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->guess = guess;
@@ -210,7 +210,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->w = w;
@@ -230,7 +230,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->sigma_y = sigma_y;
@@ -250,7 +250,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->sigma_y = sigma_y;
@@ -271,7 +271,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->guess = guess;
@@ -290,7 +290,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->w = w;
@@ -309,7 +309,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->guess = guess;
@@ -328,7 +328,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->guess = guess;
@@ -524,7 +524,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->guess = guess;
@@ -547,7 +547,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->w = w;
@@ -570,7 +570,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->sigma_y = sigma_y;
@@ -593,7 +593,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector<double> sigma_y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->sigma_y = sigma_y;
@@ -617,7 +617,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->guess = guess;
@@ -639,7 +639,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double> )> f, std::vector<double> x, std::vector<double> y, std::vector <std::function <double(double, std::vector <double>)> > partialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc, double pivot_guess)
 {
 	this->f = f;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x = x;
 	this->y = y;
 	this->w = w;
@@ -661,7 +661,7 @@ FunctionalForm::FunctionalForm(std::function <double(double, std::vector <double
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->guess = guess;
@@ -683,7 +683,7 @@ FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::
 FunctionalForm::FunctionalForm(std::function <double(std::vector <double>, std::vector <double>)> f_ND, std::vector <std::vector<double> > x_ND, std::vector<double> y, std::vector <std::function <double(std::vector <double>, std::vector <double>)> > NDpartialsvector, double tolerance, std::vector <double> guess, std::vector<double> w, Priors priorsObject, std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) >pivotFunc_ND, std::vector <double> pivot_ND_guess)
 {
 	this->f_ND = f_ND;
-	this->priorsObject = priorsObject;
+	this->priors = priorsObject;
 	this->x_ND = x_ND;
 	this->y = y;
 	this->guess = guess;
@@ -2088,7 +2088,7 @@ void FunctionalForm::buildModelSpace()
 		std::vector <double> gaussianParamSet;
 		std::vector <double> boundsSet;
 
-		switch (priorsObject.priorType) {
+		switch (priors.priorType) {
 		case CUSTOM_PRIORS:
 			// weight space
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
@@ -2098,7 +2098,7 @@ void FunctionalForm::buildModelSpace()
 					holdWeights.push_back(weightSpace[j][i]);
 					holdParams.push_back(parameterSpace[j][i]);
 				}
-				holdPost = priorsObject.p(holdParams, holdWeights); // takes in a vector of parameter weights, and returns a vector with modified weights
+				holdPost = priors.p(holdParams, holdWeights); // takes in a vector of parameter weights, and returns a vector with modified weights
 				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
 					postWeightSpace[j][i] = holdPost[j];
 				}
@@ -2111,7 +2111,7 @@ void FunctionalForm::buildModelSpace()
 					holdWeights.push_back(extraWeightSpace[j][i]);
 					holdParams.push_back(extraParameterSpace[j][i]);
 				}
-				holdPost = priorsObject.p(holdParams, holdWeights);
+				holdPost = priors.p(holdParams, holdWeights);
 				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
 					postExtraWeightSpace[j][i] = holdPost[j];
 				}
@@ -2122,9 +2122,9 @@ void FunctionalForm::buildModelSpace()
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
 				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
-					gaussianParamSet = priorsObject.gaussianParams[j];
+					gaussianParamSet = priors.gaussianParams[j];
 					if ((std::isnan(gaussianParamSet[0]) == false) && ( std::isnan(gaussianParamSet[1]) == false) ){ //if neither are nans
-						holdPost.push_back(weightSpace[j][i] * gaussian(parameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+						holdPost.push_back(weightSpace[j][i] * gaussian(parameterSpace[j][i], priors.gaussianParams[j][0], priors.gaussianParams[j][1]));
 					}
 					else { //if they're nans (don't modify priors))                             
 						holdPost.push_back(weightSpace[j][i]);
@@ -2138,9 +2138,9 @@ void FunctionalForm::buildModelSpace()
 			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
 				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
-					gaussianParamSet = priorsObject.gaussianParams[j];
+					gaussianParamSet = priors.gaussianParams[j];
 					if ((std::isnan(gaussianParamSet[0]) == false) && (std::isnan(gaussianParamSet[1]) == false)) { //if neither are nans
-						holdPost.push_back(extraWeightSpace[j][i] * gaussian(parameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+						holdPost.push_back(extraWeightSpace[j][i] * gaussian(parameterSpace[j][i], priors.gaussianParams[j][0], priors.gaussianParams[j][1]));
 					}
 					else { //if they're nans (don't modify priors))                             
 						holdPost.push_back(extraWeightSpace[j][i]);
@@ -2156,7 +2156,7 @@ void FunctionalForm::buildModelSpace()
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
 				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
-					boundsSet = priorsObject.paramBounds[j];
+					boundsSet = priors.paramBounds[j];
 					if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == true)) { //if both are nans (no bounds on the prior to add)
 						holdPost.push_back(weightSpace[j][i]);
 					}
@@ -2193,7 +2193,7 @@ void FunctionalForm::buildModelSpace()
 			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
 				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
-					boundsSet = priorsObject.paramBounds[j];
+					boundsSet = priors.paramBounds[j];
 					if ((std::isnan(boundsSet[0]) == true) && (std::isnan(boundsSet[1]) == true)) { //if both are nans (no bounds on the prior to add)
 						holdPost.push_back(extraWeightSpace[j][i]);
 					}
@@ -2233,11 +2233,11 @@ void FunctionalForm::buildModelSpace()
 			for (int i = 0; i < weightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
 				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
-					gaussianParamSet = priorsObject.gaussianParams[j];
-					boundsSet = priorsObject.paramBounds[j];
+					gaussianParamSet = priors.gaussianParams[j];
+					boundsSet = priors.paramBounds[j];
 					//Gaussian:
 					if ((std::isnan(gaussianParamSet[0]) == false) && (std::isnan(gaussianParamSet[1]) == false)) { //if neither are nans
-						holdPost.push_back(weightSpace[j][i] * gaussian(parameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+						holdPost.push_back(weightSpace[j][i] * gaussian(parameterSpace[j][i], priors.gaussianParams[j][0], priors.gaussianParams[j][1]));
 					}
 					else { //if they're nans (don't modify priors))                             
 						holdPost.push_back(weightSpace[j][i]);
@@ -2267,11 +2267,11 @@ void FunctionalForm::buildModelSpace()
 			for (int i = 0; i < extraWeightSpace[0].size(); i++) { // for the ith set of parameters
 				holdPost.clear();
 				for (int j = 0; j < M; j++) { //for each ith set, for the jth parameter of the M params 
-					gaussianParamSet = priorsObject.gaussianParams[j];
-					boundsSet = priorsObject.paramBounds[j];
+					gaussianParamSet = priors.gaussianParams[j];
+					boundsSet = priors.paramBounds[j];
 					//Gaussian:
 					if ((std::isnan(gaussianParamSet[0]) == false) && (std::isnan(gaussianParamSet[1]) == false)) { //if neither are nans
-						holdPost.push_back(extraWeightSpace[j][i] * gaussian(extraParameterSpace[j][i], priorsObject.gaussianParams[j][0], priorsObject.gaussianParams[j][1]));
+						holdPost.push_back(extraWeightSpace[j][i] * gaussian(extraParameterSpace[j][i], priors.gaussianParams[j][0], priors.gaussianParams[j][1]));
 					}
 					else { //if they're nans (don't modify priors))                             
 						holdPost.push_back(extraWeightSpace[j][i]);

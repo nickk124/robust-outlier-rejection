@@ -18,7 +18,7 @@ using namespace pybind11::literals;
 
 // variable argument conversion handlers
 
-// pivot point finding
+// support for variable argument number pivot point functions from python (WIP)
 double pivotFunc_wrapper(std::vector <double> xdata, std::vector <double> weights, std::function<double(double, std::vector<double>)> f, std::vector <double> params, std::function <double(py::kwargs)> pivotFunc_py){
     /*
         Uses python pivot function kwargs to call the function
@@ -115,14 +115,14 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
     std::function <double(std::vector <double>, std::vector <double> )> f_ND; 
     std::vector < std::vector <double> > xdata_ND; 
     std::vector < std::function <double(std::vector <double>, std::vector <double>)> > model_partials_ND;
-    std::function <std::vector <double>(py::kwargs)> pivot_func_py_ND;
+    // std::function <std::vector <double>(py::kwargs)> pivot_func_py_ND;
     std::function <std::vector <double> (std::vector < std::vector <double> >, std::vector <double>, std::function<double(std::vector <double>, std::vector<double>)>, std::vector <double>)> pivot_func_cpp_ND;
     std::vector <double> pivot_guess_ND;
 
     std::function <double(double, std::vector <double> )> f; 
     std::vector <double> xdata; 
     std::vector < std::function <double(double, std::vector <double>)> > model_partials;
-    std::function <double(py::kwargs)> pivot_func_py;
+    // std::function <double(py::kwargs)> pivot_func_py;
     std::function <double(std::vector <double>, std::vector <double>, std::function<double(double, std::vector<double>)>, std::vector <double>)> pivot_func_cpp;
     double pivot_guess;
 
@@ -132,8 +132,9 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
         model_partials_ND = py::cast < std::vector < std::function <double(std::vector <double>, std::vector <double>)> > > (args[3]);
         
         if (find_pivot){
-            pivot_func_py_ND = py::cast <std::function <std::vector <double>(py::kwargs)>>(kwargs["pivot_function"]);
-            pivot_func_cpp_ND = getPivotFunc_cpp(pivot_func_py_ND);
+            // pivot_func_py_ND = py::cast <std::function <std::vector <double>(py::kwargs)>>(kwargs["pivot_function"]);
+            // pivot_func_cpp_ND = getPivotFunc_cpp(pivot_func_py_ND);
+            pivot_func_cpp_ND = py::cast < std::function <std::vector <double> (std::vector < std::vector <double> >, std::vector <double>, std::function<double(std::vector <double>, std::vector<double>)>, std::vector <double>)> >(kwargs["pivot_function"]);
             pivot_guess_ND = py::cast <std::vector <double> >(kwargs["pivot_guess"]);
         }
         
@@ -143,8 +144,9 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
         model_partials = py::cast < std::vector < std::function <double(double, std::vector <double>)> > > (args[3]);
 
         if (find_pivot){
-            pivot_func_py = py::cast <std::function <double(py::kwargs)>>(kwargs["pivot_function"]);
-            pivot_func_cpp = getPivotFunc_cpp(pivot_func_py);
+            // pivot_func_py = py::cast <std::function <double(py::kwargs)>>(kwargs["pivot_function"]);
+            // pivot_func_cpp = getPivotFunc_cpp(pivot_func_py);
+            pivot_func_cpp = py::cast < std::function <double(std::vector <double>, std::vector <double>, std::function<double(double, std::vector<double>)>, std::vector <double>)> >(kwargs["pivot_function"]);
             pivot_guess = py::cast <double>(kwargs["pivot_guess"]);
         }
     }
@@ -285,13 +287,16 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
     
     // functional form/model fitting RCR
     py::class_<FunctionalForm>(m, "FunctionalForm", "Class used to initialize functional form/model-fitting RCR")
-    //     // constructors
-        .def(py::init(&getFunctionalFormObject), "args: f, xdata, ydata, model_partials, guess\nkwargs: weights = None, error_y = None, tol = 1e-6, has_priors = false, pivot_function = None")
+        // constructors
+        .def(py::init(&getFunctionalFormObject), "args: f, xdata, ydata, model_partials, guess\nkwargs: weights = None, error_y = None, tol = 1e-6, has_priors = false, pivot_function = None, pivot_guess = None")
         .def(py::init<>())
-
+        
         // members
+        .def_readwrite("priors", &FunctionalForm::priors, "Object describing parameter prior probability distribution(s)")
         .def_readwrite("has_priors", &FunctionalForm::has_priors, "Are you applying prior probability distributions to your model parameters?")
-        .def_readwrite("parameters", &FunctionalForm::parameters, "Current (or final) estimated model parameters");
+        .def_readwrite("parameters", &FunctionalForm::parameters, "Current (or final) estimated model parameters")
+        .def_readwrite("pivot_function", &FunctionalForm::pivotFunc, 
+            "Function used to evaluate pivot point(s), with (optional) arguments (set to None otherwise) of: xdata, data weights, model function and model params");
 
     // parameter prior probability distributions
     py::enum_<priorTypes>(m, "priorsTypes", py::arithmetic(), "Parameter prior probability distribution types")
