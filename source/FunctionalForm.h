@@ -12,6 +12,15 @@ enum priorTypes {CUSTOM_PRIORS, GAUSSIAN_PRIORS, CONSTRAINED_PRIORS, MIXED_PRIOR
 extern double pivot; //xBar, logxBar; etc. Needs to be defined globally, not just as a member of a FunctionalForm instance, so that it isn't just continually updated, but can be computed within model function and partials without adding it as an extra argument.
 extern std::vector <double> pivot_ND; //vector of pivot values, one for each of the multiple indep variables
 
+struct FunctionalFormResults
+{
+	std::vector <double> model_parameters;
+
+	// pivot points / linear parameter correlation minimization
+	double pivot;
+	std::vector <double> pivot_ND;
+};
+
 class Priors
 {
 public:
@@ -112,12 +121,10 @@ public:
 
 	//default constructor:
 	FunctionalForm();
-
 	~FunctionalForm();
 
-	// priors
-	Priors priors;
-	bool has_priors;
+	// results
+	FunctionalFormResults result;
 
 	// below need to be public for usage by RCR class
 	void buildModelSpace();
@@ -128,19 +135,21 @@ public:
 	std::vector<double> getErrors_ND(std::vector <double> line);
 	void setModel(std::vector<double>);
 
-	//void initializeBar();
-	double pivot_result; //xBar, logxBar, etc; this is not used by the model function directly (as that needs to be defined globally), so this is just used as the final pivot result.
-	std::vector <double> pivot_ND_result, trueW;
+	// priors
+	Priors priors;
+	bool has_priors;
+
+	// misc
+	std::vector <double> trueW;
 	std::vector<bool> flags;
 	std::vector <double> parameters, meanstartingpoint;
 	bool NDcheck;
 	std::vector<int> indices;
+	std::vector <std::vector<double> > parameterSpace, weightSpace, extraParameterSpace, extraWeightSpace; //generalized x vector of vectors, for >1D cases
 
-	std::vector<std::vector<double> > parameterSpace, weightSpace, extraParameterSpace, extraWeightSpace; //generalized x vector of vectors, for >1D cases
-
-	//custom function for computing pivot value (xbar, logxBar, etc)
+	// custom function for computing pivot value (xbar, logxBar, etc)
 	std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc;
-	//ND case
+	// ND case
 	std::function <std::vector<double>(std::vector<std::vector<double> >, std::vector <double>, std::function <double(std::vector <double>, std::vector <double>)>, std::vector<double>) > pivotFunc_ND;
 
 

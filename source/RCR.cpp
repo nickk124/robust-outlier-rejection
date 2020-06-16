@@ -5973,6 +5973,7 @@ namespace RCRLib {
         }
         //parametricModel->setModel(line);
         parametricModel->parameters = line; //most recent calculation of parameters ("line" vector) is stored)
+        parametricModel->result.model_parameters = line;
 
         if (parametricModel->NDcheck == true) {
             errors = parametricModel->getErrors_ND(line);

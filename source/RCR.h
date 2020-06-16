@@ -35,6 +35,7 @@ namespace RCRLib {
 
     struct RCRResults
     {
+        // single value + functional
         double mu;
         double stDev;
         double stDevBelow;

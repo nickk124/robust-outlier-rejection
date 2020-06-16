@@ -817,7 +817,7 @@ void FunctionalForm::buildModelSpace()
 				}
 			}
 			pivot_ND = pivotFunc_ND(truexND, truew, f_ND, parameters);
-			pivot_ND_result = pivot_ND;
+			result.pivot_ND = pivot_ND;
 		}
 		else if (!NDcheck) {
 			for (int i = 0; i < N; i++) {
@@ -832,7 +832,7 @@ void FunctionalForm::buildModelSpace()
 				}
 			}
 			pivot = pivotFunc(truex, truew, f, parameters);
-			pivot_result = pivot;
+			result.pivot = pivot;
 		}
 	}
 

@@ -59,6 +59,157 @@ std::function <std::vector <double> (std::vector < std::vector <double> >, std::
 
 
 // factory functions
+void buildFunctionalFormObject( // decision tree for builing a FF obj
+    FunctionalForm &FFobj,
+    std::function <double(std::vector <double>, std::vector <double> )> &f_ND, 
+    std::function <double(double, std::vector <double> )> &f, 
+    std::vector < std::vector <double> > &xdata_ND, 
+    std::vector <double> &xdata, 
+    std::vector <double> &ydata, 
+    std::vector <double> &error_y, 
+    std::vector < std::function <double(std::vector <double>, std::vector <double>)> > &model_partials_ND, 
+    std::vector < std::function <double(double, std::vector <double>)> > &model_partials,
+    double tol, 
+    std::vector <double> &guess, 
+    std::vector <double> &weights, 
+    std::function <std::vector <double> (std::vector < std::vector <double> >, std::vector <double>, std::function<double(std::vector <double>, std::vector<double>)>, std::vector <double>)> &pivot_func_cpp_ND, 
+    std::function <double(std::vector <double>, std::vector <double>, std::function<double(double, std::vector<double>)>, std::vector <double>)> &pivot_func_cpp, 
+    std::vector <double> &pivot_guess_ND,
+    double pivot_guess,
+    bool has_weights,
+    bool isND,
+    bool find_pivot,
+    bool has_priors,
+    bool has_errors
+){
+    Priors placeholderPriorsObj;
+    if (has_weights){
+        if (isND){
+            if (find_pivot){
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp_ND, pivot_guess_ND);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp_ND, pivot_guess_ND);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights, pivot_func_cpp_ND, pivot_guess_ND);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights, pivot_func_cpp_ND, pivot_guess_ND);
+                    }
+                }
+            } else {
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights, placeholderPriorsObj);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights, placeholderPriorsObj);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights);
+                    }
+                }
+            }
+        } else {
+            if (find_pivot){
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp, pivot_guess);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp, pivot_guess);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights, pivot_func_cpp, pivot_guess);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights, pivot_func_cpp, pivot_guess);
+                    }
+                }
+            } else {
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights, placeholderPriorsObj);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights, placeholderPriorsObj);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights);
+                    }
+                }
+            }
+        }
+    } else {
+        if (isND){
+            if (find_pivot){
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, placeholderPriorsObj, pivot_func_cpp_ND, pivot_guess_ND);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, placeholderPriorsObj, pivot_func_cpp_ND, pivot_guess_ND);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, pivot_func_cpp_ND, pivot_guess_ND);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, pivot_func_cpp_ND, pivot_guess_ND);
+                    }
+                }
+            } else {
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, placeholderPriorsObj);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, placeholderPriorsObj);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess);
+                    } else {
+                        FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess);
+                    }
+                }
+            }
+        } else {
+            if (find_pivot){
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, placeholderPriorsObj, pivot_func_cpp, pivot_guess);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, placeholderPriorsObj, pivot_func_cpp, pivot_guess);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, pivot_func_cpp, pivot_guess);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, pivot_func_cpp, pivot_guess);
+                    }
+                }
+            } else {
+                if (has_priors){
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, placeholderPriorsObj);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, placeholderPriorsObj);
+                    }
+                } else {
+                    if (has_errors){
+                        FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess);
+                    } else {
+                        FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess);
+                    }
+                }
+            }
+        }
+    }
+}
+
 FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
     /*
         Bridges the gap between the single python FunctionalForm constructor with the many overloaded c++ ones
@@ -75,18 +226,25 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
     std::vector <double> guess = py::cast <std::vector <double> >(args[4]);
 
     // kwargs
-    std::vector <double> error_y;
-    std::vector <double> weights(ydata.size(), 1.0); // unweighted by default
+    std::vector <double> error_y, weights;
 
-    double tol = NAN;
+    const double DEFAULT_TOL = 1e-6;
+
+    // constructor decision booleans
+    double tol = DEFAULT_TOL;
     bool has_priors = false;
     bool find_pivot = false;
+    bool has_errors = false;
+    bool has_weights = false;
+    bool isND = false;
 
     if (kwargs.contains("weights")){
         weights = py::cast <std::vector <double> >(kwargs["weights"]);
+        has_weights = true; // must use this boolean instead of, say using equal weights if unweighted, due to the core construction of RCR
     }
     if (kwargs.contains("error_y")){
         error_y = py::cast <std::vector <double> >(kwargs["error_y"]);
+        has_errors = true;
     }
     if (kwargs.contains("tol")){
         tol = py::cast <double>(kwargs["tol"]);
@@ -98,34 +256,29 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
         find_pivot = true;
     }
 
-    bool isND = false;
     try { // check dimensionality by attempting a type conversion for x data
         py::cast< std::vector <double> >(args[1]);
     } catch (...){
         isND = true;
     }
 
-    bool hasErrs = error_y.size() > 0;
-    bool hasTol = !std::isnan(tol);
-
-    const double DEFAULT_TOL = 1e-6;
-    if (!hasTol){tol = DEFAULT_TOL;};
-
     // dimensionality dependent types
-    std::function <double(std::vector <double>, std::vector <double> )> f_ND; 
-    std::vector < std::vector <double> > xdata_ND; 
-    std::vector < std::function <double(std::vector <double>, std::vector <double>)> > model_partials_ND;
+    std::function <double(std::vector <double>, std::vector <double> )> f_ND; // model function
+    std::vector < std::vector <double> > xdata_ND; // x data
+    std::vector < std::function <double(std::vector <double>, std::vector <double>)> > model_partials_ND; // model function partials
     // std::function <std::vector <double>(py::kwargs)> pivot_func_py_ND;
-    std::function <std::vector <double> (std::vector < std::vector <double> >, std::vector <double>, std::function<double(std::vector <double>, std::vector<double>)>, std::vector <double>)> pivot_func_cpp_ND;
-    std::vector <double> pivot_guess_ND;
+    std::function <std::vector <double> (std::vector < std::vector <double> >, std::vector <double>, std::function<double(std::vector <double>, std::vector<double>)>, std::vector <double>)> pivot_func_cpp_ND; // pivot point function
+    std::vector <double> pivot_guess_ND; // guess for pivot points
 
+    // same as above, but for a single independent ("x") variable
     std::function <double(double, std::vector <double> )> f; 
     std::vector <double> xdata; 
     std::vector < std::function <double(double, std::vector <double>)> > model_partials;
     // std::function <double(py::kwargs)> pivot_func_py;
     std::function <double(std::vector <double>, std::vector <double>, std::function<double(double, std::vector<double>)>, std::vector <double>)> pivot_func_cpp;
-    double pivot_guess;
+    double pivot_guess = NAN;
 
+    // cast from python arguments to cpp types
     if (isND){
         f_ND = py::cast< std::function <double(std::vector <double>, std::vector <double> )> >(args[0]);
         xdata_ND = py::cast< std::vector < std::vector <double> > >(args[1]);
@@ -140,7 +293,7 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
         
     } else {
         f = py::cast< std::function <double(double, std::vector <double> )> >(args[0]);
-        std::vector <double> xdata = py::cast< std::vector <double> >(args[1]);
+        xdata = py::cast< std::vector <double> >(args[1]);
         model_partials = py::cast < std::vector < std::function <double(double, std::vector <double>)> > > (args[3]);
 
         if (find_pivot){
@@ -151,76 +304,23 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
         }
     }
 
-    // build object
-    Priors placeholderPriorsObj;
-    if (isND){
-        if (find_pivot){
-            if (has_priors){
-                if (hasErrs){
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp_ND, pivot_guess_ND);
-                } else {
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp_ND, pivot_guess_ND);
-                }
-            } else {
-                if (hasErrs){
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights, pivot_func_cpp_ND, pivot_guess_ND);
-                } else {
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights, pivot_func_cpp_ND, pivot_guess_ND);
-                }
-            }
-        } else {
-            if (has_priors){
-                if (hasErrs){
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights, placeholderPriorsObj);
-                } else {
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights, placeholderPriorsObj);
-                }
-            } else {
-                if (hasErrs){
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, error_y, model_partials_ND, tol, guess, weights);
-                } else {
-                    FFobj = FunctionalForm(f_ND, xdata_ND, ydata, model_partials_ND, tol, guess, weights);
-                }
-            }
-        }
-    } else {
-        if (find_pivot){
-            if (has_priors){
-                if (hasErrs){
-                    FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp, pivot_guess);
-                } else {
-                    FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights, placeholderPriorsObj, pivot_func_cpp, pivot_guess);
-                }
-            } else {
-                if (hasErrs){
-                    FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights, pivot_func_cpp, pivot_guess);
-                } else {
-                    FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights, pivot_func_cpp, pivot_guess);
-                }
-            }
-        } else {
-            if (has_priors){
-                if (hasErrs){
-                    FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights, placeholderPriorsObj);
-                } else {
-                    FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights, placeholderPriorsObj);
-                }
-            } else {
-                if (hasErrs){
-                    FFobj = FunctionalForm(f, xdata, ydata, error_y, model_partials, tol, guess, weights);
-                } else {
-                    FFobj = FunctionalForm(f, xdata, ydata, model_partials, tol, guess, weights);
-                }
-            }
-        }
-    }
+    // decision tree for builing a FF obj
+    buildFunctionalFormObject(
+        FFobj, f_ND, f, xdata_ND, xdata, ydata, error_y, model_partials_ND, model_partials, tol, 
+        guess, weights, pivot_func_cpp_ND, pivot_func_cpp, pivot_guess_ND, pivot_guess,
+        has_weights, isND, find_pivot, has_priors, has_errors
+    );
+
     return FFobj;
 }
 
 
 // python binding functions
 PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
-    m.doc() = "RCR plugin";
+    m.doc() = "RCR (Robust Chauvenet Outlier Rejection) plugin";
+
+
+    // MAIN RCR ######################################################################################################################################################
 
     // enums that need to be exposed to python
     py::enum_<RejectionTechs>(m, "RejectionTechniques", py::arithmetic(), "RCR Rejection Techniques")
@@ -235,7 +335,8 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
     // pybind11 creates an enumeration that also supports rudimentary arithmetic 
     // and bit-level operations like comparisons, and, or, xor, negation, etc.
 
-    // results class
+
+    // RCR results class
     py::class_<RCRResults>(m, "RCRResults", "Results that RCR generates")
         .def_readwrite("mu", &RCRResults::mu, "Recovered mean/median/mode (central value) of uncontaminated data distribution")
         .def_readwrite("stDev", &RCRResults::stDev, "Recovered standard deviation of uncontaminated data distribution")
@@ -255,12 +356,14 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def_readwrite("originalY", &RCRResults::originalY, "Initial supplied dataset");
 
 
-
     // main (single value) class
     py::class_<RCR>(m, "RCR", "Master class used to initialize and run RCR procedures")
         // constructors
         .def(py::init<RejectionTechs>(), py::arg("RejectionTechnique"))
         .def(py::init<>())
+
+        // results
+        .def_readwrite("result", &RCR::result, "Results from RCR")
         
         // main methods
         .def("setRejectionTech", &RCR::setRejectionTech,
@@ -275,22 +378,28 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def("performBulkRejection", (void (RCR::*)(std::vector <double> &, std::vector <double> &)) &RCR::performBulkRejection,
              "Perform outlier rejection WITH bulk pre-rejection (faster)", py::arg("weights"), py::arg("data"))
 
-        .def("setParametricModel", &RCR::setParametricModel, "Initialize parametric/functional form model with RCR", py::arg("functionalform_model"))
-        // .def("setNonParametricModel", &RCR::setNonParametricModel)
+        // functional form/ model-fitting
+        .def("setParametricModel", &RCR::setParametricModel, "Initialize parametric/functional form model with RCR", py::arg("functionalform_model"));
 
-        // .def("setInitialModel", &RCR::setInitialModel)
-        // .def("setMuType", &RCR::setMuType);
 
-        // results
-        .def_readwrite("result", &RCR::result, "Results from RCR");
+    // FUNCTIONAL FORM/MODEL-FITTING RCR #############################################################################################################################
 
-    
-    // functional form/model fitting RCR
+    // Functional Form RCR results class
+    py::class_<FunctionalFormResults>(m, "FunctionalFormResults", "Results that functional form/model-fitting RCR uniquely generates")
+        .def_readwrite("model_parameters", &FunctionalFormResults::model_parameters, "Recovered post-outlier rejection best fit model parameters")
+        .def_readwrite("pivot", &FunctionalFormResults::pivot, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (1D independent variable case)")
+        .def_readwrite("pivot_ND", &FunctionalFormResults::pivot_ND, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (ND independent variable case)");
+
+
+    // main class
     py::class_<FunctionalForm>(m, "FunctionalForm", "Class used to initialize functional form/model-fitting RCR")
         // constructors
         .def(py::init(&getFunctionalFormObject), "args: f, xdata, ydata, model_partials, guess\nkwargs: weights = None, error_y = None, tol = 1e-6, has_priors = false, pivot_function = None, pivot_guess = None")
         .def(py::init<>())
-        
+
+        // results
+        .def_readwrite("result", &FunctionalForm::result, "Results unique to Functional Form/ model-fitting RCR")
+
         // members
         .def_readwrite("priors", &FunctionalForm::priors, "Object describing parameter prior probability distribution(s)")
         .def_readwrite("has_priors", &FunctionalForm::has_priors, "Are you applying prior probability distributions to your model parameters?")
@@ -298,7 +407,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def_readwrite("pivot_function", &FunctionalForm::pivotFunc, 
             "Function used to evaluate pivot point(s), with (optional) arguments (set to None otherwise) of: xdata, data weights, model function and model params");
 
-    // parameter prior probability distributions
+    // parameter prior probability distribution types
     py::enum_<priorTypes>(m, "priorsTypes", py::arithmetic(), "Parameter prior probability distribution types")
         .value("CUSTOM_PRIORS", CUSTOM_PRIORS, "Custom, function-defined prior probability distribution(s)")
         .value("GAUSSIAN_PRIORS", GAUSSIAN_PRIORS, "Gaussian (normal) prior probability distribution(s)")
@@ -306,7 +415,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .value("MIXED_PRIORS", MIXED_PRIORS, "A mixture of gaussian (normal), hard-constrained, and uninformative (uniform/flat) prior probability distributions")
         .export_values();
 
-
+    // parameter prior probability distribution class
     py::class_<Priors>(m, "Priors", "Class of prior probability distribution functions that can be applied to model parameters")
         // constructors , std::function <std::vector <double>(std::vector <double>, std::vector <double>)> 
         .def(py::init< priorTypes, std::function <std::vector <double>(std::vector <double>, std::vector <double>)> >()) // custom priors
