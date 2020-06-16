@@ -394,7 +394,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
     // main class
     py::class_<FunctionalForm>(m, "FunctionalForm", "Class used to initialize functional form/model-fitting RCR")
         // constructors
-        .def(py::init(&getFunctionalFormObject), "args: f, xdata, ydata, model_partials, guess\nkwargs: weights = None, error_y = None, tol = 1e-6, has_priors = false, pivot_function = None, pivot_guess = None")
+        .def(py::init(&getFunctionalFormObject), "args:\tf (model function; 1D or ND),\n\txdata (1D or ND),\n\tydata,\n\tmodel_partials (parameter partial-derivatives of model function; 1D or ND),\n\tguess (guess for model parameters)\nkwargs:\tweights = None,\n\terror_y = None,\n\ttol = 1e-6 (model fitting convergence tolerance),\n\thas_priors = false (are you imposing priors on your model?),\n\tpivot_function = None (function used to compute pivot point (1D or ND) of model),\n\tpivot_guess = None (guess for pivot point (1D or ND) of model)")
         .def(py::init<>())
 
         // results
