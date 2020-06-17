@@ -1,21 +1,17 @@
-src/RCR
-*.xcodeproj/
-.vscode/settings.json
-src/RCR/RCR.xcodeproj/project.pbxproj
-src/RCR/RCR.xcodeproj/project.xcworkspace/xcuserdata/nickk124.xcuserdatad/UserInterfaceState.xcuserstate
-src/RCR/RCR.xcodeproj/xcuserdata/nickk124.xcuserdatad/xcschemes/xcschememanagement.plist
+# c++ files
 src/ExampleModels.cpp
 src/ExampleModels.h
 src/RCRstarterfile.cpp
-src/RCR/RCR.xcodeproj/project.pbxproj
-src/RCR/RCR.xcodeproj/project.xcworkspace/xcuserdata/nickk124.xcuserdatad/UserInterfaceState.xcuserstate
-src/RCR/RCR.xcodeproj/xcuserdata/nickk124.xcuserdatad/xcschemes/xcschememanagement.plist
 src/example.cpp
-src/example.cpython-37m-darwin.so
-src/rcr.cpython-37m-darwin.so
-src/test.py
-src/RCR/RCR.xcodeproj/project.xcworkspace/xcuserdata/nickk124.xcuserdatad/UserInterfaceState.xcuserstate
 src/wack.cpp
+
+# binary files
+src/*.so
+
+# misc
+src/test.py
 **/.vscode/
 **/src/RCR
 **__pycache__
+/docs/build
+/docs/source
