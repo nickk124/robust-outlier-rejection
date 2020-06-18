@@ -4,6 +4,9 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# command to autogenerate documentation from docstrings: (from /docs):
+# sphinx-apidoc -o ./source ../src
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -12,6 +15,8 @@
 #
 import os
 import sys
+SRC_PATH = os.path.abspath("../../src/test/")        # path to source code
+sys.path.insert(0, SRC_PATH)
 # sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -63,7 +68,7 @@ master_doc = 'index'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_rtd_theme' # 'alabaster' 
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

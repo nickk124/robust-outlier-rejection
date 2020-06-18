@@ -15,3 +15,4 @@ src/test.py
 **__pycache__
 /docs/build
 /docs/source
+src/sphinx_test.py
