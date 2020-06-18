@@ -9,7 +9,6 @@ This file houses all of the RCR functionality that needs to be exposed to Python
 build cmd: (only tested on mac atm):
     c++ -O3 -Wall -shared -std=c++11 -undefined dynamic_lookup `python3 -m pybind11 --includes` RCR_python.cpp RCR.cpp FunctionalForm.cpp MiscFunctions.cpp NonParametric.cpp -o rcr`python3-config --extension-suffix`
 
-
 */
 #include "RCR.h"
 #include <pybind11/pybind11.h>
@@ -323,6 +322,12 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
 // python binding functions
 PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
     m.doc() = "RCR (Robust Chauvenet Outlier Rejection) plugin";
+
+    m.def("subtract", [](int i, int j) { return i - j; }, R"pbdoc(
+        Subtract two numbers
+
+        Some other explanation about the subtract function.
+    )pbdoc");
 
 
     // MAIN RCR ######################################################################################################################################################
