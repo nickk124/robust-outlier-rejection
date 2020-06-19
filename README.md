@@ -15,6 +15,12 @@ RCR has been carefully calibrated, and extensively simulated (see [Maples et al.
 ![](example_imgs/before_after_functional.png)
 *Left: Data distribution about true quadratic model (black), heavily saturated with one-sided outliers/contaminants. Right: remaining distribution after functional RCR outlier removal.*
 
+# Installation and Documentation
+RCR can be used most easily via Python, installed using `pip install rcr`. The Python documentation can be found [here](rcr.readthedocs.io).
+
+The C++ source code is also included here in `/source`, with pdf documentation in `/documentation`.
+
+
 # How do I use RCR?
 We have boiled it down to two simple user choices:
 
@@ -24,7 +30,7 @@ We have boiled it down to two simple user choices:
 
 RCR can be applied to weighted data, to functional data (e.g., x vs. y), and we have incorporated bulk rejection to decrease computation times with large samples.
 
-The C++ source code is included here in `/source`, with documentation in `/documentation`. We also offer easy-to-use online calculators for [single value](https://skynet.unc.edu/rcr/calculator/value) and [functional](https://skynet.unc.edu/rcr/calculator/functional) (model-fitting) RCR. The source code, however, is equipped with the maximum degree of customizability for using RCR, most notably with the functional form/model-fitting portion of the algorithm. In addition to the features offered by the online calculator, the full functional RCR source code also includes support for:
+We also offer easy-to-use online calculators for [single value](https://skynet.unc.edu/rcr/calculator/value) and [functional](https://skynet.unc.edu/rcr/calculator/functional) (model-fitting) RCR. The source code, however, is equipped with the maximum degree of customizability for using RCR, most notably with the functional form/model-fitting portion of the algorithm. In addition to the features offered by the online calculator, the full functional RCR source code also includes support for:
 
 **1.** Running RCR on any custom model function with any number of independent ("x") variables and model function parameters;
 

@@ -352,7 +352,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def_readwrite("stDev", &RCRResults::stDev, "Recovered standard deviation of uncontaminated data distribution")
         .def_readwrite("stDevBelow", &RCRResults::stDevBelow, "Recovered standard deviation below mu (mean/median/mode) of uncontaminated (asymmetric) data distribution")
         .def_readwrite("stDevAbove", &RCRResults::stDevAbove, "Recovered standard deviation above mu (mean/median/mode) of uncontaminated (asymmetric) data distribution")
-        .def_readwrite("stDevTotal", &RCRResults::stDevTotal, "Recovered combined standard deviation both above and below mu (mean/median/mode), of uncontaminated (asymmetric) data distribution")
+        .def_readwrite("stDevTotal", &RCRResults::stDevTotal, "Recovered combined standard deviation both above and below mu (mean/median/mode), in the case of uncontaminated an asymmetric data distribution")
         .def_readwrite("sigma", &RCRResults::sigma, "Recovered robust 68.3-percentile deviation of uncontaminated data distribution")
         .def_readwrite("sigmaBelow", &RCRResults::sigmaBelow, "Recovered robust 68.3-percentile deviation below mu (mean/median/mode) of uncontaminated data distribution")
         .def_readwrite("sigmaAbove", &RCRResults::sigmaAbove, "Recovered robust 68.3-percentile deviation above mu (mean/median/mode) of uncontaminated data distribution")

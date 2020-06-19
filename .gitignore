@@ -22,3 +22,4 @@ src/test.py
 /docs/build
 /docs/source
 src/sphinx_test.py
+tests/test.py

@@ -1,4 +1,5 @@
 import rcr
+import numpy as np
 
 def linear(x, params):
     return params[0] + x * params[1]
@@ -11,16 +12,19 @@ def linear_partial2(x, params):
 
 def get_pivot(xdata, weights, f, params):
     sum = 0
-
     for x in xdata:
         sum += x
     return sum / len(xdata)
 
 # if __name__ == "__main__":
 y = [0.1, 0.2, 0, 0.3, -0.1, -0.2, -0.3, 11]
-# w = [0.5, 1.0, 1.2, 3.0, 1.0, 0.6, 0.2, 1.0, 0.1, 1.0]
+w = [0.5, 1.0, 1.2, 3.0, 1.0, 0.6, 0.2, 1.0, 0.1, 0.05]
+
+y = np.array(y)
+w = np.array(w)
+
 rcr_obj = rcr.RCR(rcr.ES_MODE_DL)
-rcr_obj.performBulkRejection(y)
+rcr_obj.performBulkRejection(w, y)
 
 print(rcr_obj.result.flags)
 
@@ -35,6 +39,13 @@ err_y = [0.1 for xx in x]
 gaussianParams =    [[float('nan'), float('nan')], [1.0, 2.0] ]
 boundedParams =     [[0.0, float('nan')], [float('nan'), float('nan')] ]
 priors = rcr.Priors(rcr.MIXED_PRIORS, gaussianParams, boundedParams)
+
+
+y = np.array(y)
+w = np.array(w)
+x = np.array(x)
+err_y = np.array(err_y)
+guess = np.array(guess)
 
 # boundedParams =     [[0, 1], [-20, 20] ]
 # priors = rcr.Priors(rcr.CONSTRAINED_PRIORS, boundedParams)
