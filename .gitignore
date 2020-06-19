@@ -8,7 +8,13 @@ src/wack.cpp
 # binary files
 src/*.so
 
-# misc
+# packaging files
+build
+dist
+rcr.egg-info
+var
+
+# misc/testing
 src/test.py
 **/.vscode/
 **/src/RCR

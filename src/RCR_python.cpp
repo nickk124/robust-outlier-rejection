@@ -11,7 +11,7 @@ build cmd: (only tested on mac atm):
 
 */
 #include "RCR.h"
-#include <pybind11/pybind11.h>
+#include <pybind11/pybind11.h> // pybind header files are within ./pybind11/include/pybind11/
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
 
