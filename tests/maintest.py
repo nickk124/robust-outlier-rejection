@@ -80,10 +80,12 @@ print(final_parameters)
 rejected_data = r.result.rejectedY
 nonrejected_data = r.result.cleanY
 flags = r.result.flags
+indices = r.result.indices
 
 print(rejected_data)
 print(nonrejected_data)
 print(flags)
+print(indices)
 
 pivot = model.result.pivot
 print(pivot)
