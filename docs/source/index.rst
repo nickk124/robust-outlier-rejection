@@ -50,21 +50,20 @@ Both distributions are centered at :math:`\mu=0`.
 The question is, how can we recover the :math:`\mu` and :math:`\sigma` of the underlying distribution, 
 in the face of such heavy contamination? The example below shows how to do it with RCR.
 
-.. literalinclude:: examples/intro/intro_example.py
+.. literalinclude:: examples/intro/intro.py
 
 Output:
 
 .. image:: 
-   _static/examples/intro/intro_example.*
+   _static/examples/intro/intro.*
 
 For a more in-depth explanation of using RCR for this type of one-dimensional outlier rejection, see :ref:`singlevalue`.
 
 .. toctree::
    :maxdepth: 2
    
-   tutorials/singlevalue/singlevalue
-   tutorials/functional/functional_basic
-   tutorials/functional/functional_advanced
+   tutorials/singlevalue
+   tutorials/functional
 
    guide/install
    guide/bulk
