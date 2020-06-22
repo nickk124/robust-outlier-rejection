@@ -3,9 +3,12 @@
 Rejecting Outliers While Model Fitting
 ======================================
 
+<<<<<<< HEAD
 Introduction
 ------------
 
+=======
+>>>>>>> f36d1aea0185529ba029acd8594c90110d381444
 In it's most simple form, RCR is an excellent tool for
 detecting and rejecting outliers within heavily contaminated one-dimensional 
 datasets, as shown in :ref:`singlevalue`. However, this only scratches
@@ -35,7 +38,11 @@ independent variable(s), and :math:`\vec{\theta}` is an
 :math:`M`-dimensional vector of the model's parameters. In this case, 
 we say that :math:`y(\vec{x}|\vec{\theta})` is an :math:`n`-dimensional,
 :math:`M`-parameter model. For a more concrete example of this, consider
+<<<<<<< HEAD
 a simple linear model :math:`y = b + mx`. In this case,
+=======
+a simple, one-dimensional linear model :math:`y = b + mx`. In this case,
+>>>>>>> f36d1aea0185529ba029acd8594c90110d381444
 :math:`n = 1`, and our parameter vector is just :math:`\vec{\theta} = (b ,m)`.
 
 For this more-general case, what does our dataset look like? Each datapoint
@@ -47,6 +54,7 @@ as :math:`\left\{\left(\vec{x}_i, y_i\right)\right\}_{i=1}^N`
 the former is the number of datapoints that we're fitting the 
 model to, while the latter is the dimensionality of the dataset/model).
 
+<<<<<<< HEAD
 Last but not least, before we get into the code, it's important to point out
 that in order for RCR to fit any arbitrary model function to a dataset,
 (partial) derivatives of the model function with respect to each model parameter must
@@ -109,5 +117,10 @@ Applying Prior Knowledge to Model Parameters
 
 Automatically Minimizing Correlation between Linear Model Parameters (Advanced)
 -------------------------------------------------------------------------------
+=======
+
+Automatically Minimizing Correlation between Linear Model Parameters
+--------------------------------------------------------------------
+>>>>>>> f36d1aea0185529ba029acd8594c90110d381444
 
 Why is it useful (think of Dan's examples...)
