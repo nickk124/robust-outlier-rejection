@@ -69,12 +69,54 @@ flags = r.result.flags
 # list of booleans corresponding to the original dataset, 
 # true if the corresponding datapoint is not an outlier.
 
-cleaned_data_indices = r.result.indices # indices of data in original dataset that are not outliers
+cleaned_data_indices = r.result.indices 
+# indices of data in original dataset that are not outliers
 
 plt.figure(figsize=(8,5))
 ax = plt.subplot(111)
 ax.plot(data[cleaned_data_indices], ydata[cleaned_data_indices], "b.", 
     label="RCR-accepted points", alpha=0.75, ms=4)
+
+plt.xlim(-15, 15)
+plt.ylim(0, 1)
+plt.xlabel("data")
+plt.yticks([])
+
+box = ax.get_position()
+ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+plt.show()
+
+
+# Weighting Data:
+
+from scipy.stats import norm
+
+def weight_data(datapoint):
+    return norm.pdf(datapoint, loc=mu, scale=sigma_uncontaminated)
+
+weights = weight_data(data)
+
+# perform RCR
+r = rcr.RCR(rcr.SS_MEDIAN_DL)
+r.performBulkRejection(weights, data) # perform outlier rejection, now with weights
+
+
+# View results post-RCR
+cleaned_mu = r.result.mu
+cleaned_sigma = r.result.stDev
+print(cleaned_mu, cleaned_sigma)
+
+
+# plot rejections
+cleaned_data = r.result.cleanY
+cleaned_data_indices = r.result.indices
+
+plt.figure(figsize=(8,5))
+ax = plt.subplot(111)
+ax.plot(data[cleaned_data_indices], ydata[cleaned_data_indices], "b.", 
+    label="RCR-accepted points,\nwith weights applied to data", alpha=0.75, ms=4)
 
 plt.xlim(-15, 15)
 plt.ylim(0, 1)

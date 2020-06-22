@@ -21,7 +21,7 @@ Best Rejection Technique  Uncontaminated ("true") Distribution  Contaminant Dist
 ``ES_MODE_DL``            Mildly Asymmetric/Very low :math:`N`  (Any)                
 ========================  ====================================  =============================
 
-*(Note that an uncontaminated distribution labeled as "symmetric" means Gaussian/normal, 
+*(Note that an uncontaminated distribution labeled as "symmetric" means approximately Gaussian/normal, 
 mildly peaked, or mildly flat-topped, meaning an*
 `exponential power distribution/generalized normal distribution <https://en.wikipedia.org/wiki/Generalized_normal_distribution>`_ 
 *with positive and negative kurtosis, respectively.)*
@@ -88,7 +88,7 @@ To see what this dataset looks like, we'll plot it below (projected randomly alo
 Output:
 
 .. image:: 
-   ../../_static/examples/singlevalue/singlevalue_preRCR.*
+   ../_static/examples/singlevalue/singlevalue_preRCR.*
 
 Now, what do we do if we to estimate the :math:`\mu` and :math:`\sigma` of the underlying uncontaminated distribution?
 Without RCR, we get:
@@ -126,8 +126,8 @@ as follows:
    r = rcr.RCR(rcr.SS_MEDIAN_DL)
    r.performBulkRejection(data) # perform outlier rejection
 
-Next, we can obtain the results of RCR with the `result` member of `RCR`. In our case, we're interested in the RCR-recovered
-values for :math:`\mu` and :math:`\sigma` of the underlying uncontaminated distribution, i.e.:
+Next, we can obtain the results of RCR with the `result` member of ``RCR``. In our case, we're interested in the RCR-recovered
+values for :math:`\mu` and :math:`\sigma` of the underlying uncontaminated distribution:
 
 .. code-block:: python
 
@@ -143,7 +143,7 @@ Output:
    -0.1584668560834893 1.8260572902969874
 
 Successfully, RCR managed to recover both a :math:`\mu` and :math:`\sigma` that are significantly 
-closer to the true values, both by a factor of about 2.
+closer to the true values of :math:`0` and :math:`1`, respectively, both by a factor of about 2.
 
 We can also access the subsets of rejected and nonrejected datapoints of the dataset, as well as
 the corresponding indices and flags thereof, from ``RCR.result``. For example, we can plot the
@@ -158,7 +158,8 @@ post-rejection dataset with:
    # list of booleans corresponding to the original dataset, 
    # true if the corresponding datapoint is not an outlier.
 
-   cleaned_data_indices = r.result.indices # indices of data in original dataset that are not outliers
+   cleaned_data_indices = r.result.indices 
+   # indices of data in original dataset that are not outliers
 
    plt.figure(figsize=(8,5))
    ax = plt.subplot(111)
@@ -179,9 +180,92 @@ post-rejection dataset with:
 Output:
 
 .. image:: 
-   ../../_static/examples/singlevalue/singlevalue_postRCR.*
+   ../_static/examples/singlevalue/singlevalue_postRCR.*
+
+In the next section, we'll explore how we can apply weights to datapoints
+to use with RCR.
 
 .. _weighting:
 
 Weighting Data
 --------------
+
+For both single-value/one-dimensional RCR, and the :math:`n`-dimensional
+model-fitting/functional variant (see :ref:`functional`), numerical, non-negative weights can be
+optionally provided for each of the datapoints. However, what does it really mean
+to weight datapoints? If you have some datapoint :math:`y_n`, giving it a weight
+of :math:`w_n=2` is simply analogous to counting it twice. Now, what's 
+an example of where weighting can be useful?
+
+Lets say that we'd like to perform RCR on the same dataset as above, except now
+we somehow know that the true, uncontaminated datapoints should
+be normally/Gaussian-distributed (again with :math:`\mu=0` and :math:`\sigma=1`) *a priori*.
+We can use this prior knowledge to perform a sort of Bayesian outlier rejection,
+by giving the datapoints weights that are proportional to the value of the
+known normal probability density function. In Python, we can do this simply as:
+
+.. code-block:: python
+
+   from scipy.stats import norm
+
+   # function to weight each datapoint according to the prior knowledge
+   def weight_data(datapoint):
+      return norm.pdf(datapoint, loc=mu, scale=sigma_uncontaminated)
+
+   # create weights
+   weights = weight_data(data)
+
+Next we can perform RCR and view the results as usual, but now with providing the weights as the first argument
+of ``performBulkRejection()``:
+
+.. code-block:: python
+
+   # perform RCR; same rejection technique
+   r = rcr.RCR(rcr.SS_MEDIAN_DL)
+   r.performBulkRejection(weights, data) # perform outlier rejection, now with weights
+
+   # View results post-RCR
+   cleaned_mu = r.result.mu
+   cleaned_sigma = r.result.stDev
+   print(cleaned_mu, cleaned_sigma)
+
+Output:
+
+.. code-block:: python
+
+   -0.05519770432617514 0.7825197746126461
+
+This is much closer to the expected values of :math:`\mu=0` and :math:`\sigma=1` than 
+what we got with the unweighted/equally-weighted dataset above (this time actually,
+:math:`\sigma` was slightly *under*-estimated).
+
+We can then plot the cleaned dataset/non-rejected data as usual:
+
+.. code-block:: python
+
+   # plot rejections
+   cleaned_data = r.result.cleanY
+   cleaned_data_indices = r.result.indices
+
+   plt.figure(figsize=(8,5))
+   ax = plt.subplot(111)
+   ax.plot(data[cleaned_data_indices], ydata[cleaned_data_indices], "b.", 
+      label="RCR-accepted points,\nwith weights applied to data", alpha=0.75, ms=4)
+
+   plt.xlim(-15, 15)
+   plt.ylim(0, 1)
+   plt.xlabel("data")
+   plt.yticks([])
+
+   box = ax.get_position()
+   ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
+   ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+   plt.show()
+
+Output:
+
+.. image:: 
+   ../_static/examples/singlevalue/singlevalue_postRCR_weight.*
+
+As expected, the width of the cleaned dataset is noticeably smaller after applying weights.
