@@ -15,7 +15,7 @@ LONG_DESCRIPTION =   """A suite of algorithms for powerful, but easy to use stat
                         Supports weighted datasets, multi-dimensional model fitting,
                         and much more. See https://github.com/nickk124/RCR for more information."""
 
-__version__ = '2.4.4'
+__version__ = '2.4.5'
 
 SRC_DIR = 'src'
 SRC_FILES = [

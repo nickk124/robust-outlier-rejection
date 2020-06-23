@@ -2364,7 +2364,7 @@ std::vector<double> FunctionalForm::get_bestfit_errorbars(std::vector <double> b
 			result = paramuncertainty(NDpartialsvector, goodx_ND, best_fit_params, goodsigma_y);
 		}
 		else if (!hasErrorBars) {
-			result = paramuncertainty(NDpartialsvector, goodx_ND, best_fit_params);
+			// model parameter errors are only defined if you have weights and/or error bars
 		}
 	}
 	else if ((weightedCheck == false) && (NDcheck == false))
@@ -2373,7 +2373,7 @@ std::vector<double> FunctionalForm::get_bestfit_errorbars(std::vector <double> b
 			result = paramuncertainty(partialsvector, goodx, best_fit_params, goodsigma_y);
 		}
 		else if (!hasErrorBars) {
-			result = paramuncertainty(partialsvector, goodx, best_fit_params);
+			// model parameter errors are only defined if you have weights and/or error bars
 		}
 	}
 
