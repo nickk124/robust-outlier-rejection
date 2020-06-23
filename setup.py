@@ -1,6 +1,5 @@
 """
     Based off of github.com/pybind/python_example
-
 """
 
 from setuptools import setup, Extension
@@ -9,7 +8,14 @@ import sys
 import setuptools
 import os
 
-__version__ = '2.4.3'
+
+LONG_DESCRIPTION =   """A suite of algorithms for powerful, but easy to use statistical outlier detection/rejection.
+                        Especially useful for cleaning heavily (sometimes >85%) contaminated datasets,
+                        while avoiding the rejection of non-outlier points.
+                        Supports weighted datasets, multi-dimensional model fitting,
+                        and much more. See https://github.com/nickk124/RCR for more information."""
+
+__version__ = '2.4.4'
 
 SRC_DIR = 'src'
 SRC_FILES = [
@@ -122,7 +128,7 @@ setup(
     author_email='nickkonz3@gmail.com',
     url='https://github.com/nickk124/RCR',
     description='Advanced, but easy to use outlier rejection.',
-    long_description='',
+    long_description=LONG_DESCRIPTION,
     ext_modules=ext_modules,
     setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},

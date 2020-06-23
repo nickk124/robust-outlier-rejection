@@ -100,7 +100,7 @@ r.performBulkRejection(ydata) # perform RCR
 
 
 # view results
-best_fit_parameters = model.result.model_parameters # best fit parameters
+best_fit_parameters = model.result.parameters # best fit parameters
 
 rejected_data = r.result.rejectedY # rejected and non-rejected data
 nonrejected_data = r.result.cleanY
@@ -151,3 +151,9 @@ ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 print("Least-squares fit results:", intercept_lsq, slope_lsq)
 
 plt.show()
+
+
+# get error bars on fitted params
+best_fit_params_errors = model.result.parameter_uncertainties # best fit parameters
+
+print(best_fit_params_errors)

@@ -241,7 +241,7 @@ having model-fitting results from our model, with the member ``model.result``:
 
 .. code-block:: python
 
-    best_fit_parameters = model.result.model_parameters # best fit parameters
+    best_fit_parameters = model.result.parameters # best fit parameters
 
     rejected_data = r.result.rejectedY # rejected and non-rejected data
     nonrejected_data = r.result.cleanY
@@ -331,10 +331,12 @@ result.
 Overall, the RCR fit (green line) is clearly a much better fit 
 (true best fit in blue dashed line) than the least squares best fit (red line).
 
-.. note::
-    Model param errors bars....
+Model Parameter Uncertainties/Error Bars
+----------------------------------------
 
-
+In many cases, we often want not just best fit parameters for a model and dataset,
+but also *uncertainties*, or "error bars" for these parameters. This is easily
+available in ``rcr``, simply via the 
 
 Weighting Data
 --------------

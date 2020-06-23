@@ -413,8 +413,8 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
         // members
         .def_readwrite("priors", &FunctionalForm::priors, "Object describing parameter prior probability distribution(s)")
-        .def_readwrite("has_priors", &FunctionalForm::has_priors, "Are you applying prior probability distributions to your model parameters?")
-        .def_readwrite("parameters", &FunctionalForm::parameters, "Current (or final) estimated model parameters")
+        // .def_readwrite("has_priors", &FunctionalForm::has_priors, "Are you applying prior probability distributions to your model parameters?")
+        // .def_readwrite("parameters", &FunctionalForm::parameters, "Current (or final) estimated model parameters")
         .def_readwrite("pivot_function", &FunctionalForm::pivotFunc, 
             "Function used to evaluate pivot point(s), with (optional) arguments (set to None otherwise) of: xdata, data weights, model function and model params");
 
