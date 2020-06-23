@@ -396,7 +396,8 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
     // Functional Form RCR results class
     py::class_<FunctionalFormResults>(m, "FunctionalFormResults", "Results that functional form/model-fitting RCR uniquely generates")
-        .def_readwrite("model_parameters", &FunctionalFormResults::model_parameters, "Recovered post-outlier rejection best fit model parameters")
+        .def_readwrite("parameters", &FunctionalFormResults::parameters, "Recovered post-outlier rejection best fit model parameters")
+        .def_readwrite("parameter_uncertainties", &FunctionalFormResults::parameter_uncertainties, "Recovered post-outlier rejection best fit model parameter uncertainties/error bars")
         .def_readwrite("pivot", &FunctionalFormResults::pivot, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (1D independent variable case)")
         .def_readwrite("pivot_ND", &FunctionalFormResults::pivot_ND, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (ND independent variable case)");
 

@@ -5972,8 +5972,12 @@ namespace RCRLib {
             break;
         }
         //parametricModel->setModel(line);
-        parametricModel->parameters = line; //most recent calculation of parameters ("line" vector) is stored)
-        parametricModel->result.model_parameters = line;
+        parametricModel->parameters = line; // most recent calculation of parameters ("line" vector) is stored)
+
+        parametricModel->result.parameters = line; // final best fit (uncertainties stored)
+
+        parametricModel->result.parameter_uncertainties = parametricModel->get_bestfit_errorbars(line); 
+        // get uncertainties of final best fit
 
         if (parametricModel->NDcheck == true) {
             errors = parametricModel->getErrors_ND(line);

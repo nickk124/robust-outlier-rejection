@@ -2309,7 +2309,78 @@ void FunctionalForm::buildModelSpace()
 	};
 }
 
-std::vector<double> FunctionalForm::regression() //determines params
+std::vector<double> FunctionalForm::get_bestfit_errorbars(std::vector <double> best_fit_params){
+	std::vector <double> goodw, goodsigma_y, goodx, result; // true-flagged x and y data 
+	std::vector <std::vector <double> > goodx_ND;
+
+	for (int i = 0; i < N; i++) {
+		if (flags[i]) {
+			goodw.push_back(w[i]);
+			if (hasErrorBars) {
+				goodsigma_y.push_back(sigma_y[i]);
+			}
+
+			if (NDcheck) {
+				goodx_ND.push_back(x_ND[i]);
+			}
+			if (NDcheck == false) {
+				goodx.push_back(x[i]);
+			}
+		}
+	}
+
+	if (weightedCheck) { //calculates wbar -- average weight of all unrejected data points
+		double wsum = 0.0;
+		double goodcount = 0.0;
+		for (int j = 0; j < N; j++) {
+			if (flags[j]) {
+				wsum += w[j];
+				goodcount += 1.0;
+			}
+		}
+		wbar = wsum / goodcount;
+	}
+
+	if (weightedCheck && NDcheck) 
+	{
+		if (hasErrorBars) {
+			result = paramuncertainty(NDpartialsvector, goodx_ND, best_fit_params, goodsigma_y, goodw, wbar);
+		} else if (!hasErrorBars) {
+			result = paramuncertainty(NDpartialsvector, goodx_ND, best_fit_params, goodw, wbar);
+		}
+	}
+	else if (weightedCheck && (NDcheck == false))
+	{
+		if (hasErrorBars) {
+			result = paramuncertainty(partialsvector, goodx, best_fit_params, goodsigma_y, goodw, wbar);
+		}
+		else if (!hasErrorBars) {
+			result = paramuncertainty(partialsvector, goodx, best_fit_params, goodw, wbar);
+		}
+	}
+	else if ((weightedCheck == false) && NDcheck)
+	{
+		if (hasErrorBars) {
+			result = paramuncertainty(NDpartialsvector, goodx_ND, best_fit_params, goodsigma_y);
+		}
+		else if (!hasErrorBars) {
+			result = paramuncertainty(NDpartialsvector, goodx_ND, best_fit_params);
+		}
+	}
+	else if ((weightedCheck == false) && (NDcheck == false))
+	{
+		if (hasErrorBars) {
+			result = paramuncertainty(partialsvector, goodx, best_fit_params, goodsigma_y);
+		}
+		else if (!hasErrorBars) {
+			result = paramuncertainty(partialsvector, goodx, best_fit_params);
+		}
+	}
+
+	return result;
+}
+
+std::vector<double> FunctionalForm::regression() //determines best fit params
 {
 	std::vector <double> goody, goodw, goodsigma_y, goodx, result; // true-flagged x and y data 
 	std::vector <std::vector <double> > goodx_ND;

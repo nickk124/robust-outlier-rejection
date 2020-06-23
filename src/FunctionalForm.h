@@ -14,7 +14,8 @@ extern std::vector <double> pivot_ND; //vector of pivot values, one for each of 
 
 struct FunctionalFormResults
 {
-	std::vector <double> model_parameters;
+	std::vector <double> parameters;
+	std::vector <double> parameter_uncertainties;
 
 	// pivot points / linear parameter correlation minimization
 	double pivot;
@@ -131,6 +132,7 @@ public:
 	void setTrueVec(std::vector<bool>&, std::vector<double>&, std::vector<double>&);
 	void setTrueVec(std::vector<bool>&, std::vector<double>&);
 	std::vector<double> regression();
+	std::vector<double> get_bestfit_errorbars(std::vector <double> best_fit_params);
 	std::vector<double> getErrors(std::vector <double> line);
 	std::vector<double> getErrors_ND(std::vector <double> line);
 	void setModel(std::vector<double>);
