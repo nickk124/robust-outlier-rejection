@@ -28,10 +28,10 @@ ax = plt.subplot(111)
 
 ydata = np.random.uniform(0, 1, N) # project randomly into 2D for better visualization
 
-ax.plot(contaminated_samples, ydata[:int(N * frac_contaminated)], "r.", 
-    label="Contaminated distribution", alpha=0.75, ms=4)
+ax.plot(contaminated_samples, ydata[:int(N * frac_contaminated)], "k.", 
+    label="Pre-RCR dataset", alpha=0.75, ms=4)
 ax.plot(uncontaminated_samples, ydata[int(N * frac_contaminated):], "k.", 
-    label="Uncontaminated/\"true\"\ndistribution", alpha=0.75, ms=4)
+    alpha=0.75, ms=4)
 
 plt.xlim(-15, 15)
 plt.ylim(0, 1)

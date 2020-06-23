@@ -69,7 +69,7 @@ model = rcr.FunctionalForm(linear,
 
 model.priors = priors
 
-r = rcr.RCR(rcr.SS_MEDIAN_DL) #setting up for RCR with this rejection technique
+r = rcr.RCR(rcr.SS_MEDIAN_DL) # setting up for RCR with this rejection technique
 r.setParametricModel(model)
 r.performBulkRejection(w, y) # //running Bulk rejection RCR
 
