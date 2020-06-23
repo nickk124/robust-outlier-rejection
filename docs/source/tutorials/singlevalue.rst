@@ -85,11 +85,6 @@ To see what this dataset looks like, we'll plot it below (projected randomly alo
 
    plt.show()
 
-Output:
-
-.. image:: 
-   ../_static/examples/singlevalue/singlevalue_preRCR.*
-
 Now, what do we do if we to estimate the :math:`\mu` and :math:`\sigma` of the underlying uncontaminated distribution?
 Without RCR, we get:
 

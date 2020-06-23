@@ -90,13 +90,130 @@ parameter derivatives:
     def linear(x, params): # model function
         return params[0] + x * params[1]
 
-    def linear_partial1(x, params): # first model parameter derivative
+    def d_linear_1(x, params): # first model parameter derivative
         return 1
 
-    def linear_partial2(x, params): # second model parameter derivative
+    def d_linear_2(x, params): # second model parameter derivative
         return x
 
-Next, let's create our dataset; 
+Next, let's create our dataset. We'll create a dataset with :math:`N=200` points
+total, with 85% datapoints being outliers. Our "true" model that the datapoints
+will be generated about will have parameters of :math:`b=0` and :math:`m=1`. 
+In code, this is simply:
+
+.. code-block:: python
+
+    import numpy as np
+
+    N = 200 # number of datapoints
+    f = 0.85 # fraction of datapoints that are outliers
+
+    params_true = [0, 1] # parameters of "true" model
+
+Next, let's create the data. We'll generate our datapoints in a certain range
+of :math:`x` values about the "true" model line. For this example, we'll 
+make uncontaminated datapoints that are Gaussian/normally distributed, with
+standard deviation :math:`\sigma=1`, about the true model. In order to highlight
+the power of RCR with dealing with especially difficult outliers, we'll generate
+one-sided outliers/contaminants, sampled from the positive side of a 
+Gaussian with :math:`\sigma=10`. In code, this will take the form of:
+
+.. code-block:: python
+
+    sigma_uncontaminated = 1 # standard deviations used to generate datapoints
+    sigma_contaminated = 10
+
+    # generate x-datapoints randomly in an interval
+    x_range = (-10, 10)
+    xdata_uncontaminated = np.random.uniform(
+        x_range[0], x_range[1], int(N * (1 - f)))
+    xdata_contaminated = np.random.uniform(
+        x_range[0], x_range[1], int(N * f))
+
+
+    # generate y-datapoints about the true model:
+    # symmetric uncontaminated distribution
+    ydata_uncontaminated = np.random.normal(
+        loc=linear(xdata_uncontaminated, params_true),
+        scale=sigma_uncontaminated
+        )
+
+    # one-sided contaminated distribution
+    ydata_contaminated = linear(xdata_contaminated, params_true) + np.abs(
+        np.random.normal(0, sigma_contaminated, int(N * f)))
+
+
+    # combine dataset
+    xdata = np.concatenate((xdata_contaminated, xdata_uncontaminated))
+    ydata = np.concatenate((ydata_contaminated, ydata_uncontaminated))
+   
+Let's plot the dataset over the true, underlying model:
+
+.. code-block:: python
+
+    # plot dataset
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(8,5))
+    ax = plt.subplot(111)
+
+    ax.plot(xdata_contaminated, ydata_contaminated, "k.", 
+        label="Pre-RCR dataset", alpha=0.75, ms=4)
+    ax.plot(xdata_uncontaminated, ydata_uncontaminated, "k.", 
+        alpha=0.75, ms=4)
+
+
+    # plot model
+    x_model = np.linspace(x_range[0], x_range[1], 1000)
+    ax.plot(x_model, linear(x_model, params_true),
+        "b--", label="True model", alpha=0.5, lw=2)
+
+    plt.xlim(-10, 10)
+    plt.ylim(-15, 25)
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+    plt.show()
+
+Output:
+
+.. image:: 
+   ../_static/examples/functional/preRCR.*
+
+Clearly, these outliers are pretty nasty. This looks like a job for RCR. First,
+we  need to supply an initial guess
+for the model parameters, to give the fitting engine within RCR a starting place. 
+Approaching this
+dataset with no knowledge of what is or isn't an outlier, it would be hard
+to tell what the true best fit should be; as such, we'll use an initial guess
+that naively should work with the data, but are pretty far off of the true values of 
+:math:`b=0` and :math:`m=1`; let's try :math:`b=5` and :math:`m=1.5`:
+
+.. code-block:: python
+
+    guess = [5, 1.5]
+
+Next, we'll need to initialize the model, as an instance 
+of the ``rcr.FunctionalForm`` class. The required arguments (in order)
+to construct an instance of this class are 1) the model function,
+2) the (:math:`n`-dimensional) :math:`x`-data, 3) the :math:`y`-data,
+4) a list of the model parameter derivative functions, in order and 5)
+the guess for the parameters. This is implemented as:
+
+.. code-block:: python
+
+    model = rcr.FunctionalForm(linear,
+        xdata,
+        ydata,
+        [d_linear_1, d_linear_2],
+        guess
+    )
+
+Now, we're finally ready to run RCR on the dataset/model. Following 
 
 Weighting Data
 --------------

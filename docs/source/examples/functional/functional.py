@@ -67,7 +67,6 @@ x_model = np.linspace(x_range[0], x_range[1], 1000)
 ax.plot(x_model, linear(x_model, params_true),
     "b--", label="True model", alpha=0.5, lw=2)
 
-
 plt.xlim(-10, 10)
 plt.ylim(-15, 25)
 plt.xlabel("$x$")
@@ -81,7 +80,7 @@ plt.show()
 
 # initialize model and guess for model parameters
 
-guess = [0.1, 0.9]
+guess = [5, 1.5]
 
 model = rcr.FunctionalForm(linear,
     xdata,
