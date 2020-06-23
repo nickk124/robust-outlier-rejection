@@ -100,7 +100,7 @@ r.performBulkRejection(ydata) # perform RCR
 
 
 # view results
-best_fit_parameters = model.parameters # best fit parameters
+best_fit_parameters = model.result.model_parameters # best fit parameters
 
 rejected_data = r.result.rejectedY # rejected and non-rejected data
 nonrejected_data = r.result.cleanY
@@ -111,7 +111,7 @@ print(best_fit_parameters)
 
 # plot results
 
-plt.figure(figsize=(8,5))
+plt.figure(figsize=(8, 5))
 ax = plt.subplot(111)
 
 ax.plot(xdata_contaminated, ydata_contaminated, "k.", 
@@ -120,7 +120,7 @@ ax.plot(xdata_uncontaminated, ydata_uncontaminated, "k.",
     alpha=0.75, ms=4)
 
 ax.plot(xdata[nonrejected_indices], ydata[nonrejected_indices], "bo", 
-    label="Data post-RCR", alpha=0.4, ms=4)
+    label="Post-RCR dataset", alpha=0.4, ms=4)
 
 # plot true model
 ax.plot(x_model, linear(x_model, params_true),
@@ -147,5 +147,7 @@ plt.ylabel("$y$")
 box = ax.get_position()
 ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+print("Least-squares fit results:", intercept_lsq, slope_lsq)
 
 plt.show()

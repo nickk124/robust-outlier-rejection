@@ -89,3 +89,5 @@ print(indices)
 
 pivot = model.result.pivot
 print(pivot)
+
+print(model.result.parameter_uncertainties)

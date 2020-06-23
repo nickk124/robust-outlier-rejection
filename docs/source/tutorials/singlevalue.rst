@@ -12,6 +12,11 @@ distribution (outliers) and 2) samples from some underlying "true" uncontaminate
 RCR has various outlier rejection techniques (**add link to them here**) that have each been 
 chosen to work best for different shapes of these distributions. The table below explains this.
 
+.. _rejectiontechs:
+
+Table of Rejection Techniques
+-----------------------------
+
 ========================  ====================================  =============================
 Best Rejection Technique  Uncontaminated ("true") Distribution  Contaminant Distribution
 ========================  ====================================  =============================

@@ -63,7 +63,9 @@ Implementation
 --------------
 
 Finally, we have everything that we need to use RCR for outlier rejection 
-during model fitting. For simplicity, let's consider a simple linear model
+during model fitting. Although ``rcr`` supports any arbitrary
+:math:`n`-dimensional nonlinear model function (as long as the model parameter 
+derivatives are well-defined), for simplicity let's consider a simple linear model
 :math:`y(\vec{x}|\vec{\theta})=b + mx`. The parameter partial derivatives
 are then simply
 
@@ -154,7 +156,7 @@ Let's plot the dataset over the true, underlying model:
     # plot dataset
     import matplotlib.pyplot as plt
 
-    plt.figure(figsize=(8,5))
+    plt.figure(figsize=(8, 5))
     ax = plt.subplot(111)
 
     ax.plot(xdata_contaminated, ydata_contaminated, "k.", 
@@ -213,7 +215,126 @@ the guess for the parameters. This is implemented as:
         guess
     )
 
-Now, we're finally ready to run RCR on the dataset/model. Following 
+Now, we're finally ready to run RCR on the dataset/model.
+Our uncontaminated distribution of data is
+symmetric, while our contaminated distribution is
+one-sided/completely asymmetric. Therefore, following
+the :ref:`rejectiontechs`, the rejection technique
+that will perform best on this dataset is ``LS_MODE_68``. Given this,
+we'll perform RCR as usual, except now, we need to tell our instance of
+the ``RCR`` class that we're fitting to our specific parametric model:
+
+.. code-block:: python
+
+    r = rcr.RCR(rcr.LS_MODE_68) # setting up for RCR with this rejection technique
+
+    r.setParametricModel(model) 
+    # tell RCR that we are model fitting, and give it the model of choice
+
+    r.performBulkRejection(ydata) # perform RCR
+
+That was only a few lines of code, but what actually happened here? Essentially,
+(see the paper **HERE** for more details), RCR can iteratively reject outliers and
+fit the model to the data at the same time. As such, we can access the same 
+outlier-rejection results from ``r.result`` as in :ref:`singlevalue`, while also
+having model-fitting results from our model, with the member ``model.result``:
+
+.. code-block:: python
+
+    best_fit_parameters = model.result.model_parameters # best fit parameters
+
+    rejected_data = r.result.rejectedY # rejected and non-rejected data
+    nonrejected_data = r.result.cleanY
+    nonrejected_indices = r.result.indices 
+    # indices from original dataset of nonrejected data
+
+    print(best_fit_parameters)
+
+Output:
+
+.. code-block:: python
+
+    [1.2367288755077883, 1.004037971689524]
+
+Before we discuss this result, it's teaching to compare it to the
+traditional method of ordinary least-squares fitting; we'll summarize 
+this in a plot, as follows:
+
+.. code-block:: python
+
+    # plot results
+
+    plt.figure(figsize=(8, 5))
+    ax = plt.subplot(111)
+
+    ax.plot(xdata_contaminated, ydata_contaminated, "k.", 
+        label="Pre-RCR dataset", alpha=0.75, ms=4)
+    ax.plot(xdata_uncontaminated, ydata_uncontaminated, "k.", 
+        alpha=0.75, ms=4)
+
+    ax.plot(xdata[nonrejected_indices], ydata[nonrejected_indices], "bo", 
+        label="Post-RCR dataset", alpha=0.4, ms=4)
+
+    # plot true model
+    ax.plot(x_model, linear(x_model, params_true),
+        "b--", label="True model", alpha=0.5, lw=2)
+
+    # plot regular linear least squares best fit
+    from scipy.stats import linregress
+
+    slope_lsq, intercept_lsq, _, _, _ = linregress(xdata, ydata)
+
+    ax.plot(x_model, linear(x_model, [intercept_lsq, slope_lsq]),
+        "r-", label="Least-squares best fit", alpha=0.5, lw=2)
+
+    # plot RCR-fitted model
+    ax.plot(x_model, linear(x_model, best_fit_parameters),
+        "g-", label="RCR best fit", alpha=0.5, lw=2)
+
+
+    plt.xlim(-10, 10)
+    plt.ylim(-15, 25)
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+    print("Least-squares fit results:", intercept_lsq, slope_lsq)
+
+    plt.show()
+
+Output:
+
+.. code-block:: python
+
+   7.202089027278407 1.0412871059773106
+
+.. image:: 
+   ../_static/examples/functional/postRCR.*
+
+RCR gave us a best fit values of :math:`b=1.237` and :math:`m=1.004`, while
+traditional linear least squares gave :math:`b=7.202` and :math:`m=1.041`.
+The slope (true value of :math:`m=1`) was recovered very well in both cases, 
+but this isn't super surprising, given that both the contaminated and uncontaminated
+measurement distributions were generated without any scatter
+along the :math:`x`-axis. However, due to the heavy scatter/contamination along the
+:math:`y`-axis, the least-squares result for the intercept :math:`b` is, 
+expectly, heavily biased by the outliers, very far off of the true value of 
+:math:`b=1`. However, RCR was able to successfully reject many of the outliers,
+while maintaining almost all of the uncontaminated distribution 
+(shown in blue circles), giving a best fit :math:`b=1.237` 
+that is significantly closer to the true value of :math:`b=1` than the least-squares
+result. 
+
+Overall, the RCR fit (green line) is clearly a much better fit 
+(true best fit in blue dashed line) than the least squares best fit (red line).
+
+.. note::
+    Model param errors bars....
+
+
 
 Weighting Data
 --------------
