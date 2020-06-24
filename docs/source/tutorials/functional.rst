@@ -331,6 +331,14 @@ result.
 Overall, the RCR fit (green line) is clearly a much better fit 
 (true best fit in blue dashed line) than the least squares best fit (red line).
 
+Data with Uncertainties
+-----------------------
+
+Realistically, many datasets will have uncertainties along the :y:
+
+Weighting Data
+--------------
+
 Model Parameter Uncertainties/Error Bars
 ----------------------------------------
 
@@ -338,11 +346,6 @@ In many cases, we often want not just best fit parameters for a model and datase
 but also *uncertainties*, or "error bars" for these parameters. This is easily
 available in ``rcr``, simply via the 
 
-Weighting Data
---------------
-
-Data with Uncertainties
------------------------
 
 Applying Prior Knowledge to Model Parameters
 --------------------------------------------

@@ -153,7 +153,6 @@ print("Least-squares fit results:", intercept_lsq, slope_lsq)
 plt.show()
 
 
-# get error bars on fitted params
-best_fit_params_errors = model.result.parameter_uncertainties # best fit parameters
 
-print(best_fit_params_errors)
+
+# get error bars on fitted params

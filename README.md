@@ -1,3 +1,8 @@
+# Robust Chauvenet Outlier Rejection (RCR)
+
+[![Documentation Status](https://readthedocs.org/projects/rcr/badge/?version=latest)](https://rcr.readthedocs.io/en/latest/?badge=latest)
+      
+
 ![](example_imgs/before_after_singlevalue.png)
 *Left: data distribution heavily saturated with one-sided outliers/contaminants, with true value in black. Right: remaining un-contaminated distribution after single-value RCR outlier removal.*
 
