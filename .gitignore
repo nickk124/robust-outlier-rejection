@@ -14,10 +14,6 @@ dist
 rcr.egg-info
 var
 
-# static
-*.png 
-*.svg
-
 # misc/testing
 src/test.py
 **/.vscode/
