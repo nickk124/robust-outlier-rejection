@@ -599,14 +599,31 @@ manner to the case of Gaussian priors (except now being sure to specify
 
     mypriors = rcr.Priors(rcr.CONSTRAINED_PRIORS, paramBounds)
 
-Finally, we'll need to initialize our model with the priors as in the end of the previous section, 
+Finally, we'll need to initialize our model with the priors as in the end of the previous section 
+(again with ``has_priors=True``),
 and then we're good to go.
 
-Both Gaussian and/or Constrained Priors
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Both Gaussian and/or Constrained (Mixed) Priors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+What if we want to apply Gaussian priors to some model parameters, constrained priors to others,
+or even a mix of both for certain parameters (e.g. force a parameter to be positive, while also
+making it Gaussian-distributed)? To do this, simply create the lists that specify these priors---
+``paramBounds`` and ``gaussianParams`` following the previous examples---and supply them both
+to the constructor for your ``Priors`` object, making sure to specify the priors type as 
+``MIXED_PRIORS``:
+
+.. code-block:: python
+
+    mypriors = rcr.Priors(rcr.MIXED_PRIORS, gaussianParams, paramBounds)
+
+From here, RCR can be used as normal, after initializing our model (with ``has_priors=True``)
+and supplying the model with the Priors object.
 
 Custom Priors
 ^^^^^^^^^^^^^
+
+In the most general case, it can be desired to supply any type of 
 
 Automatically Minimizing Correlation between Linear Model Parameters (Advanced)
 -------------------------------------------------------------------------------
