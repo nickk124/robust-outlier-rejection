@@ -308,7 +308,8 @@ this in a plot, as follows:
 Output:
 
 .. code-block:: python
-
+   
+   Least-squares fit results:
    7.202089027278407 1.0412871059773106
 
 .. image:: 
@@ -331,26 +332,281 @@ result.
 Overall, the RCR fit (green line) is clearly a much better fit 
 (true best fit in blue dashed line) than the least squares best fit (red line).
 
-Data with Uncertainties
------------------------
+Data with Uncertainties and/or Weights
+--------------------------------------
 
-Realistically, many datasets will have uncertainties along the :y:
+Realistically, many datasets will have measurements that have uncertainties, or *error bars*,
+as practically all physical measurements cannot truly be made with exact precision.
+In most model-fitting scenarios, only uncertainties in the *dependent* variable (:math:`y`) 
+are considered, with any uncertainties in the independent variable(s) :math:`\vec{x}`
+considered to be negligible (for a more generalized treatment, that includes such
+:math:`\vec{x}`-uncertainties, as well as uncertainty in the dataset
+that cannot solely be attributed to the data error bars, 
+see e.g. `Konz 2020 <https://github.com/nickk124/seniorthesis>`_). In this case, which
+we take for RCR, our dataset becomes 
+:math:`\left\{\left(\vec{x}_i, y_i \pm \sigma_{y,i}\right)\right\}_{i=1}^N`, i.e.
+our measurement error bars/uncertainties are :math:`\left\{\sigma_{y,i}\right\}_{i=1}^N`.
 
-Weighting Data
---------------
+Just as in one-dimensional RCR, weights :math:`w_i`
+can also be applied to model-fitting datasets (e.g. :ref:`weighting`). 
+We note that the inclusion of error bars as described in the previous paragraph
+is not mutual exclusive with such weighting; both weights and error bars can be used
+in practice. 
+
+To use a dataset with error bars and/or weights with model-fitting RCR, simply
+use the optional arguments ``error_y`` and ``weights`` of the ``rcr.FunctionalForm()``
+constructor, where the former is an ordered vector/list of measurement uncertainties 
+:math:`\left\{\sigma_{y,i}\right\}_{i=1}^N`, and the latter is an ordered vector/list 
+of measurement weights :math:`\left\{ w_i\right\}_{i=1}^N`. An example of this 
+is given in the following section.
 
 Model Parameter Uncertainties/Error Bars
 ----------------------------------------
 
 In many cases, we often want not just best fit parameters for a model and dataset,
 but also *uncertainties*, or "error bars" for these parameters. This is easily
-available in ``rcr``, simply via the 
+available in ``rcr``, again via the ``model.result`` object, as 
+``model.result.parameter_uncertainties``. However, before we go into a
+worked code example, note the following:
+
+.. note::
+
+    In ``rcr``, best fit model parameter uncertainties can only be calculated if 
+    error bars/uncertainties *and/or* weights were given for the dataset before fitting.
+
+Now, let's try adding error bars to our linear dataset, same as above. First, 
+we'll initialize the error bars, randomly, giving higher error, on average, to the contaminants:
+
+.. code-block:: python
+
+    error_y_uncontaminated = np.random.uniform(low=0.1, high=1, size=int(N * (1 - f)))
+    error_y_contaminated = np.random.uniform(low=1, high=2, size=int(N * f))
+
+    error_y = np.concatenate((error_y_contaminated, error_y_uncontaminated))
+
+Next, let's initailize the model as before, except now using the optional keyword argument ``error_y``
+to input the error bars. We then can perform RCR as usual.
+
+.. code-block:: python
+
+    # instantiate model
+    model = rcr.FunctionalForm(linear,
+        xdata,
+        ydata,
+        [d_linear_1, d_linear_2],
+        guess,
+        error_y=error_y
+    )
+
+    # initialize and perform RCR as usual
+    r = rcr.RCR(rcr.LS_MODE_68) # setting up for RCR with this rejection technique
+    r.setParametricModel(model) # tell RCR that we are model fitting
+    r.performBulkRejection(ydata) # perform RCR
+
+Let's check out the results:
+
+.. code-block:: python
+
+    # view results
+    best_fit_parameters = model.result.parameters # best fit parameters
+    best_fit_parameter_errors = model.result.parameter_uncertainties # and their uncertainties
+
+    rejected_data = r.result.rejectedY # rejected and non-rejected data
+    nonrejected_data = r.result.cleanY
+    nonrejected_indices = r.result.indices
+
+    print(best_fit_parameters)
+    print(best_fit_parameter_errors)
+
+Output:
+
+.. code-block:: python
+
+    [6.612942587028933, 0.9732622673909074]
+    [1.6299290812536242, 0.3258511725157285]
+
+So, our RCR-recovered best fit is :math:`b = 6.61 \pm 1.63` and :math:`m = 0.973 \pm 0.326`.
+Unfortunately, this fit isn't nearly as good as when we didn't have measurement uncertainties.
+But why? To see, let's plot the dataset alongside the fit:
+
+.. code-block:: python
+
+    # plot results
+
+    plt.figure(figsize=(8, 5))
+    ax = plt.subplot(111)
+
+    ax.errorbar(xdata_contaminated, ydata_contaminated, yerr=error_y_contaminated, 
+        fmt="k.", label="Pre-RCR dataset", alpha=0.75, ms=4)
+    ax.errorbar(xdata_uncontaminated, ydata_uncontaminated, yerr=error_y_uncontaminated,
+        fmt="k.", alpha=0.75, ms=4)
+
+    ax.plot(xdata[nonrejected_indices], ydata[nonrejected_indices], "bo", 
+        label="Post-RCR dataset", alpha=0.4, ms=4)
+
+    # plot true model
+    ax.plot(x_model, linear(x_model, params_true),
+        "b--", label="True model", alpha=0.5, lw=2)
+
+    # plot RCR-fitted model
+    ax.plot(x_model, linear(x_model, best_fit_parameters),
+        "g-", label="RCR best fit", alpha=0.5, lw=2)
 
 
-Applying Prior Knowledge to Model Parameters
---------------------------------------------
+    plt.xlim(-10, 10)
+    plt.ylim(-15, 25)
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+    plt.show()
+
+Output:
+
+.. image::
+    ../_static/examples/functional/postRCR_erry.*
+
+Adding error bars, or *intrinsic* uncertainties, to the measurements in
+the dataset introduced even more overall uncertainty, beyond just the *extrinsic* uncertainty,
+or scatter/sample variance of the datapoints themselves. That, combined with the extremely, even unusually high
+contaminant fraction of 85%, made it so that RCR was unable to tell apart the contaminants from the non-outlier datapoints,
+under-rejecting the outliers, as shown in the plot. As such, the final dataset that the
+model was fit to included too many outliers, biasing the fitted line to have too high an intercept.
+
+.. _priors:
+
+Applying Prior Knowledge to Model Parameters (Advanced)
+-------------------------------------------------------
+
+Let's say that we want to fit some model to a dataset, and we know certain, *prior* information
+about one of the parameters of the model :math:`a`, in advance. 
+From the point of view of `Bayesian inference <https://en.wikipedia.org/wiki/Bayes%27_theorem>`_,
+this can be formalized by specifying the *prior probability distribution*, or *prior probability density function*
+(PDF) of that parameter :math:`p(a)`. For example, let's say that for the linear dataset/model above, we know *a priori* 
+that the intercept :math:`b` should be :math:`b=0`, with uncertainty of :math:`1`, 
+i.e. :math:`b=0 \pm 1`. This translates to a *prior probability distribution* of a Gaussian
+with mean :math:`\mu=0` and standard deviation :math:`\sigma=1`, i.e.
+
+.. math::
+    p(b) = \frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}b^2}.
+
+However, let's say that we don't know anything in advance about the slope :math:`m`. In this case,
+we say that the prior on :math:`m` is *uninformative*, i.e. all values are equally likely 
+(again, this is before we even consider any data), which manifests mathematically as 
+
+.. math::
+    p(m) \propto 1.
+
+In ``rcr``, prior probability distributions can be specified for any or all of the parameters of a model,
+which will affect the rejection of outliers (essentially by modifying the rejection probability of certain measurements
+according to the prior probabilities of all of the model parameter solutions that these measurements can contribute to). For simplicity and ease-of-use,
+we've included two types of common priors within the library, as well as allowing for any sort of custom
+prior PDF. These options are described in the table below.
+
+Types of Model Parameter Priors in RCR
+--------------------------------------
+
+====================== =============================================================================
+Prior Type             Parameters Needed To Specify        
+====================== =============================================================================
+``GAUSSIAN_PRIORS``    Means and standard deviations of some or all model parameters           
+``CONSTRAINED_PRIORS`` Lower and/or upper bounds on some or all model parameters         
+``MIXED_PRIORS``       Combination of some or all of the two above
+``CUSTOM_PRIORS``      For some or all model parameters :math:`a_j`, custom prior PDF :math:`p(a_j)`
+====================== =============================================================================
+
+Now, how can we use these different types of priors in practice?
+
+Gaussian Priors
+^^^^^^^^^^^^^^^
+
+Let's say that you want to apply Gaussian/normal prior probability distributions on some (or all) of your
+model parameters. To do so, you'll first need to create a list, where each element of the list
+corresponds to a model parameter, and is itself a list of 1) the mean of the Gaussian
+for that parameter's prior and 2) the standard deviation of the same. If no Gaussian prior
+is desired for a certain parameter, just give NaNs for those fields.
+
+This is pretty dense, so we'll show a specific instance of this usage. Following the example within the introduction to
+this section (:ref:`priors`), lets use the same linear model as before, and apply a Gaussian prior to the 
+intercept :math:`b`, with mean :math:`\mu=0` and standard deviation :math:`\sigma=1`. We'll use no prior 
+(uninformative) on the slope :math:`m`. From here, our list of parameters (not model parameters) 
+that describe the Gaussian priors will be: 
+
+.. code-block:: python
+
+    gaussianParams = [
+            [0,             1], # mu = 0, sigma = 1
+            [float('nan'),  float('nan')] 
+            # no prior on the slope parameter, so just use NaNs
+        ]
+
+Now, to introduce these priors before performing any fitting/RCR, we'll need to create an instance of 
+the ``Priors`` class from ``rcr``, making sure to specify which type of prior we're implementing using
+the correct object from the above table (in this case ``GAUSSIAN_PRIORS``). Here it is in code:
+
+.. code-block:: python
+
+    mypriors = rcr.Priors(rcr.GAUSSIAN_PRIORS, gaussianParams)
+
+From here, RCR can be performed as usual, by 1) supplying the optional argument ``has_priors=True``
+to the ``FunctionalForm`` constructor when initializing the model, and after that 2) 
+initializing the ``priors`` attribute of your model with your ``Priors`` object:, e.g.:
+
+.. code-block:: python
+
+    model = rcr.FunctionalForm(linear,
+        x,
+        y,
+        [linear_partial1, linear_partial2],
+        guess,
+        has_priors=True
+    )
+
+    model.priors = mypriors
+
+Now, RCR can be utilized with this model given the usual methods.
+
+Constrained/Bounded Priors
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Another very common type of prior is to give hard constraints/bounds on 
+certain model parameters. Following the same linear example, let's say
+that we know that the slope :math:`m` of our model should be nonnegative 
+(this type of prior is often for some physical reason), but we don't know anything about
+the intercept :math:`b`. 
+
+Similar to the usage of Gaussian priors, to implement this
+we'll need to create a list where each element corresponds to a model parameter, and is
+itself a list of 1) the lower bound and 2) the upper bounds that we want to give the corresponding parameter
+if we only want to supply one (or neither) of the bounds, just use a NaN instead. 
+Following our chosen example, this list can be coded as
+
+.. code-block:: python
+
+    paramBounds = [
+            [float('nan'),  float('nan')] 
+            [0,             float('nan')]  # constrain m > 0
+        ]
+
+Next, we need to instantiate an ``rcr.Priors`` object, in a similar
+manner to the case of Gaussian priors (except now being sure to specify
+``CONSTRAINED_PRIORS``):
+
+.. code-block:: python
+
+    mypriors = rcr.Priors(rcr.CONSTRAINED_PRIORS, paramBounds)
+
+Finally, we'll need to initialize our model with the priors as in the end of the previous section, 
+and then we're good to go.
+
+Both Gaussian and/or Constrained Priors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Custom Priors
+^^^^^^^^^^^^^
 
 Automatically Minimizing Correlation between Linear Model Parameters (Advanced)
 -------------------------------------------------------------------------------
-
-Why is it useful (think of Dan's examples...)

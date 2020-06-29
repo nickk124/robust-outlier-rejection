@@ -152,7 +152,98 @@ print("Least-squares fit results:", intercept_lsq, slope_lsq)
 
 plt.show()
 
+# model param error bars
+
+# create measurement uncertainties
+error_y_uncontaminated = np.random.uniform(low=0.1, high=1, size=int(N * (1 - f)))
+
+error_y_contaminated = np.random.uniform(low=1, high=2, size=int(N * f))
+
+error_y = np.concatenate((error_y_contaminated, error_y_uncontaminated))
+
+
+# instantiate model
+model = rcr.FunctionalForm(linear,
+    xdata,
+    ydata,
+    [d_linear_1, d_linear_2],
+    guess,
+    error_y=error_y
+)
+
+# initialize and perform RCR as usual
+r = rcr.RCR(rcr.LS_MODE_68) # setting up for RCR with this rejection technique
+r.setParametricModel(model) # tell RCR that we are model fitting
+r.performBulkRejection(ydata) # perform RCR
+
+
+# view results
+best_fit_parameters = model.result.parameters # best fit parameters
+best_fit_parameter_errors = model.result.parameter_uncertainties # and their uncertainties
+
+rejected_data = r.result.rejectedY # rejected and non-rejected data
+nonrejected_data = r.result.cleanY
+nonrejected_indices = r.result.indices
+
+print(best_fit_parameters)
+print(best_fit_parameter_errors)
+
+
+# plot results
+
+plt.figure(figsize=(8, 5))
+ax = plt.subplot(111)
+
+ax.errorbar(xdata_contaminated, ydata_contaminated, yerr=error_y_contaminated, 
+    fmt="k.", label="Pre-RCR dataset", alpha=0.75, ms=4)
+ax.errorbar(xdata_uncontaminated, ydata_uncontaminated, yerr=error_y_uncontaminated,
+    fmt="k.", alpha=0.75, ms=4)
+
+ax.plot(xdata[nonrejected_indices], ydata[nonrejected_indices], "bo", 
+    label="Post-RCR dataset", alpha=0.4, ms=4)
+
+# plot true model
+ax.plot(x_model, linear(x_model, params_true),
+    "b--", label="True model", alpha=0.5, lw=2)
+
+# plot RCR-fitted model
+ax.plot(x_model, linear(x_model, best_fit_parameters),
+    "g-", label="RCR best fit", alpha=0.5, lw=2)
+
+
+plt.xlim(-10, 10)
+plt.ylim(-15, 25)
+plt.xlabel("$x$")
+plt.ylabel("$y$")
+
+box = ax.get_position()
+ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+plt.show()
 
 
 
-# get error bars on fitted params
+# priors 
+
+# Gaussian
+gaussianParams =    [[float('nan'), float('nan')], [1.0, 2.0] ]
+mypriors = rcr.Priors(rcr.MIXED_PRIORS, gaussianParams, boundedParams)
+
+model = rcr.FunctionalForm(linear,
+    x,
+    y,
+    [linear_partial1, linear_partial2],
+    guess,
+    tol=tolerance,
+    weights=w,
+    error_y=err_y,
+    has_priors=True,
+    pivot_function=get_pivot,
+    pivot_guess=pivot_guess
+)
+
+model.priors = mypriors
+
+#Bounded/constrained
+boundedParams =     [[0.0, float('nan')], [float('nan'), float('nan')] ]
