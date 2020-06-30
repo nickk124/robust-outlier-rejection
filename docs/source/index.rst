@@ -74,3 +74,5 @@ For a more in-depth explanation of using RCR for this type of one-dimensional ou
    guide/install
    guide/bulk
 
+   modules
+

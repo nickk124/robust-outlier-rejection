@@ -412,7 +412,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def_readwrite("result", &FunctionalForm::result, "Results unique to Functional Form/ model-fitting RCR")
 
         // members
-        .def_readwrite("priors", &FunctionalForm::priors, "Object describing parameter prior probability distribution(s)")
+        .def_readwrite("priors", &FunctionalForm::priors, "rcr.Priors object describing parameter prior probability distribution(s)")
         // .def_readwrite("has_priors", &FunctionalForm::has_priors, "Are you applying prior probability distributions to your model parameters?")
         // .def_readwrite("parameters", &FunctionalForm::parameters, "Current (or final) estimated model parameters")
         .def_readwrite("pivot_function", &FunctionalForm::pivotFunc, 

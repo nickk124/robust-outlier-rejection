@@ -627,7 +627,8 @@ In the most general case, RCR can work with any type of prior
 probability distributions/density functions. To implement this,
 you'll need a function :math:`\vec{p}(\vec{\theta})` that takes in
 a vector of model parameters :math:`\vec{\theta}`, and returns a vector
-of each parameter's prior probability density (pdf).
+of each parameter's prior probability density function evaluated 
+given the corresponding parameter's value.
 
 As an example, let's consider that for our linear model, we'd like to 1) place
 an (unusual) prior on b:
@@ -641,7 +642,7 @@ We can then implement :math:`\vec{p}(\vec{\theta})` as:
 .. code-block:: python
 
     def prior_pdfs(model_parameters):
-        pdfs = [] # vector of model parameter density function values
+        pdfs = np.zeros(2) # vector of model parameter density function values
         b = model_parameters[0]
         pdfs[0] = np.exp(-np.abs(b)) * np.abs(np.cos(b)**2.)
 
@@ -657,7 +658,7 @@ declaring our type of priors as ``CUSTOM_PRIORS``:
 
 .. code-block:: python
 
-    mypriors = rcr.Priors(prior_pdfs)
+    mypriors = rcr.Priors(rcr.CUSTOM_PRIORS, prior_pdfs)
 
 After creating our model (with ``has_priors=True``) and supplying it with
 our Priors object ``mypriors``, RCR can then be used as usual.
