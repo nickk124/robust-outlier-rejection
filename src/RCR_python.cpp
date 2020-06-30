@@ -321,49 +321,140 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
 
 // python binding functions
 PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
-    m.doc() = "RCR (Robust Chauvenet Outlier Rejection) plugin";
-
-    m.def("subtract", [](int i, int j) { return i - j; }, R"pbdoc(
-        Subtract two numbers
-
-        Some other explanation about the subtract function.
-    )pbdoc");
-
+    m.doc() = "RCR (Robust Chauvenet Outlier Rejection) Package API Details";
 
     // MAIN RCR ######################################################################################################################################################
 
     // enums that need to be exposed to python
-    py::enum_<RejectionTechs>(m, "RejectionTechniques", py::arithmetic(), "RCR Rejection Techniques")
-        .value("SS_MEDIAN_DL", SS_MEDIAN_DL, "Rejection technique for a symmetric uncontaminated distribution with two-sided contaminants")
-        .value("LS_MODE_68", LS_MODE_68, "Rejection technique for a symmetric uncontaminated distribution with one-sided contaminants")
-        .value("LS_MODE_DL", LS_MODE_DL, "Rejection technique for a symmetric uncontaminated distribution with a mixture of one-sided and two-sided contaminants")
-        .value("ES_MODE_DL", ES_MODE_DL, "Rejection technique for a mildly asymmetric uncontaminated distribution and/or a very low number of data points")
+    py::enum_<RejectionTechs>(m, "RejectionTechniques", py::arithmetic(), "RCR Standard Rejection Techniques.")
+        .value("SS_MEDIAN_DL", SS_MEDIAN_DL, "Rejection technique for a symmetric uncontaminated distribution with two-sided contaminants.")
+        .value("LS_MODE_68", LS_MODE_68, "Rejection technique for a symmetric uncontaminated distribution with one-sided contaminants.")
+        .value("LS_MODE_DL", LS_MODE_DL, "Rejection technique for a symmetric uncontaminated distribution with a mixture of one-sided and two-sided contaminants.")
+        .value("ES_MODE_DL", ES_MODE_DL, "Rejection technique for a mildly asymmetric uncontaminated distribution and/or a very low number of data points.")
         .export_values();
 
 
     // ABOVE: When the special tag py::arithmetic() is specified to the enum_ constructor, 
     // pybind11 creates an enumeration that also supports rudimentary arithmetic 
-    // and bit-level operations like comparisons, and, or, xor, negation, etc.
+    // and bit-level operations like comparisons, and, or, xor, negation, etc.imp
 
 
     // RCR results class
     py::class_<RCRResults>(m, "RCRResults", "Results that RCR generates")
-        .def_readwrite("mu", &RCRResults::mu, "Recovered mean/median/mode (central value) of uncontaminated data distribution")
-        .def_readwrite("stDev", &RCRResults::stDev, "Recovered standard deviation of uncontaminated data distribution")
-        .def_readwrite("stDevBelow", &RCRResults::stDevBelow, "Recovered standard deviation below mu (mean/median/mode) of uncontaminated (asymmetric) data distribution")
-        .def_readwrite("stDevAbove", &RCRResults::stDevAbove, "Recovered standard deviation above mu (mean/median/mode) of uncontaminated (asymmetric) data distribution")
-        .def_readwrite("stDevTotal", &RCRResults::stDevTotal, "Recovered combined standard deviation both above and below mu (mean/median/mode), in the case of uncontaminated an asymmetric data distribution")
-        .def_readwrite("sigma", &RCRResults::sigma, "Recovered robust 68.3-percentile deviation of uncontaminated data distribution")
-        .def_readwrite("sigmaBelow", &RCRResults::sigmaBelow, "Recovered robust 68.3-percentile deviation below mu (mean/median/mode) of uncontaminated data distribution")
-        .def_readwrite("sigmaAbove", &RCRResults::sigmaAbove, "Recovered robust 68.3-percentile deviation above mu (mean/median/mode) of uncontaminated data distribution")
-        .def_readwrite("flags", &RCRResults::flags, "Ordered flags describing outlier status of each corresponding datapoint (true if datapoint is NOT an outlier)")
-        .def_readwrite("indices", &RCRResults::indices, "Indices of dataset where are NOT outliers")
-        .def_readwrite("cleanW", &RCRResults::cleanW, "Weights of non-outlying datapoints")
-        .def_readwrite("cleanY", &RCRResults::cleanY, "Non-outlying datapoints")
-        .def_readwrite("rejectedW", &RCRResults::rejectedW, "Weights of outlying datapoints")
-        .def_readwrite("rejectedY", &RCRResults::rejectedY, "Outlying datapoints")
-        .def_readwrite("originalW", &RCRResults::originalW, "Weights of initial supplied dataset")
-        .def_readwrite("originalY", &RCRResults::originalY, "Initial supplied dataset");
+        .def_readwrite("mu", &RCRResults::mu, R"mydelimiter(
+            *float*. Mean/median/mode (central value) of uncontaminated data distribution.
+
+            The central value of the uncontaminated part of the provided dataset, recovered from
+            performing RCR.
+        )mydelimiter")
+
+        .def_readwrite("stDev", &RCRResults::stDev, R"mydelimiter(
+            *float*. Standard deviation of uncontaminated data distribution.
+
+            The standard deviation/width :math:`\sigma` of the uncontaminated part of the provided dataset, recovered from
+            performing RCR. For the case of a symmetric uncontaminated data distribution.
+        )mydelimiter")
+
+        .def_readwrite("stDevBelow", &RCRResults::stDevBelow, R"mydelimiter(
+            *float*. Standard deviation below mu (mean/median/mode) of uncontaminated (asymmetric) data distribution.
+
+            The *asymmetric* standard deviation/width :math:`\sigma_-` of the negative side of a mildly asymmetric uncontaminated data distribution, recovered from RCR (for the symmetric case, :math:`\sigma_-=\sigma_+\equiv\sigma`).
+        )mydelimiter")
+
+        .def_readwrite("stDevAbove", &RCRResults::stDevAbove, R"mydelimiter(
+            *float*. Standard deviation above mu (mean/median/mode) of uncontaminated (asymmetric) data distribution.
+
+            The *asymmetric* standard deviation/width :math:`\sigma_+` of the positive side of a mildly asymmetric uncontaminated data distribution, recovered from RCR (for the symmetric case, :math:`\sigma_+=\sigma_-\equiv\sigma`).
+        )mydelimiter")
+
+        .def_readwrite("stDevTotal", &RCRResults::stDevTotal, R"mydelimiter(
+            *float*. Combined standard deviation both above and below mu (mean/median/mode) of uncontaminated (asymmetric) data distribution.
+
+            A combination of the *asymmetric* standard deviation/width :math:`\sigma_+` of the positive side of a mildly asymmetric uncontaminated data distribution and the width :math:`\sigma_-` of the negative side 
+            of the distribution, recovered from RCR. Can be used to approximate a mildly asymmetric data distribution as symmetric.
+        )mydelimiter")
+
+        .def_readwrite("sigma", &RCRResults::sigma, R"mydelimiter(
+            *float*. Recovered robust 68.3-percentile deviation of uncontaminated data distribution.
+
+            A more robust (less sensitive to outliers) version of the standard deviation/width :math:`\sigma`
+            of the uncontaminated part of the provided dataset (see Section 2.1 of :ref:`papers`), recovered from
+            performing RCR. For the case of a symmetric uncontaminated data distribution.
+        )mydelimiter")
+
+        .def_readwrite("sigmaBelow", &RCRResults::sigmaBelow, R"mydelimiter(
+            *float*. Recovered robust 68.3-percentile deviation below mu (mean/median/mode) of uncontaminated data distribution.
+
+            A more robust (less sensitive to outliers) version of the standard deviation/width :math:`\sigma_-`
+            of the negative side of a mildly asymmetric uncontaminated data distribution (see Section 2.1 of :ref:`papers`), recovered from
+            performing RCR. (For the symmetric case, :math:`\sigma_-=\sigma_+\equiv\sigma`).
+        )mydelimiter")
+
+        .def_readwrite("sigmaAbove", &RCRResults::sigmaAbove, R"mydelimiter(
+            *float*. Recovered robust 68.3-percentile deviation abpve mu (mean/median/mode) of uncontaminated data distribution.
+
+            A more robust (less sensitive to outliers) version of the standard deviation/width :math:`\sigma_+`
+            of the positive side of a mildly asymmetric uncontaminated data distribution (see Section 2.1 of :ref:`papers`), recovered from
+            performing RCR. (For the symmetric case, :math:`\sigma_+=\sigma_-\equiv\sigma`).
+        )mydelimiter")
+
+        .def_readwrite("flags", &RCRResults::flags, R"mydelimiter(
+            *list of bools*. Ordered flags describing outlier status of each inputted datapoint (True if datapoint is NOT an outlier).
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` was provided and only the ``37`` and ``-100`` were found to be outliers,
+            then ``flags = [True, True, True, True, True, False, True, False]``.
+        )mydelimiter")
+
+        .def_readwrite("indices", &RCRResults::indices, R"mydelimiter(
+            *list of ints*. A list of indices of datapoints from original inputted dataset that are NOT outliers.
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` was provided and only the ``37`` and ``-100`` were found to be outliers,
+            then ``indices = [0, 1, 2, 3, 4, 6]``.
+        )mydelimiter")
+
+        .def_readwrite("cleanW", &RCRResults::cleanW, R"mydelimiter(
+            *list of floats*. The user-provided datapoint weights that correspond to NON-outliers in the original dataset.
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` with weights ``w = [1, 1.1, 0.9, 1.2, 0.8, 0.2, 0.95, 2]``
+            was provided, and only the ``37`` and ``-100`` were found to be outliers,
+            then ``cleanW = [1, 1.1, 0.9, 1.2, 0.8, 0.95]``.
+        )mydelimiter")
+
+        .def_readwrite("cleanY", &RCRResults::cleanY, R"mydelimiter(
+            *list of floats*. After performing RCR on some original dataset, these are the datapoints that were NOT found to be outliers.
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` was provided and only the ``37`` and ``-100`` were found to be outliers,
+            then ``cleanY = [0, 1, -2, 1, 2, 0.5]``.
+        )mydelimiter")
+
+        .def_readwrite("rejectedW", &RCRResults::rejectedW, R"mydelimiter(
+            *list of floats*. The user-provided datapoint weights that correspond to outliers in the original dataset.
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` with weights ``w = [1, 1.1, 0.9, 1.2, 0.8, 0.2, 0.95, 2]``
+            was provided, and only the ``37`` and ``-100`` were found to be outliers,
+            then ``rejectedW = [0.2, 2]``.
+        )mydelimiter")
+
+        .def_readwrite("rejectedY", &RCRResults::rejectedY, R"mydelimiter(
+            *list of floats*. After performing RCR on some original dataset, these are the datapoints that WERE found to be outliers.
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` was provided and only the ``37`` and ``-100`` were found to be outliers,
+            then ``rejectedY = [37, -100]``.
+        )mydelimiter")
+
+        .def_readwrite("originalW", &RCRResults::originalW, R"mydelimiter(
+            *list of floats*. The user-provided datapoint weights, pre-RCR.
+
+            For example, if a dataset with weights ``w = [1, 1.1, 0.9, 1.2, 0.8, 0.2, 0.95, 2]``
+            was provided, then ``originalW = [1, 1.1, 0.9, 1.2, 0.8, 0.2, 0.95, 2]``.
+        )mydelimiter")
+
+        .def_readwrite("originalY", &RCRResults::originalY, R"mydelimiter(
+            *list of floats*. The user-provided dataset, pre-RCR.
+
+            For example, if a dataset of ``y = [0, 1, -2, 1, 2, 37, 0.5, -100]`` was provided, 
+            then ``originalY = [0, 1, -2, 1, 2, 37, 0.5, -100]``.
+        )mydelimiter");
 
 
     // main (single value) class
@@ -419,11 +510,11 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
             "Function used to evaluate pivot point(s), with (optional) arguments (set to None otherwise) of: xdata, data weights, model function and model params");
 
     // parameter prior probability distribution types
-    py::enum_<priorTypes>(m, "priorsTypes", py::arithmetic(), "Parameter prior probability distribution types")
-        .value("CUSTOM_PRIORS", CUSTOM_PRIORS, "Custom, function-defined prior probability distribution(s)")
-        .value("GAUSSIAN_PRIORS", GAUSSIAN_PRIORS, "Gaussian (normal) prior probability distribution(s)")
-        .value("CONSTRAINED_PRIORS", CONSTRAINED_PRIORS, "Bounded/hard-constrained prior probability distribution(s)")
-        .value("MIXED_PRIORS", MIXED_PRIORS, "A mixture of gaussian (normal), hard-constrained, and uninformative (uniform/flat) prior probability distributions")
+    py::enum_<priorTypes>(m, "priorsTypes", py::arithmetic(), "Types of prior probability density functions that can be applied to model parameters.")
+        .value("CUSTOM_PRIORS", CUSTOM_PRIORS, "Custom, function-defined prior probability density functions(s).")
+        .value("GAUSSIAN_PRIORS", GAUSSIAN_PRIORS, "Gaussian (normal) prior probability density function(s).")
+        .value("CONSTRAINED_PRIORS", CONSTRAINED_PRIORS, "Bounded/hard-constrained prior probability density function(s).")
+        .value("MIXED_PRIORS", MIXED_PRIORS, "A mixture of gaussian (normal), hard-constrained, and uninformative (uniform/flat) prior probability density functions.")
         .export_values();
 
     // parameter prior probability distribution class

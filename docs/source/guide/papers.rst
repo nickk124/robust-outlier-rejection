@@ -1,0 +1,4 @@
+.. _papers:
+
+The Paper
+=========

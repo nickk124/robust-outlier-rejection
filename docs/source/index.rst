@@ -67,12 +67,18 @@ For a more in-depth explanation of using RCR for this type of one-dimensional ou
 
 .. toctree::
    :maxdepth: 2
-   
-   tutorials/singlevalue
-   tutorials/functional
+   :caption: User Guide
 
    guide/install
    guide/bulk
-
+   guide/papers
+   guide/faq
    modules
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+
+   tutorials/singlevalue
+   tutorials/functional

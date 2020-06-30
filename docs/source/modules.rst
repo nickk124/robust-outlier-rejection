@@ -1,7 +1,7 @@
 .. _modules:
 
-API
-===
+API Reference
+=============
 
 .. automodule:: rcr
    :members:
