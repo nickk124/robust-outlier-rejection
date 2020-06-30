@@ -11,7 +11,7 @@ double pivot; //see declaration in FunctionalForm.h for explanation as to why th
 std::vector <double> pivot_ND;
 
 // Constructors
-Priors::Priors(priorTypes priorType, std::function <std::vector <double>(std::vector <double>, std::vector <double>)> p) { //custom priors
+Priors::Priors(priorTypes priorType, std::function <std::vector <double>(std::vector <double>)> p) { //custom priors
 	this->priorType = priorType;
 	this->p = p;
 };
@@ -2098,9 +2098,9 @@ void FunctionalForm::buildModelSpace()
 					holdWeights.push_back(weightSpace[j][i]);
 					holdParams.push_back(parameterSpace[j][i]);
 				}
-				holdPost = priors.p(holdParams, holdWeights); // takes in a vector of parameter weights, and returns a vector with modified weights
+				holdPost = priors.p(holdParams); // takes in a vector of parameter weights, and returns a vector with factors to modify weights by
 				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
-					postWeightSpace[j][i] = holdPost[j];
+					postWeightSpace[j][i] *= holdPost[j];
 				}
 			}
 			// extra weight space
@@ -2111,9 +2111,9 @@ void FunctionalForm::buildModelSpace()
 					holdWeights.push_back(extraWeightSpace[j][i]);
 					holdParams.push_back(extraParameterSpace[j][i]);
 				}
-				holdPost = priors.p(holdParams, holdWeights);
+				holdPost = priors.p(holdParams);
 				for (int j = 0; j < M; j++) { //adds new, adjusted weights from priors, to the post weight space
-					postExtraWeightSpace[j][i] = holdPost[j];
+					postExtraWeightSpace[j][i] *= holdPost[j];
 				}
 			}
 			break;

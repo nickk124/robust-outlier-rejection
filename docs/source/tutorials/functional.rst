@@ -623,7 +623,44 @@ and supplying the model with the Priors object.
 Custom Priors
 ^^^^^^^^^^^^^
 
-In the most general case, it can be desired to supply any type of 
+In the most general case, RCR can work with any type of prior
+probability distributions/density functions. To implement this,
+you'll need a function :math:`\vec{p}(\vec{\theta})` that takes in
+a vector of model parameters :math:`\vec{\theta}`, and returns a vector
+of each parameter's prior probability density (pdf).
+
+As an example, let's consider that for our linear model, we'd like to 1) place
+an (unusual) prior on b:
+
+.. math::
+    p(b) = e^{-|b|}\left|\cos^2x\right|,
+
+and 2) constrain m to be within the interval :math:`(0, 2]`. 
+We can then implement :math:`\vec{p}(\vec{\theta})` as:
+
+.. code-block:: python
+
+    def prior_pdfs(model_parameters):
+        pdfs = [] # vector of model parameter density function values
+        b = model_parameters[0]
+        pdfs[0] = np.exp(-np.abs(b)) * np.abs(np.cos(b)**2.)
+
+        b = model_parameters[0]
+        pdfs[1] = 1 if 0 < m <= 2 else 0 
+        # p(m) = 0 if m is outside bounds of (0, 2]
+
+        return pdfs
+
+After such a :math:`\vec{p}(\vec{\theta})` is defined, we'll need to 
+use it to instantiate an ``rcr.Priors`` object as usual, this time
+declaring our type of priors as ``CUSTOM_PRIORS``:
+
+.. code-block:: python
+
+    mypriors = rcr.Priors(prior_pdfs)
+
+After creating our model (with ``has_priors=True``) and supplying it with
+our Priors object ``mypriors``, RCR can then be used as usual.
 
 Automatically Minimizing Correlation between Linear Model Parameters (Advanced)
 -------------------------------------------------------------------------------

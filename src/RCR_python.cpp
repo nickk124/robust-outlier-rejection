@@ -428,15 +428,15 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
     // parameter prior probability distribution class
     py::class_<Priors>(m, "Priors", "Class of prior probability distribution functions that can be applied to model parameters")
-        // constructors , std::function <std::vector <double>(std::vector <double>, std::vector <double>)> 
-        .def(py::init< priorTypes, std::function <std::vector <double>(std::vector <double>, std::vector <double>)> >()) // custom priors
+        // constructors
+        .def(py::init< priorTypes, std::function <std::vector <double>(std::vector <double>)> >()) // custom priors
         .def(py::init< priorTypes, std::vector < std::vector <double> > >()) // only Gaussian or only bounded/hard constraints
         .def(py::init< priorTypes, std::vector < std::vector <double> >, std::vector < std::vector <double> > >()) // mixed priors
         .def(py::init<>())
 
         // members
         .def_readwrite("priorType", &Priors::priorType, "Type of prior")
-        .def_readwrite("p", &Priors::p, "a function that takes in a parameters vector and a weights vector and modifies the weights given the prior probability distirbution")
+        .def_readwrite("p", &Priors::p, "a function that takes in a parameters vector and returns a vector of the prior probability density for each value")
         .def_readwrite("gaussianParams", &Priors::gaussianParams, "A list that contains a list of mu and sigma for the guassian prior of each param. If no prior, then just use NANs.")
         .def_readwrite("paramBounds", &Priors::paramBounds, "a list that contains lists of the bounds of each param. If not bounded, use NANs, and if there's only one bound, use NAN for the other \"bound\".");
 }

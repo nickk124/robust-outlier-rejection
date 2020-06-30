@@ -26,13 +26,13 @@ class Priors
 {
 public:
 	//constructors:
-	Priors(priorTypes priorType, std::function <std::vector <double>(std::vector <double>, std::vector <double>)> p); //custom priors
+	Priors(priorTypes priorType, std::function <std::vector <double>(std::vector <double>)> p); //custom priors
 	Priors(priorTypes priorType, std::vector < std::vector <double> > params); //Only Gaussian or only bounded/constrained
 	Priors(priorTypes priorType, std::vector < std::vector <double> > gaussianParams, std::vector < std::vector <double> > paramBounds); //mixed
 	Priors();
 
 	priorTypes priorType;
-	std::function <std::vector <double>(std::vector <double>, std::vector <double>)> p; // a pointer to a function that takes in a parameters vector and a weights vector and modifies it with the priors
+	std::function <std::vector <double>(std::vector <double>)> p; // a pointer to a function that takes in a parameters vector and a weights vector and modifies it with the priors
 	std::vector < std::vector <double> > gaussianParams; // a vector that contains a vector of mu and sigma for the guassian prior of each param. If no prior, then just use NANs.
 	std::vector < std::vector <double> > paramBounds; // a vector that contains vectors of the bounds of each param. If not bounded, use NANs, and if there's only one bound, use NAN for the other "bound".
 };
