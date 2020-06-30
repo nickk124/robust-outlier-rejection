@@ -318,10 +318,14 @@ FunctionalForm getFunctionalFormObject(py::args args, py::kwargs kwargs){
     return FFobj;
 }
 
+// def performRejection_wrapper(py::args args, py::kwargs kwargs){
+
+
+// }
 
 // python binding functions
 PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
-    m.doc() = "RCR (Robust Chauvenet Outlier Rejection) Package API Details";
+    m.doc() = "RCR (Robust Chauvenet Outlier Rejection) Package API Details.";
 
     // MAIN RCR ######################################################################################################################################################
 
@@ -340,7 +344,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
 
     // RCR results class
-    py::class_<RCRResults>(m, "RCRResults", "Results that RCR generates")
+    py::class_<RCRResults>(m, "RCRResults", "Various results from performing outlier rejection with RCR.")
         .def_readwrite("mu", &RCRResults::mu, R"mydelimiter(
             *float*. Mean/median/mode (central value) of uncontaminated data distribution.
 
@@ -458,37 +462,102 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
 
     // main (single value) class
-    py::class_<RCR>(m, "RCR", "Master class used to initialize and run RCR procedures")
+    py::class_<RCR>(m, "RCR", "Master class used to initialize and run RCR outlier rejection procedures.")
         // constructors
         .def(py::init<RejectionTechs>(), py::arg("RejectionTechnique"))
         .def(py::init<>())
 
         // results
-        .def_readwrite("result", &RCR::result, "Results from RCR")
+        .def_readwrite("result", &RCR::result, R"mydelimiter(
+            *rcr.RCRResults object*. Access various results of RCR with this (see :class:`rcr.RCRResults`).
+        )mydelimiter")
         
         // main methods
-        .def("setRejectionTech", &RCR::setRejectionTech,
-            "Set outlier rejection technique", py::arg("RejectionTechnique"))
+        .def("setRejectionTech", &RCR::setRejectionTech, R"mydelimiter(
+            Modify/set outlier rejection technique to be used with RCR.
 
-        .def("performRejection", (void (RCR::*)(std::vector <double> &)) &RCR::performRejection,  // explicitly giving arguments is necessary for overloaded funcs
-            "Perform outlier rejection WITHOUT bulk pre-rejection (slower)", py::arg("data"))
-        .def("performBulkRejection", (void (RCR::*)(std::vector <double> &)) &RCR::performBulkRejection,
-             "Perform outlier rejection WITH bulk pre-rejection (faster)", py::arg("data"))
-        .def("performRejection", (void (RCR::*)(std::vector <double> &, std::vector <double> &)) &RCR::performRejection, 
-            "Perform outlier rejection WITHOUT bulk pre-rejection (slower)", py::arg("weights"), py::arg("data"))
-        .def("performBulkRejection", (void (RCR::*)(std::vector <double> &, std::vector <double> &)) &RCR::performBulkRejection,
-             "Perform outlier rejection WITH bulk pre-rejection (faster)", py::arg("weights"), py::arg("data"))
+            See :ref:`rejectiontechs` for an explanation of each rejection technique, and when to use it.
+
+            Parameters
+            ----------
+            rejection_technique : :class:`rcr.RejectionTechniques`
+                The rejection technique to be used with your instance of :class:`rcr.RCR`.
+        )mydelimiter", py::arg("rejection_technique"))
+
+        // explicitly giving arguments is necessary for overloaded funcs
+        .def("performRejection", (void (RCR::*)(std::vector <double> &)) &RCR::performRejection, R"mydelimiter(
+            Perform outlier rejection WITHOUT the speed-up of bulk pre-rejection (slower; see :ref:`bulk`).
+
+            *Parameters:*
+            
+            data : list/array_like
+                Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
+                (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
+        )mydelimiter", py::arg("data"))
+
+        .def("performBulkRejection", (void (RCR::*)(std::vector <double> &)) &RCR::performBulkRejection, R"mydelimiter(
+            Perform outlier rejection WITH the speed-up of bulk pre-rejection (see :ref:`bulk`).
+
+            *Parameters:*
+            
+            data : list/array_like
+                Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
+                (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
+        )mydelimiter", py::arg("data"))
+
+        .def("performRejection", (void (RCR::*)(std::vector <double> &, std::vector <double> &)) &RCR::performRejection, R"mydelimiter(
+            Perform outlier rejection WITHOUT the speed-up of bulk pre-rejection (slower; see :ref:`bulk`).
+
+            *Parameters:*
+            
+            weights : list/array_like
+                Weights for dataset to perform outlier rejection (RCR) on.
+            data : list/array_like
+                Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
+                (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
+        )mydelimiter", py::arg("weights"), py::arg("data"))
+
+        .def("performBulkRejection", (void (RCR::*)(std::vector <double> &, std::vector <double> &)) &RCR::performBulkRejection, R"mydelimiter(
+            Perform outlier rejection WITH the speed-up of bulk pre-rejection (see :ref:`bulk`).
+
+            *Parameters:*
+            
+            weights : list/array_like
+                Weights for dataset to perform outlier rejection (RCR) on.
+            data : list/array_like
+                Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
+                (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
+        )mydelimiter", py::arg("weights"), py::arg("data"))
 
         // functional form/ model-fitting
-        .def("setParametricModel", &RCR::setParametricModel, "Initialize parametric/functional form model with RCR", py::arg("functionalform_model"));
+        .def("setParametricModel", &RCR::setParametricModel, R"mydelimiter(
+            Initialize parametric/functional form model to be used with RCR (see :ref:`functional` for a tutorial).
+
+            *Parameters:*
+            
+            model : :class:`rcr.FunctionalForm`
+                :math:`n`-dimensional model to fit data to, while performing outlier rejection.
+        )mydelimiter", py::arg("model"));
 
 
     // FUNCTIONAL FORM/MODEL-FITTING RCR #############################################################################################################################
 
     // Functional Form RCR results class
-    py::class_<FunctionalFormResults>(m, "FunctionalFormResults", "Results that functional form/model-fitting RCR uniquely generates")
-        .def_readwrite("parameters", &FunctionalFormResults::parameters, "Recovered post-outlier rejection best fit model parameters")
-        .def_readwrite("parameter_uncertainties", &FunctionalFormResults::parameter_uncertainties, "Recovered post-outlier rejection best fit model parameter uncertainties/error bars")
+    py::class_<FunctionalFormResults>(m, "FunctionalFormResults", "Results from (and unique to) functional form/model-fitting RCR.")
+        .def_readwrite("parameters", &FunctionalFormResults::parameters, R"mydelimiter(
+            *list of floats*. Best-fit model parameters, post-outlier rejection.
+
+            For example, if you're fitting to some linear model :math:`y(x|b,m)=b+mx`, and you obtain a best fit of :math:`b=1` and :math:`m=2`, then ``parameters = [1, 2]``.
+        )mydelimiter")
+
+        .def_readwrite("parameter_uncertainties", &FunctionalFormResults::parameter_uncertainties, R"mydelimiter(
+            *list of floats*. Best-fit model parameter uncertainties, post-outlier rejection.
+
+            For example, if you're fitting to some linear model :math:`y(x|b,m)=b+mx`, and you obtain a best fit of :math:`b=1.0\pm0.5` and :math:`m=2\pm 1`, then ``parameter_uncertainties = [0.5, 1]``.
+            
+            Note that in order for parameter uncertainties to be computed, either/both weights and data error bars/uncertainties must have been provided when constructing the :class:`rcr.FunctionalForm` model.
+        )mydelimiter")
+
         .def_readwrite("pivot", &FunctionalFormResults::pivot, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (1D independent variable case)")
         .def_readwrite("pivot_ND", &FunctionalFormResults::pivot_ND, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (ND independent variable case)");
 
