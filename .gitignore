@@ -21,4 +21,4 @@ src/test.py
 **__pycache__
 /docs/build
 src/sphinx_test.py
-tests/test.py
+tests/maintest.py
