@@ -70,7 +70,6 @@ For a more in-depth explanation of using RCR for this type of one-dimensional ou
    :caption: User Guide
 
    guide/install
-   guide/bulk
    guide/papers
    guide/faq
    modules
