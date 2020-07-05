@@ -76,7 +76,7 @@ box = ax.get_position()
 ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-plt.show()
+# plt.show()
 
 # initialize model and guess for model parameters
 
@@ -150,7 +150,7 @@ ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 print("Least-squares fit results:", intercept_lsq, slope_lsq)
 
-plt.show()
+# plt.show()
 
 # model param error bars
 
@@ -220,30 +220,45 @@ box = ax.get_position()
 ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-plt.show()
+# plt.show()
 
 
 
 # priors 
 
-# Gaussian
-gaussianParams =    [[float('nan'), float('nan')], [1.0, 2.0] ]
-mypriors = rcr.Priors(rcr.MIXED_PRIORS, gaussianParams, boundedParams)
+# # Gaussian
+# gaussianParams =    [[float('nan'), float('nan')], [1.0, 2.0] ]
+# mypriors = rcr.Priors(rcr.MIXED_PRIORS, gaussianParams, boundedParams)
 
-model = rcr.FunctionalForm(linear,
-    x,
-    y,
-    [linear_partial1, linear_partial2],
-    guess,
-    tol=tolerance,
-    weights=w,
-    error_y=err_y,
-    has_priors=True,
-    pivot_function=get_pivot,
-    pivot_guess=pivot_guess
-)
+# model = rcr.FunctionalForm(linear,
+#     x,
+#     y,
+#     [linear_partial1, linear_partial2],
+#     guess,
+#     tol=tolerance,
+#     weights=w,
+#     error_y=err_y,
+#     has_priors=True
+# )
 
-model.priors = mypriors
+# model.priors = mypriors
 
-#Bounded/constrained
-boundedParams =     [[0.0, float('nan')], [float('nan'), float('nan')] ]
+# #Bounded/constrained
+# boundedParams =     [[0.0, float('nan')], [float('nan'), float('nan')] ]
+
+
+# pivots
+
+# define function that returns pivot point
+def get_pivot_powerlaw(xdata, weights, f, params):
+    topsum = np.sum(weights * np.log10(xdata) * np.power(f(xdata, params), 2.))
+    bottomsum = np.sum(weights * np.power(f(xdata, params), 2.))
+    
+    return topsum / bottomsum
+
+
+weights = np.ones(len(xdata))
+
+xp = get_pivot_powerlaw(np.abs(xdata), weights, linear, guess)
+
+print(xp)

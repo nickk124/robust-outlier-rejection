@@ -665,3 +665,89 @@ our Priors object ``mypriors``, RCR can then be used as usual.
 
 Automatically Minimizing Correlation between Linear Model Parameters (Advanced)
 -------------------------------------------------------------------------------
+
+Let's again consider a linear model :math:`y = b + mx`. Usually
+the fitted slope :math:`m` will be correlated with the fitted intercept :math:`b`.
+Why is this? Consider redefining this model as :math:`y = b + m(x-x_p)`, with some
+*pivot point* :math:`x_p`. Then, the intercept parameter is effectively :math:`b-mx_p`.
+Therefore, given some fitted :math:`m`, the fitted intercept will be impacted by
+:math:`m`, with the degree of this depending on choice of :math:`x_p`. 
+As shown in `Trotter (2011) <https://cdr.lib.unc.edu/concern/dissertations/1544bq461>`_,
+there exists some optimal :math:`x_p` that minimizes the correlation between :math:`b` and :math:`m`.
+
+RCR has an algorithm for this, that works for any model that can be written as :math:`y = b + m(x-x_p)`.
+So, for example, we could have some power-law model 
+
+.. math::
+    y(x|a_0, a_1) = a_0\left(\frac{x}{10^{x_p}}\right)^{a_1},
+
+that can be actually be *linearized* (to be used with RCR's pivot point optimizing algorithm)
+as follows:
+
+.. math::
+    y(x) &= a_0\left(\frac{x}{10^{x_p}}\right)^{a_1}
+
+    \log_{10}y(x) &= \log_{10}\left[a_0\left(\frac{x}{10^{x_p}}\right)^{a_1}\right]
+
+    &= \log_{10}a_0 + \log_{10}\left(\frac{x}{10^{x_p}}\right)^{a_1}
+
+    &= \log_{10}a_0 + a_1\log_{10}\left(\frac{x}{10^{x_p}}\right)
+
+    &= \log_{10}a_0 + a_1\left[\log_{10}x - \log_{10}10^{x_p}\right] 
+
+    \log_{10}y(x) &\equiv \log_{10}a_0 + a_1\left[\log_{10}x - (\log_{10}x)_p\right]
+
+So, the linearized version of this power law has intercept :math:`\log_{10}a_0`, slope :math:`a_1`,
+pivot point :math:`(\log_{10}x)_p`, and the data transforms as :math:`\log_{10}y \rightarrow y` and :math:`\log_{10}x \rightarrow x`.
+The formula for the pivot point is 
+
+.. math::
+    (\log_{10}x)_p = \frac{\sum\limits_iw_i(\log_{10} x_i)y^2(x_i)}{\sum\limits_i w_iy^2(x_i)}
+
+(`Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_, Section 8.3.5); we'll need such a formula
+for the pivot point of any model that we'd like to apply this procedure to. Keeping that in mind,
+lets look at this in code.
+
+To use the slope-intercept correlation minimization procedure with RCR, we'll need to define
+this pivot point function. However, first read the following note:
+
+.. note::
+    Pivot point functions need to be defined with parameters of 1) `xdata`, 
+    a list or array of the :math:`x`-data in the dataset, 2) `weights`, a list/array 
+    of the weights of the dataset, 3) :math:`f`, the model function, and 4) :math:`params`,
+    a list/array of model parameters. (To be made easier in a future patch)
+
+Keeping this in mind, let's define our pivot point function for this power law model:
+
+.. code-block:: python
+
+    def get_pivot_powerlaw(xdata, weights, f, params):
+        topsum = np.sum(weights * np.log10(xdata) * np.power(f(xdata, params), 2.))
+        bottomsum = np.sum(weights * np.power(f(xdata, params), 2.))
+        
+        return topsum / bottomsum
+
+Next, we can use this with RCR as normal, except now supplying additional arguments
+of ``pivot_function`` and ``pivot_guess`` to the model constructor ``rcr.FunctionalForm``, 
+where ``pivot_function`` is the function that returns
+the pivot for model give ``xdata, weights, f, params``, and ``pivot_guess`` is a guess for the optimal
+pivot point (for the iterative optimization algorithm). For example, if our initial guess for the pivot point
+is some ``pivot_guess = 4.5``, we could initialize our model as:
+
+.. code-block:: python
+
+    model = rcr.FunctionalForm(model,
+        xdata,
+        ydata,
+        [model_partial1, model_partial2],
+        guess,
+        pivot_function=get_pivot_powerlaw,
+        pivot_guess=pivot_guess
+    )
+
+From here, we can perform RCR as normal, and access the optimal value for the pivot points found by RCR
+with ``model.result.pivot`` (or ``model.result.pivot_ND`` for the `n`-dimensional model case).
+
+Finally, note that the support for :math:`n`-dimensional models (i.e. :math:`n` independent variables)
+is still available when using this algorithm; in this case, your pivot point function
+should return a list/array of :math:`n` pivot points.
