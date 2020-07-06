@@ -8,12 +8,17 @@
 rcr
 ===
 
+.. image:: https://img.shields.io/badge/arXiv-1807.05276-orange.svg?style=flat
+    :target: https://arxiv.org/abs/1807.05276
+
 .. image:: https://img.shields.io/badge/GitHub-dfm%2Femcee-blue.svg?style=flat
     :target: https://github.com/nickk124/RCR
     :alt: Github Repository
+
 .. image:: https://readthedocs.org/projects/rcr/badge/?version=latest
    :target: https://rcr.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+
 .. image:: https://travis-ci.com/nickk124/RCR.svg?branch=master
     :target: https://travis-ci.com/nickk124/RCR
     :alt: Build Status
