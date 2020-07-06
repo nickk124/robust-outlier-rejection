@@ -10,3 +10,5 @@ r.performBulkRejection(data) # perform outlier rejection
 rejected_data = r.result.rejectedY
 
 assert len(rejected_data) >= 1
+
+print(len(rejected_data))
