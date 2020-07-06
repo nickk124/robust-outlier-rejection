@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/nickk124/RCR.svg?branch=master)](https://travis-ci.com/nickk124/RCR)
 [![Documentation Status](https://readthedocs.org/projects/rcr/badge/?version=latest)](https://rcr.readthedocs.io/en/latest/?badge=latest)
+[![Paper](https://img.shields.io/badge/arXiv-1807.05276-orange)](https://arxiv.org/abs/1807.05276)
       
 
 ![](example_imgs/before_after_singlevalue.png)
