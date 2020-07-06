@@ -52,7 +52,7 @@ Licensing and Citation
 
 RCR is free to use for academic and non-commercial applications (see license in this repository). We only ask that you cite `Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_ as:
 
-.. literalinclude:: ../../citation.bib
+.. literalinclude:: docs/citation.bib
 
 For commercial applications, or consultation, feel free to contact us.
 
