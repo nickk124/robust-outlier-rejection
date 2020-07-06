@@ -1,5 +1,6 @@
 # Robust Chauvenet Outlier Rejection (RCR)
 
+[![Build Status](https://travis-ci.com/nickk124/RCR.svg?branch=master)](https://travis-ci.com/nickk124/RCR)
 [![Documentation Status](https://readthedocs.org/projects/rcr/badge/?version=latest)](https://rcr.readthedocs.io/en/latest/?badge=latest)
       
 
