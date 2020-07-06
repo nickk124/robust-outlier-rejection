@@ -10,7 +10,7 @@ Linux and macOS
 ^^^^^^^^^^^^^^^
 The easiest way to install RCR into Python is with ``pip``:
 
-.. code-block:: python
+.. code-block:: bash
     
     python3 -m pip3 install rcr
 
@@ -32,7 +32,8 @@ If that doesn't work, you may need the latest `Windows SDK <https://developer.mi
 (Both can be installed through the Visual Studio Installer.)
 
 From here, install via ``pip`` from the terminal as usual:
-.. code-block:: python
+
+.. code-block:: bash
     
     python3 -m pip3 install rcr
 

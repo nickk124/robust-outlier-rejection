@@ -12,7 +12,7 @@ rcr
     :target: https://arxiv.org/abs/1807.05276
     :alt: arXiv Paper
 
-.. image:: https://img.shields.io/badge/GitHub-dfm%2Femcee-blue.svg?style=flat
+.. image:: https://img.shields.io/badge/GitHub-nickk124%2Frcr-blue.svg?style=flat
     :target: https://github.com/nickk124/RCR
     :alt: Github Repository
 
