@@ -133,4 +133,9 @@ setup(
     setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: Other/Proprietary License",
+        "Operating System :: OS Independent",
+    ]
 )

@@ -3,10 +3,6 @@
 [![Build Status](https://travis-ci.com/nickk124/RCR.svg?branch=master)](https://travis-ci.com/nickk124/RCR)
 [![Documentation Status](https://readthedocs.org/projects/rcr/badge/?version=latest)](https://rcr.readthedocs.io/en/latest/?badge=latest)
 [![Paper](https://img.shields.io/badge/arXiv-1807.05276-orange)](https://arxiv.org/abs/1807.05276)
-      
-
-![](example_imgs/before_after_singlevalue.png)
-*Left: data distribution heavily saturated with one-sided outliers/contaminants, with true value in black. Right: remaining un-contaminated distribution after single-value RCR outlier removal.*
 
 # What is RCR?
 RCR is advanced, but easy to use, outlier rejection.
@@ -19,13 +15,25 @@ Robust Chauvenet Rejection (RCR) instead first makes use of robust replacements 
 
 RCR has been carefully calibrated, and extensively simulated (see [Maples et al. 2018](https://arxiv.org/abs/1807.05276)). It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
 
+# Example Images
+
+![](example_imgs/before_after_singlevalue.png)
+*Left: data distribution heavily saturated with one-sided outliers/contaminants, with true value in black. Right: remaining un-contaminated distribution after single-value RCR outlier removal.*
+
 ![](example_imgs/before_after_functional.png)
 *Left: Data distribution about true quadratic model (black), heavily saturated with one-sided outliers/contaminants. Right: remaining distribution after functional RCR outlier removal.*
 
 # Installation and Documentation
+
+## Linux and macOS
+
 RCR can be used most easily via Python, installed using `pip install rcr`. The Python documentation can be found [here](rcr.readthedocs.io).
 
-The C++ source code is also included here in `/source`, with pdf documentation in `/documentation`.
+The C++ source code is also included here in `/source`, with documentation in `/docs/cpp_docs`.
+
+## Windows
+
+Before installing, you'll need to have **Microsoft Visual C++ 14.0**, found under the [Microsoft Visual C++ Build Tools](https://visualstudio.microsoft.com/downloads/). If that doesn't work, you may need the latest [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/). (Both can be installed through the Visual Studio Installer.)
 
 
 # How do I use RCR?

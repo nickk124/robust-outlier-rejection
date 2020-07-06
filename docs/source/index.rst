@@ -10,6 +10,7 @@ rcr
 
 .. image:: https://img.shields.io/badge/arXiv-1807.05276-orange.svg?style=flat
     :target: https://arxiv.org/abs/1807.05276
+    :alt: arXiv Paper
 
 .. image:: https://img.shields.io/badge/GitHub-dfm%2Femcee-blue.svg?style=flat
     :target: https://github.com/nickk124/RCR
