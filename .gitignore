@@ -22,3 +22,6 @@ src/test.py
 /docs/build
 src/sphinx_test.py
 tests/maintest.py
+
+# deprecated
+/example_imgs

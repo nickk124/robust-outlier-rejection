@@ -52,18 +52,7 @@ Licensing and Citation
 
 RCR is free to use for academic and non-commercial applications (see license in this repository). We only ask that you cite `Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_ as:
 
-.. code-block:: bib
-
-        @article{maples2018robust,
-            title={Robust chauvenet outlier rejection},
-            author={Maples, MP and Reichart, DE and Konz, NC and Berger, TA and Trotter, AS and Martin, JR and Dutton, DA and Paggen, ML and Joyner, RE and Salemi, CP},
-            journal={The Astrophysical Journal Supplement Series},
-            volume={238},
-            number={1},
-            pages={2},
-            year={2018},
-            publisher={IOP Publishing}
-        }
+.. literalinclude:: ../../citation.bib
 
 For commercial applications, or consultation, feel free to contact us.
 
