@@ -64,7 +64,7 @@ plt.xlim(-5, 30)
 plt.ylim(0, 1)
 plt.xlabel("data")
 plt.title("Results of RCR being used on an" + 
-    "{}% contaminated dataset".format(frac_contaminated*100))
+    " {}% contaminated dataset".format(frac_contaminated*100))
 plt.yticks([])
 
 box = ax.get_position()

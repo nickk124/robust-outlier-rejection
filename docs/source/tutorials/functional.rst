@@ -6,17 +6,17 @@ Rejecting Outliers While Model Fitting
 Introduction
 ------------
 
-In it's most simple form, RCR is an excellent tool for
+In its most simple form, RCR is an excellent tool for
 detecting and rejecting outliers within heavily contaminated one-dimensional 
 datasets, as shown in :ref:`singlevalue`. However, this only scratches
-the surface of RCR. In it's more generalized form, RCR can also be used
+the surface of RCR. In its more generalized form, RCR can also be used
 to reject outliers within some :math:`n`-dimensional dataset 
 while also *simultaneously* fitting a model to
 that dataset. This section will explain how this can be done
 fairly easily in practice, while avoiding going into unnessarily
 technicalities. We recommend reading :ref:`singlevalue` before
 tackling this section, as the following is essentially a generalization
-on that section.
+of that section.
 
 For the case of one-dimensional data (see :ref:`singlevalue`), 
 RCR can be thought of as being used to reject outliers from some
@@ -98,8 +98,8 @@ parameter derivatives:
     def d_linear_2(x, params): # second model parameter derivative
         return x
 
-Next, let's create our dataset. We'll create a dataset with :math:`N=200` points
-total, with 85% datapoints being outliers. Our "true" model that the datapoints
+Next, let's start creating our dataset. We'll have :math:`N=200` points
+total, with 85% of the datapoints being outliers. Our "true" model that the datapoints
 will be generated about will have parameters of :math:`b=0` and :math:`m=1`. 
 In code, this is simply:
 
@@ -112,7 +112,7 @@ In code, this is simply:
 
     params_true = [0, 1] # parameters of "true" model
 
-Next, let's create the data. We'll generate our datapoints in a certain range
+We'll generate our datapoints in a certain range
 of :math:`x` values about the "true" model line. For this example, we'll 
 make uncontaminated datapoints that are Gaussian/normally distributed, with
 standard deviation :math:`\sigma=1`, about the true model. In order to highlight
@@ -192,7 +192,7 @@ for the model parameters, to give the fitting engine within RCR a starting place
 Approaching this
 dataset with no knowledge of what is or isn't an outlier, it would be hard
 to tell what the true best fit should be; as such, we'll use an initial guess
-that naively should work with the data, but are pretty far off of the true values of 
+that naively should work with the data, but is pretty far off of the true values of 
 :math:`b=0` and :math:`m=1`; let's try :math:`b=5` and :math:`m=1.5`:
 
 .. code-block:: python
@@ -234,7 +234,7 @@ the ``RCR`` class that we're fitting to our specific parametric model:
     r.performBulkRejection(ydata) # perform RCR
 
 That was only a few lines of code, but what actually happened here? Essentially,
-(see the paper **HERE** for more details), RCR can iteratively reject outliers and
+(see :ref:`papers` for more details), RCR can iteratively reject outliers and
 fit the model to the data at the same time. As such, we can access the same 
 outlier-rejection results from ``r.result`` as in :ref:`singlevalue`, while also
 having model-fitting results from our model, with the member ``model.result``:
@@ -344,7 +344,7 @@ are considered, with any uncertainties in the independent variable(s) :math:`\ve
 considered to be negligible (for a more generalized treatment, that includes such
 :math:`\vec{x}`-uncertainties, as well as uncertainty in the dataset
 that cannot solely be attributed to the data error bars, 
-see e.g. `Konz 2020 <https://github.com/nickk124/seniorthesis>`_). In this case, which
+see e.g. `Konz 2020 <https://github.com/nickk124/seniorthesis/blob/master/konz_thesis_final.pdf>`_). In this case, which
 we take for RCR, our dataset becomes 
 :math:`\left\{\left(\vec{x}_i, y_i \pm \sigma_{y,i}\right)\right\}_{i=1}^N`, i.e.
 our measurement error bars/uncertainties are :math:`\left\{\sigma_{y,i}\right\}_{i=1}^N`.
@@ -472,11 +472,13 @@ Output:
     ../_static/examples/functional/postRCR_erry.*
 
 Adding error bars, or *intrinsic* uncertainties, to the measurements in
-the dataset introduced even more overall uncertainty, beyond just the *extrinsic* uncertainty,
-or scatter/sample variance of the datapoints themselves. That, combined with the extremely, even unusually high
+the dataset introduced even more overall uncertainty to the data, beyond just the *extrinsic* uncertainty,
+or scatter/sample variance of the datapoints themselves. That, combined with the extremely high
 contaminant fraction of 85%, made it so that RCR was unable to tell apart the contaminants from the non-outlier datapoints,
 under-rejecting the outliers, as shown in the plot. As such, the final dataset that the
 model was fit to included too many outliers, biasing the fitted line to have too high an intercept.
+RCR would've worked better if either/both 1) there were smaller error bars
+or 2) the fraction of contaminants was lower.
 
 .. _priors:
 
@@ -484,7 +486,7 @@ Applying Prior Knowledge to Model Parameters (Advanced)
 -------------------------------------------------------
 
 Let's say that we want to fit some model to a dataset, and we know certain, *prior* information
-about one of the parameters of the model :math:`a`, in advance. 
+about one of the parameters of the model, :math:`a`, in advance. 
 From the point of view of `Bayesian inference <https://en.wikipedia.org/wiki/Bayes%27_theorem>`_,
 this can be formalized by specifying the *prior probability distribution*, or *prior probability density function*
 (PDF) of that parameter :math:`p(a)`. For example, let's say that for the linear dataset/model above, we know *a priori* 
@@ -571,7 +573,7 @@ initializing the ``priors`` attribute of your model with your ``Priors`` object:
 
     model.priors = mypriors
 
-Now, RCR can be utilized with this model given the usual methods.
+From here RCR can be utilized with this model given the usual methods.
 
 Constrained/Bounded Priors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -635,12 +637,12 @@ of each parameter's prior probability density function evaluated
 given the corresponding parameter's value.
 
 As an example, let's consider that for our linear model, we'd like to 1) place
-an (unusual) prior on b:
+an (unusual) prior on :math:`b`:
 
 .. math::
-    p(b) = e^{-|b|}\left|\cos^2x\right|,
+    p(b) = e^{-|b|}\left|\cos^2b\right|,
 
-and 2) constrain m to be within the interval :math:`(0, 2]`. 
+and 2) constrain :math:`m` to be within the interval :math:`(0, 2]`. 
 We can then implement :math:`\vec{p}(\vec{\theta})` as:
 
 .. code-block:: python
@@ -755,5 +757,5 @@ From here, we can perform RCR as normal, and access the optimal value for the pi
 with ``model.result.pivot`` (or ``model.result.pivot_ND`` for the `n`-dimensional model case).
 
 Finally, note that the support for :math:`n`-dimensional models (i.e. :math:`n` independent variables)
-is still available when using this algorithm; in this case, your pivot point function
+is still available when using this feature; in this case, your pivot point function
 should return a list/array of :math:`n` pivot points.

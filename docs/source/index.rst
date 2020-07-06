@@ -28,7 +28,7 @@ rcr
 in `Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_, this site will 
 show you how to use RCR in Python. RCR can be applied to weighted data 
 and used for model-fitting, and we have incorporated rejecting 
-outliers in bulk to have the best of both computational efficiency and accuracy.
+outliers in bulk to have the best of both computational efficiency and accuracy (see the :ref:`install`).
 
 RCR has been carefully calibrated, and extensively simulated. It can be 
 applied to samples with both large contaminants and large contaminant 
@@ -76,12 +76,25 @@ Output:
 
 For a more in-depth explanation of using RCR for this type of one-dimensional outlier rejection, see :ref:`singlevalue`.
 
+License and Attribution
+-----------------------
+
+.. _papers:
+
+The Paper
+^^^^^^^^^
+The original paper for RCR can be found `here <https://arxiv.org/abs/1807.05276>`_. If you use RCR, please cite it as:
+   
+.. literalinclude:: ../citation.bib
+
+and use it according to the `license <https://github.com/nickk124/RCR/blob/master/LICENSE>`_ (the essential point
+here is just to contact us if you want to use RCR for commercial purposes).
+
 .. toctree::
    :maxdepth: 2
    :caption: User Guide
 
    guide/install
-   guide/papers
    guide/faq
    modules
 

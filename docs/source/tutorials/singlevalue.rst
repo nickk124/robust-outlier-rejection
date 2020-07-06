@@ -5,12 +5,12 @@ Rejecting 1D Outliers
 
 This page gives a full tutorial for using RCR to detect and reject outliers
 within one-dimensional datasets. Although this page avoids unnecessary statistical technicalities 
-(see the paper **ADD LINK HERE**), a more bare-bones example is given on the main page :ref:`index`.
+(see :ref:`papers`), a more bare-bones example is given on the main page, :ref:`index`.
 
 To begin, consider some dataset of :math:`N` measurements, made up of 1) samples from some contaminant 
 distribution (outliers) and 2) samples from some underlying "true" uncontaminated distribution. 
-RCR has various outlier rejection techniques (**add link to them here**) that have each been 
-chosen to work best for different shapes of these distributions. The table below explains this.
+RCR has various outlier rejection techniques that have each been 
+chosen to work best for different shapes of these distributions. The table below illustrates this.
 
 .. _rejectiontechs:
 
@@ -90,6 +90,11 @@ To see what this dataset looks like, we'll plot it below (projected randomly alo
 
    plt.show()
 
+Output:
+
+.. image:: 
+   ../_static/examples/singlevalue/singlevalue_preRCR.*
+
 Now, what do we do if we to estimate the :math:`\mu` and :math:`\sigma` of the underlying uncontaminated distribution?
 Without RCR, we get:
 
@@ -126,7 +131,7 @@ as follows:
    r = rcr.RCR(rcr.SS_MEDIAN_DL)
    r.performBulkRejection(data) # perform outlier rejection
 
-Next, we can obtain the results of RCR with the `result` member of ``RCR``. In our case, we're interested in the RCR-recovered
+Next, we can obtain the results of RCR with the ``result`` member of the ``RCR`` class. In our case, we're interested in the RCR-recovered
 values for :math:`\mu` and :math:`\sigma` of the underlying uncontaminated distribution:
 
 .. code-block:: python
@@ -198,8 +203,8 @@ of :math:`w_n=2` is simply analogous to counting it twice. Now, what's
 an example of where weighting can be useful?
 
 Lets say that we'd like to perform RCR on the same dataset as above, except now
-we somehow know that the true, uncontaminated datapoints should
-be normally/Gaussian-distributed (again with :math:`\mu=0` and :math:`\sigma=1`) *a priori*.
+we somehow know *a priori* that the true, uncontaminated datapoints should
+be normally/Gaussian-distributed (again with :math:`\mu=0` and :math:`\sigma=1`).
 We can use this prior knowledge to perform a sort of Bayesian outlier rejection,
 by giving the datapoints weights that are proportional to the value of the
 known normal probability density function. In Python, we can do this simply as:
@@ -215,7 +220,7 @@ known normal probability density function. In Python, we can do this simply as:
    # create weights
    weights = weight_data(data)
 
-Next we can perform RCR and view the results as usual, but now with providing the weights as the first argument
+Next we can perform RCR and view the results as usual, only now providing the weights as the first argument
 of ``performBulkRejection()``:
 
 .. code-block:: python

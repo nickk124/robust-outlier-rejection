@@ -44,6 +44,6 @@ C++
 ---
 Because the RCR Python library uses pybind11 to wrap the original C++ source code seamlessly into Python, 
 all of the speed of C++ is available through the Python library. However, if the C++ source code is desired, it
-can be found at the `github repository <https://github.com/nickk124/RCR>`_ in 
+can be found at the `Github repository <https://github.com/nickk124/RCR>`_ in 
 the ``src`` directory (``RCR_python.cpp`` is only used for wrapping the C++ code into the rcr Python library, so it can be ignored).
 Documentation specific to the C++ codebase can be found within the directory ``docs/cpp_docs`` of this repository.
