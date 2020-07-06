@@ -27,13 +27,15 @@ RCR has been carefully calibrated, and extensively simulated (see [Maples et al.
 
 ## Linux and macOS
 
-RCR can be used most easily via Python, installed using `pip install rcr`. The Python documentation can be found [here](rcr.readthedocs.io).
+RCR can be used most easily via Python, installed using `python3 -m pip install rcr` in the command line. The Python documentation can be found [here](rcr.readthedocs.io).
 
 The C++ source code is also included here in `/source`, with documentation in `/docs/cpp_docs`.
 
 ## Windows
 
 Before installing, you'll need to have **Microsoft Visual C++ 14.0**, found under the [Microsoft Visual C++ Build Tools](https://visualstudio.microsoft.com/downloads/). If that doesn't work, you may need the latest [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/). (Both can be installed through the Visual Studio Installer.)
+
+After that, run `python3 -m pip install rcr` in the command line.
 
 
 # How do I use RCR?

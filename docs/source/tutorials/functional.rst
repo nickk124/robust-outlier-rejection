@@ -332,6 +332,8 @@ result.
 Overall, the RCR fit (green line) is clearly a much better fit 
 (true best fit in blue dashed line) than the least squares best fit (red line).
 
+.. _errorbars:
+
 Data with Uncertainties and/or Weights
 --------------------------------------
 
@@ -506,6 +508,8 @@ according to the prior probabilities of all of the model parameter solutions tha
 we've included two types of common priors within the library, as well as allowing for any sort of custom
 prior PDF. These options are described in the table below.
 
+.. _priorstypes:
+
 Types of Model Parameter Priors in RCR
 --------------------------------------
 
@@ -662,6 +666,8 @@ declaring our type of priors as ``CUSTOM_PRIORS``:
 
 After creating our model (with ``has_priors=True``) and supplying it with
 our Priors object ``mypriors``, RCR can then be used as usual.
+
+.. _pivots:
 
 Automatically Minimizing Correlation between Linear Model Parameters (Advanced)
 -------------------------------------------------------------------------------

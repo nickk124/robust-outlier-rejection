@@ -469,7 +469,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
         // results
         .def_readwrite("result", &RCR::result, R"mydelimiter(
-            *rcr.RCRResults object*. Access various results of RCR with this (see :class:`rcr.RCRResults`).
+            ``rcr.RCRResults`` *object*. Access various results of RCR with this (see :class:`rcr.RCRResults`).
         )mydelimiter")
         
         // main methods
@@ -490,7 +490,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
             *Parameters:*
             
-            data : list/array_like
+            data : list/array_like, 1D
                 Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
                 (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
         )mydelimiter", py::arg("data"))
@@ -500,7 +500,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
             *Parameters:*
             
-            data : list/array_like
+            data : list/array_like, 1D
                 Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
                 (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
         )mydelimiter", py::arg("data"))
@@ -510,9 +510,9 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
             *Parameters:*
             
-            weights : list/array_like
+            weights : list/array_like, 1D
                 Weights for dataset to perform outlier rejection (RCR) on.
-            data : list/array_like
+            data : list/array_like, 1D
                 Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
                 (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
         )mydelimiter", py::arg("weights"), py::arg("data"))
@@ -522,9 +522,9 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
 
             *Parameters:*
             
-            weights : list/array_like
+            weights : list/array_like, 1D
                 Weights for dataset to perform outlier rejection (RCR) on.
-            data : list/array_like
+            data : list/array_like, 1D
                 Dataset to perform outlier rejection (RCR) on. Access results via the ``result`` attribute 
                 (:class:`rcr.RCRResults`) of your instance of :class:`rcr.RCR`.
         )mydelimiter", py::arg("weights"), py::arg("data"))
@@ -533,10 +533,10 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def("setParametricModel", &RCR::setParametricModel, R"mydelimiter(
             Initialize parametric/functional form model to be used with RCR (see :ref:`functional` for a tutorial).
 
-            *Parameters:*
-            
+            Parameters
+            ----------
             model : :class:`rcr.FunctionalForm`
-                :math:`n`-dimensional model to fit data to, while performing outlier rejection.
+                :math:`n`-dimensional model to fit data to while performing outlier rejection.
         )mydelimiter", py::arg("model"));
 
 
@@ -558,25 +558,123 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
             Note that in order for parameter uncertainties to be computed, either/both weights and data error bars/uncertainties must have been provided when constructing the :class:`rcr.FunctionalForm` model.
         )mydelimiter")
 
-        .def_readwrite("pivot", &FunctionalFormResults::pivot, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (1D independent variable case)")
-        .def_readwrite("pivot_ND", &FunctionalFormResults::pivot_ND, "Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (ND independent variable case)");
+        .def_readwrite("pivot", &FunctionalFormResults::pivot, R"mydelimiter(
+           *float*. Recovered optimal \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (1D independent variable case).
+
+           See :ref:`pivots`. For example, the pivot point for the model :math:`y(x|b,m) = b + m(x-x_p)` is :math:`x_p`.
+        )mydelimiter")
+        .def_readwrite("pivot_ND", &FunctionalFormResults::pivot_ND, R"mydelimiter(
+           *float* Recovered optimal :math:`n`-dimensional \"pivot\" point for model that should minimize correlation between the slope and intercept parameters of the linearized model (:math:`n`-D independent variable case).
+
+           See :ref:`pivots`. For example, the pivot point for the :math:`n`-dimensional model :math:`y(\vec{x}|\vec{b},\vec{m}) = \vec{b} + \vec{m}^T(\vec{x}-\vec{x}_p)` is :math:`\vec{x}_p`.
+        )mydelimiter");
 
 
     // main class
-    py::class_<FunctionalForm>(m, "FunctionalForm", "Class used to initialize functional form/model-fitting RCR")
+    py::class_<FunctionalForm>(m, "FunctionalForm", R"mydelimiter(
+            *class*. Class used to initialize functional form/model-fitting RCR (see :ref:`functional`).
+
+            Constructor arguments:
+
+            Parameters
+            ----------
+            f : function
+                Model function :math:`y(\vec{x}|\vec{\theta})` to fit data to while performing outlier rejection, where :math:`\vec{x}` is an :math:`n`-dimensional list/array_like (or float, for 1D models) of independent variables and :math:`\vec{\theta}` is an
+                :math:`M`-dimensional list/array_like of model parameters. Arguments for ``f`` must follow this prototype:
+
+                Parameters
+                ----------
+                x : float or 1D list/array_like
+                    Independent variable(s) of model
+                params : list/array_like, 1D
+                    Parameters of model
+
+                Returns
+                -------
+                y : float
+                    Model evaluated at the corresponding values of ``x`` and ``params``.
+            
+            xdata : list/array_like, 1D or 2D
+                :math:`n`-dimensional independent variable data to fit model to. For 1D models (:math:`n=1`), this will be a 1D list/array_like, while for :math:`n`-D models, this will be a 2D list/array_like where each entry is a list/array_like of length :math:`n`.
+            ydata : list/array_like, 1D
+                Dependent variable (model function evaluation) data to fit model to. 
+            model_partials : list of functions
+                A list of functions that return the partial derivatives of the model function ``f`` with respect to each, ordered, model parameter :math:`\vec{\theta}` (See :ref:`functional` for an example). Arguments for each one of these functions must follow this prototype 
+                (same as for the model function ``f``):
+
+                Parameters
+                ----------
+                x : float or 1D list/array_like
+                    Independent variable(s) of model
+                params : list/array_like, 1D
+                    Parameters of model
+
+                Returns
+                -------
+                y : float
+                    Derivative of model (with respect to given model parameter), evaluated at the corresponding values of ``x`` and ``params``.
+            
+            guess : list/array_like, 1D
+                Guess for best fit values of model parameters :math:`\vec{\theta}` (for the fitting algorithm).
+
+            weights : list/array_like, optional, 1D
+                Optional weights to be applied to dataset (see :ref:`weighting`).
+
+            error_y : list/array_like, optional, 1D
+                Optional error bars/:math:`y`-uncertainties to be applied to dataset (see :ref:`errorbars`).
+            
+            tol : float, optional
+                Default: ``1e-6``. Convergence tolerance of modified Gauss-Newton fitting algorithm.
+
+            has_priors : bool, optional
+                Default: ``False``. Set to ``True`` if you're going to apply statistical priors to your model parameters 
+                (see :ref:`priors`; you'll also need to create an instance of :class:`rcr.Priors` and set the ``priors`` attribute of this instance of ``FunctionalForm`` equal to it).
+
+            pivot_function : function, optional
+                Default: ``None``. Function that returns the pivot point of some linearized model (see :ref:`pivots`). Must be of the form/prototype of:
+
+                Parameters
+                ----------
+                xdata : list/array_like, 1D or 2D
+                    :math:`n`-dimensional independent variable data to fit model to; same as above``xdata``.
+                weights : list/array_like, optional, 1D
+                    Optional weights to be applied to dataset (see :ref:`weighting`).
+                f : function
+                    Model function; same as above ``f``.
+                params : list/array_like, 1D
+                    Parameters of model
+
+                Returns
+                -------
+                pivot : float or 1D list/array_like
+                    Pivot point(s) of the model; (``float`` if you're using a one-dimensional model/independent variable, ``list/array_like`` if :math:`n`-dimensional.)
+
+                However, note that all arguments need to be actually used for the pivot point computation. For example,
+                a simple linear model :math:`y(x|b,m) = b + m(x-x_p)` has a pivot point found by :math:`x_p=\sum_iw_ix_i/\sum_iw_i`, where
+                :math:`w_i` are the weights of the datapoints.
+            
+            pivot_guess : float or 1D list/array_like, optional
+                Initial guess for the pivot point(s) of the model (``float`` if you're using a one-dimensional model/independent variable, ``list/array_like`` if :math:`n`-dimensional; see :ref:`pivots`).
+        )mydelimiter")
         // constructors
-        .def(py::init(&getFunctionalFormObject), "args:\tf (model function; 1D or ND),\n\txdata (1D or ND),\n\tydata,\n\tmodel_partials (parameter partial-derivatives of model function; 1D or ND),\n\tguess (guess for model parameters)\nkwargs:\tweights = None,\n\terror_y = None,\n\ttol = 1e-6 (model fitting convergence tolerance),\n\thas_priors = false (are you imposing priors on your model?),\n\tpivot_function = None (function used to compute pivot point (1D or ND) of model),\n\tpivot_guess = None (guess for pivot point (1D or ND) of model)")
+        .def(py::init(&getFunctionalFormObject))
         .def(py::init<>())
 
         // results
-        .def_readwrite("result", &FunctionalForm::result, "Results unique to Functional Form/ model-fitting RCR")
+        .def_readwrite("result", &FunctionalForm::result, R"mydelimiter(
+            ``rcr.FunctionalFormResults`` *object*. Access various results unique to Functional Form RCR with this (see :class:`rcr.FunctionalFormResults`).
+        )mydelimiter")
 
         // members
-        .def_readwrite("priors", &FunctionalForm::priors, "rcr.Priors object describing parameter prior probability distribution(s)")
-        // .def_readwrite("has_priors", &FunctionalForm::has_priors, "Are you applying prior probability distributions to your model parameters?")
-        // .def_readwrite("parameters", &FunctionalForm::parameters, "Current (or final) estimated model parameters")
-        .def_readwrite("pivot_function", &FunctionalForm::pivotFunc, 
-            "Function used to evaluate pivot point(s), with (optional) arguments (set to None otherwise) of: xdata, data weights, model function and model params");
+        .def_readwrite("priors", &FunctionalForm::priors, R"mydelimiter(
+            ``rcr.Priors`` *object*. Object describing parameter prior probability distribution(s) applied to :class:`rcr.FunctionalForm` model (see :class:`rcr.Priors`).
+
+            To use priors on model parameters for some :class:`rcr.FunctionalForm` model, this attribute of the model needs to be initialized as some instance of :class:`rcr.Priors`
+            (see :ref:`priors`).
+        )mydelimiter")
+        .def_readwrite("pivot_function", &FunctionalForm::pivotFunc, R"mydelimiter(
+            Function used to evaluate pivot point(s) (see ``pivot_function`` optional argument of :class:`rcr.FunctionalForm` model constructor).
+        )mydelimiter");
 
     // parameter prior probability distribution types
     py::enum_<priorTypes>(m, "priorsTypes", py::arithmetic(), "Types of prior probability density functions that can be applied to model parameters.")
@@ -587,7 +685,25 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .export_values();
 
     // parameter prior probability distribution class
-    py::class_<Priors>(m, "Priors", "Class of prior probability distribution functions that can be applied to model parameters")
+    py::class_<Priors>(m, "Priors", R"mydelimiter(
+            *class*. Class that encapsulates probabalistic priors to be applied to model parameters when using model-fitting/functional form RCR (see :ref:`priors` for an example).
+
+            Constructor arguments:
+
+            Parameters
+            ----------
+            priorType : :class:`rcr.priorsTypes`
+                The type of priors that you're applying to your model (see :class:`rcr.priorsTypes` and :ref:`priorstypes`).
+
+            p : function, optional
+                Custom priors function; takes in a vector of model parameters and returns a vector of the prior probability density for each value (see :ref:`priors` for an example).
+            
+            gaussianParams : 2D list/array_like, optional 2nd argument
+                A list that contains lists of mu and sigma for the Gaussian prior of each param. If no prior, then just use NaNs (see :ref:`priors` for an example).
+            
+            paramBounds : 2D list/array_like, optional 2nd argument (or 3rd, for the case of ``rcr.MIXED_PRIORS``)
+                A list that contains lists of the lower and upper hard bounds of each param. If not bounded, use NaNs, and if there's only one bound, use NaN for the other bound (see :ref:`priors` for an example).
+        )mydelimiter")
         // constructors
         .def(py::init< priorTypes, std::function <std::vector <double>(std::vector <double>)> >()) // custom priors
         .def(py::init< priorTypes, std::vector < std::vector <double> > >()) // only Gaussian or only bounded/hard constraints
@@ -595,8 +711,16 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         .def(py::init<>())
 
         // members
-        .def_readwrite("priorType", &Priors::priorType, "Type of prior")
-        .def_readwrite("p", &Priors::p, "a function that takes in a parameters vector and returns a vector of the prior probability density for each value")
-        .def_readwrite("gaussianParams", &Priors::gaussianParams, "A list that contains a list of mu and sigma for the guassian prior of each param. If no prior, then just use NANs.")
-        .def_readwrite("paramBounds", &Priors::paramBounds, "a list that contains lists of the bounds of each param. If not bounded, use NANs, and if there's only one bound, use NAN for the other \"bound\".");
+        .def_readwrite("priorType", &Priors::priorType, R"mydelimiter(
+            ``rcr.priorsTypes`` *object*. The type of priors that you're applying to your model (see :class:`rcr.priorsTypes` and :ref:`priorstypes`).
+        )mydelimiter")
+        .def_readwrite("p", &Priors::p, R"mydelimiter(
+            *function*. Custom priors function; takes in a vector of model parameters and returns a vector of the prior probability density for each value (see :ref:`priors` for an example).
+        )mydelimiter")
+        .def_readwrite("gaussianParams", &Priors::gaussianParams, R"mydelimiter(
+            *2D list/array_like*. A list that contains lists of mu and sigma for the Gaussian prior of each param. If no prior, then just use NaNs (see :ref:`priors` for an example).
+        )mydelimiter")
+        .def_readwrite("paramBounds", &Priors::paramBounds, R"mydelimiter(
+            A list that contains lists of the lower and upper hard bounds of each param. If not bounded, use NaNs, and if there's only one bound, use NaN for the other bound (see :ref:`priors` for an example).
+        )mydelimiter");
 }
