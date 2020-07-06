@@ -35,7 +35,7 @@ Installation
 Linux and macOS
 ---------------
 
-RCR can be used most easily via Python, installed using `python3 -m pip install rcr` in the command line. The Python documentation can be found [here](rcr.readthedocs.io).
+RCR can be used most easily via Python, installed using `python3 -m pip install rcr` in the command line.
 
 The C++ source code is also included here in `/source`, with documentation in `/docs/cpp_docs`.
 
