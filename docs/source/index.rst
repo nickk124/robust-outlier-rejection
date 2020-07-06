@@ -8,11 +8,16 @@
 rcr
 ===
 
+.. image:: https://img.shields.io/badge/GitHub-dfm%2Femcee-blue.svg?style=flat
+    :target: https://github.com/nickk124/RCR
+    :alt: Github Repository
 .. image:: https://readthedocs.org/projects/rcr/badge/?version=latest
-   
    :target: https://rcr.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
+.. image:: https://travis-ci.com/nickk124/RCR.svg?branch=master
+    :target: https://travis-ci.com/nickk124/RCR
+    :alt: Build Status
+    
 **RCR**, or Robust Chauvenet Rejection, is advanced, and easy to use, outlier rejection. Originally published 
 in `Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_, this site will 
 show you how to use RCR in Python. RCR can be applied to weighted data 
