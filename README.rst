@@ -35,16 +35,16 @@ Installation
 Linux and macOS
 ---------------
 
-RCR can be used most easily via Python, installed using `python3 -m pip install rcr` in the command line.
+RCR can be used most easily via Python, installed using ``python3 -m pip install rcr`` in the command line.
 
-The C++ source code is also included here in `/source`, with documentation in `/docs/cpp_docs`.
+The C++ source code is also included here in ``/source``, with documentation in ``/docs/cpp_docs``.
 
 Windows
 -------
 
 Before installing, you'll need to have **Microsoft Visual C++ 14.0**, found under the `Microsoft Visual C++ Build Tools <https://visualstudio.microsoft.com/downloads/>`_. If that doesn't work, you may need the latest `Windows SDK <https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/>`_. (Both can be installed through the Visual Studio Installer.)
 
-After that, run `python3 -m pip install rcr` in the command line.
+After that, run ``python3 -m pip install rcr`` in the command line.
 
 
 Licensing and Citation
