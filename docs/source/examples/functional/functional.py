@@ -76,7 +76,7 @@ box = ax.get_position()
 ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-# plt.show()
+plt.show()
 
 # initialize model and guess for model parameters
 
@@ -150,7 +150,7 @@ ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 print("Least-squares fit results:", intercept_lsq, slope_lsq)
 
-# plt.show()
+plt.show()
 
 # model param error bars
 
@@ -220,7 +220,7 @@ box = ax.get_position()
 ax.set_position([box.x0, box.y0, box.width * 0.65, box.height])
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-# plt.show()
+plt.show()
 
 
 
