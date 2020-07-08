@@ -24,10 +24,15 @@ Robust Chauvenet Rejection (RCR) instead first makes use of robust replacements 
 
 RCR has been carefully calibrated, and extensively simulated (see `Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_). It can be applied to samples with both large contaminants and large contaminant fractions (sometimes in excess of 90% contaminated).
 
-Documentation
-=============
+Documentation/How to Use RCR
+============================
 
 The `documentation <rcr.readthedocs.io>`_ covers all of the RCR API, and provides thorough examples for using RCR in all of its forms.
+
+We've also built a web calculator for quick use of RCR, including interactive visualizations. The calculator can be used for either 
+
+1. `one-dimensional dataset outlier rejection <https://skynet.unc.edu/rcr/calculator/value>`_ or 
+2.  `outlier rejection combined with model fitting <https://skynet.unc.edu/rcr/calculator/functional>`_.
 
 Installation
 ============
