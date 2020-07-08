@@ -677,10 +677,10 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
         )mydelimiter")
 
         // static members
-        .def_readwrite("pivot", &FunctionalForm::pivot, R"mydelimiter(
+        .def_readwrite_static("pivot", &FunctionalForm::pivot, R"mydelimiter(
             *float*. Pivot point (see :ref:`pivots`) for 1-D model, static with respect to :class:`rcr.FunctionalForm` so that it can be used in model function definitions.
         )mydelimiter")
-        .def_readwrite("pivot_ND", &FunctionalForm::pivot, R"mydelimiter(
+        .def_readwrite_static("pivot_ND", &FunctionalForm::pivot, R"mydelimiter(
             *list/array_like of floats*. Pivot point(s) (see :ref:`pivots`) for :math:`n`-D models, static with respect to :class:`rcr.FunctionalForm` so that it can be used in model function definitions.
         )mydelimiter");
 

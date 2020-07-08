@@ -735,19 +735,42 @@ Keeping this in mind, let's define our pivot point function for this power law m
         
         return topsum / bottomsum
 
+Now, we need to define our model, making sure to use the pivot point. In order to use pivot points
+within the function definition of a model (and its derivatives), we'll need to use the
+static attribute ``pivot`` of the ``rcr.FunctionalForm`` class (or ``pivot_ND`` for the :math:`n`-dimensional case)
+within these definitions. So, our power-law model and its parameter-derivatives can be defined as:
+
+.. code-block:: python
+
+    def powerlaw(x, params):
+        a0 = params[0]
+        a1 = params[1]
+        return a0 * np.power(x / np.power(10., rcr.FunctionalForm.pivot), a1)
+
+    def powerlaw_partial1(x, params):
+        a1 = params[1]
+        return np.power((x / np.power(10., rcr.FunctionalForm.pivot)), a1)
+
+    def powerlaw_partial2(x, params):
+        a0 = params[0]
+        a1 = params[1]
+        piv = rcr.FunctionalForm.pivot # renamed for brevity
+
+        return a0 * np.power((x / np.power(10., piv)), a1) * np.log(x / np.power(10., piv))
+
 Next, we can use this with RCR as normal, except now supplying additional arguments
 of ``pivot_function`` and ``pivot_guess`` to the model constructor ``rcr.FunctionalForm``, 
 where ``pivot_function`` is the function that returns
 the pivot for model give ``xdata, weights, f, params``, and ``pivot_guess`` is a guess for the optimal
 pivot point (for the iterative optimization algorithm). For example, if our initial guess for the pivot point
-is some ``pivot_guess = 4.5``, we could initialize our model as:
+is some ``pivot_guess = 1.5``, we could initialize our model as:
 
 .. code-block:: python
 
-    model = rcr.FunctionalForm(model,
+    model = rcr.FunctionalForm(powerlaw,
         xdata,
         ydata,
-        [model_partial1, model_partial2],
+        [powerlaw_partial1, powerlaw_partial2],
         guess,
         pivot_function=get_pivot_powerlaw,
         pivot_guess=pivot_guess

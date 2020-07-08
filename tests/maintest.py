@@ -2,13 +2,13 @@ import rcr
 import numpy as np
 
 def linear(x, params):
-    return params[0] + x * params[1]
+    return params[0] + (x - rcr.FunctionalForm.pivot) * params[1]
 
 def linear_partial1(x, params):
     return 1
 
 def linear_partial2(x, params):
-    return x
+    return x - rcr.FunctionalForm.pivot
 
 def get_pivot(xdata, weights, f, params):
     sum = 0
@@ -60,20 +60,20 @@ model = rcr.FunctionalForm(linear,
     [linear_partial1, linear_partial2],
     guess,
     tol=tolerance,
-    weights=w,
-    error_y=err_y,
-    has_priors=True,
+    # weights=w,
+    # error_y=err_y,
+    # has_priors=True,
     pivot_function=get_pivot,
     pivot_guess=pivot_guess
 )
 
-model.priors = priors
+# model.priors = priors
 
 r = rcr.RCR(rcr.SS_MEDIAN_DL) # setting up for RCR with this rejection technique
 r.setParametricModel(model)
-r.performBulkRejection(w, y) # //running Bulk rejection RCR
+r.performBulkRejection(y) # //running Bulk rejection RCR
 
-final_parameters = model.parameters
+final_parameters = model.result.parameters
 
 print(final_parameters)
 
