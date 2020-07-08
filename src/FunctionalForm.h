@@ -9,9 +9,6 @@
 
 enum priorTypes {CUSTOM_PRIORS, GAUSSIAN_PRIORS, CONSTRAINED_PRIORS, MIXED_PRIORS};
 
-extern double pivot; //xBar, logxBar; etc. Needs to be defined globally, not just as a member of a FunctionalForm instance, so that it isn't just continually updated, but can be computed within model function and partials without adding it as an extra argument.
-extern std::vector <double> pivot_ND; //vector of pivot values, one for each of the multiple indep variables
-
 struct FunctionalFormResults
 {
 	std::vector <double> parameters;
@@ -148,6 +145,11 @@ public:
 	bool NDcheck;
 	std::vector<int> indices;
 	std::vector <std::vector<double> > parameterSpace, weightSpace, extraParameterSpace, extraWeightSpace; //generalized x vector of vectors, for >1D cases
+    
+    // pivots
+
+    static double pivot; //xBar, logxBar; etc. Needs to be defined globally, not just as a member of a FunctionalForm instance, so that it isn't just continually updated, but can be computed within model function and partials without adding it as an extra argument.
+    static std::vector <double> pivot_ND; //vector of pivot values, one for each of the multiple indep variables
 
 	// custom function for computing pivot value (xbar, logxBar, etc)
 	std::function < double(std::vector <double>, std::vector <double>, std::function < double(double, std::vector <double>) >, std::vector <double>) > pivotFunc;

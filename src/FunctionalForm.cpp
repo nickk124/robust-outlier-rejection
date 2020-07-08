@@ -5,10 +5,9 @@
  See license at https://github.com/nickk124/RCR
  */
 #include "FunctionalForm.h"
-//std::vector <double>(*p)(std::vector <double>)
 
-double pivot; //see declaration in FunctionalForm.h for explanation as to why this needs to be global.
-std::vector <double> pivot_ND;
+double FunctionalForm::pivot;
+std::vector <double> FunctionalForm::pivot_ND;
 
 // Constructors
 Priors::Priors(priorTypes priorType, std::function <std::vector <double>(std::vector <double>)> p) { //custom priors

@@ -308,8 +308,8 @@
                         <div id="RejectionMethod" style="width:130%; float:right">
                           <table style="float:right">
                             <tr>
-                              <th>Final model<br>parameters and <span id="xBarOut" style="text-decoration:overline">x</span>:</th>
-                              <th style="width:400px">Selected points (x, y, and w if weighted):</th>
+                              <th>Final model<br>parameters (and pivot point):</th>
+                              <th style="width:400px">Selected Points (x, y):</th>
                             </tr>
                             <tr>
                               <th><textarea class="dataTable" id="finalParameters" style="margin-top:10px; width:80%; height:200px"></textarea></th>
@@ -867,26 +867,34 @@ function transformExp(data){
 	return y_trans;
 }
 function transformLog(data){
-	var y_trans = [];
+  let y_trans = [];
+  var new_val;
 
 	for (var i = 0; i < data.length; i++){
 		if (data[i] > 0){
-			y_trans.push(Math.log10(data[i]));
-		}
+      new_val = Math.log10(data[i]);
+    } else {
+      new_val = 0
+    }
+    
+    y_trans.push(new_val);
 	}
 
 	return y_trans;
 }
 
 function transformData(x_data, y_data){
+
+  // console.log(`Transforming x to ${x_basis} and y to ${y_basis}.`);
+
   switch (x_basis){
 		case "linear":
 			break;
 		case "log":
-			y_data = transformLog(y_data);
+			x_data = transformLog(x_data);
 			break;
 		case "exp":
-			y_data = transformExp(y_data);
+			x_data = transformExp(x_data);
 		default:
 			break;
   }
@@ -902,8 +910,11 @@ function transformData(x_data, y_data){
 		default:
 			break;
   }
-    
-    return [x_data, y_data];
+
+  // console.log("New data:");
+  // console.log(x_data, y_data);
+
+  return [x_data, y_data];
 }
 
 function alertBadWeights(){
@@ -1612,7 +1623,7 @@ function performFunctionalRCR(){
                       break;
                     }
 
-                    console.log(y_fitted_result)
+                    // console.log(y_fitted_result)
 
 
 

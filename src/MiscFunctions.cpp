@@ -1961,7 +1961,7 @@ double getAvg_Exp(std::vector<double> x, std::vector <double> w, std::function <
 	for (int i = 0; i < x.size(); i++) {
 		double y_i = f(x[i], params);
 		uppersum += w[i]*x[i]*std::pow(y_i, 2.0);
-		lowersum += w[i]*std::pow(10.0, -2.0*y_i);
+		lowersum += w[i]*std::pow(y_i, 2.0);
 	}
 
 	return (uppersum / lowersum);
