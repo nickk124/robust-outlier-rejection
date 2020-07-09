@@ -360,6 +360,8 @@ button_addbins.js_on_click(callback_add_visible_bins)
 button_addbins.js_on_click(callback_plot)
 button_addbins.js_on_click(callback_maintain_range)
 
+p.js_on_event(LODEnd, callback_resetrange)
+
 # layout
 buttons_0 = widgetbox(button_plot)
 buttons_1 = widgetbox(button_addbins, button_subtractbins)#, sizing_mode = 'stretch_both')

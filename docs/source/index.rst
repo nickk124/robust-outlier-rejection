@@ -8,10 +8,6 @@
 rcr
 ===
 
-.. image:: https://img.shields.io/badge/arXiv-1807.05276-orange.svg?style=flat
-    :target: https://arxiv.org/abs/1807.05276
-    :alt: arXiv Paper
-
 .. image:: https://img.shields.io/badge/GitHub-nickk124%2Frcr-blue.svg?style=flat
     :target: https://github.com/nickk124/RCR
     :alt: Github Repository
@@ -23,6 +19,14 @@ rcr
 .. image:: https://travis-ci.com/nickk124/RCR.svg?branch=master
     :target: https://travis-ci.com/nickk124/RCR
     :alt: Build Status
+
+.. image:: https://img.shields.io/badge/arXiv-1807.05276-orange.svg?style=flat
+    :target: https://arxiv.org/abs/1807.05276
+    :alt: arXiv Paper
+
+.. image:: https://zenodo.org/badge/246971427.svg
+   :target: https://zenodo.org/badge/latestdoi/246971427
+   :alt: Zenodo (DOI)
     
 **RCR**, or Robust Chauvenet Rejection, is advanced, and easy to use, outlier rejection. Originally published 
 in `Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_, this site will 

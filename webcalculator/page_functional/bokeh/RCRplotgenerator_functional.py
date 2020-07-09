@@ -17,7 +17,7 @@ sourceall = ColumnDataSource(data=dict(x_original=x_original, y_fitted=y_fitted)
 
 plot = Figure(plot_width=600, plot_height=600)
 #plotting code
-plot.circle('x_nonrejected', 'y_nonrejected', source=sourcenon, size=5, color="navy", alpha=0.5, legend="nonrejected data of size")# nonrejected
+plot.circle('x_nonrejected', 'y_nonrejected', source=sourcenon, size=5, color="navy", alpha=0.5, legend="nonrejected data")# nonrejected
 plot.circle('x_rejected', 'y_rejected', source=sourcerej, size=5, color="red", alpha=0.5, legend="rejected data")# rejected
 plot.line('x_original', 'y_fitted', source=sourceall, color="green", line_width=2, legend="fitted model")
 
