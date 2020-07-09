@@ -118,6 +118,8 @@ callback_maintain_range = CustomJS(args=dict(x_range=p.x_range), code="""
     x_range.start = xMinNew;
     x_range.end = xMaxNew;
     x_range.change.emit();
+
+    //canChangeDefaultBincount = false;
 """)
 
 callback_maintain_range_basis = CustomJS(args=dict(x_range=p.x_range), code="""
@@ -245,23 +247,37 @@ callback_changetoexp = CustomJS(code="""
 
 callback_resetrange = CustomJS(code="""
     canChangeRange = true;
+    //canChangeDefaultBincount = true;
+    bincount_default_temp = bincount_default;
 """)
 
 callback_add_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
     let bincount_prev = bincount;
     let xrange_displayed = x_range.end - x_range.start;
     let xrange_data = xMaxData - xMinData;
-    let bincount_displayed = Math.round(bincount_default * xrange_displayed / xrange_data)
-    console.log("current displayed bincount:", bincount_displayed); // this is correct, I checked
-    
-    let binwidth = xrange_displayed / bincount_displayed; // also correct
-    console.log("current (displayed) binwidth:", binwidth); 
 
-    console.log("default bincount:", bincount_default);
-    bincount = Math.round((bincount_default + 1) * xrange_data / xrange_displayed);
+    // only for debugging
+    //let bincount_displayed = Math.round(bincount_default * xrange_displayed / xrange_data)
+    //console.log("current displayed bincount:", bincount_displayed); // this is correct, I checked
+    //let binwidth = xrange_displayed / bincount_displayed; // also correct
+    //console.log("current (displayed) binwidth:", binwidth); 
+    //console.log("default bincount:", bincount_default);
+
+
+    bincount = Math.round((bincount_default_temp + 1) * xrange_data / xrange_displayed);
     canChangeBins = true;
     canChangeRange = false;
     console.log("Autoadjusting bincount from:", bincount_prev, "to:", bincount);
+
+    bincount_default_temp++;
+
+    console.log('bincount_default_temp:', bincount_default_temp);
+
+    //if (bincount_prev >= bincount) {
+    //    bincount++;
+    //
+    //    console.log("bincount added one; now:", bincount);
+    //}
 """)
 
 callback_subtract_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
@@ -275,10 +291,20 @@ callback_subtract_visible_bins = CustomJS(args=dict(x_range=p.x_range), code="""
     // console.log("current (displayed) binwidth:", binwidth); 
 
     // console.log("default bincount:", bincount_default);
-    bincount = Math.round((bincount_default - 1) * xrange_data / xrange_displayed);
+    bincount = Math.round((bincount_default_temp - 1) * xrange_data / xrange_displayed);
     canChangeBins = true;
     canChangeRange = false;
     console.log("Autoadjusting bincount from:", bincount_prev, "to:", bincount);
+
+    bincount_default_temp--;
+
+    console.log('bincount_default_temp:', bincount_default_temp);
+
+    //if (bincount_prev <= bincount) {
+    //   bincount--;
+    //
+    //    console.log("bincount subtracted one; now:", bincount);
+    //}
 """)
 #interactivity
 
