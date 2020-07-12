@@ -31,7 +31,7 @@ RCR has been carefully calibrated, and extensively simulated (see `Maples et al.
 Documentation/How to Use RCR
 ============================
 
-The `documentation <rcr.readthedocs.io>`_ covers all of the RCR API, and provides thorough examples for using RCR in all of its forms.
+The `documentation <https://rcr.readthedocs.io/en/latest/>`_ covers all of the RCR API, and provides thorough examples for using RCR in all of its forms.
 
 We've also built a web calculator for quick use of RCR, including interactive visualizations. The calculator can be used for either 
 
