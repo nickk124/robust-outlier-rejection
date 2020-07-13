@@ -683,7 +683,15 @@ Therefore, given some fitted :math:`m`, the fitted intercept will be impacted by
 As shown in `Trotter (2011) <https://cdr.lib.unc.edu/concern/dissertations/1544bq461>`_,
 there exists some optimal :math:`x_p` that minimizes the correlation between :math:`b` and :math:`m`.
 
-RCR has an algorithm for this, that works for any model that can be written as :math:`y = b + m(x-x_p)`.
+
+RCR has an algorithm for this; but first, why does this matter? One reason is
+that if the linear parameters are uncorrelated with each other, then the uncertainty
+in their estimation can be represented with simple, one-dimensional error bars. However,
+if the two parameters *do* have some nontrivial correlation, then in order to properly present
+their uncertainties, a full 2D correlation ellipse (`e.g. <http://www.math.wpi.edu/saspdf/insight/chap18.pdf>`_)
+is needed, making things more complicated.
+
+RCR's method for this correlation minimization works for any model that can be written as :math:`y = b + m(x-x_p)`.
 So, for example, we could have some power-law model 
 
 .. math::
