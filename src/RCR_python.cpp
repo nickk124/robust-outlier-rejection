@@ -1,14 +1,13 @@
 /*
  Robust Chauvenet Rejection (RCR) Official Codebase
  Active Author: Nick C. Konz
- Former Author: Michael Maples
+ Former Author/Creator: Michael Maples
  See license at https://github.com/nickk124/RCR
 
 This file houses all of the RCR functionality that needs to be exposed to Python.
 
 build cmd: (only tested on mac atm):
     c++ -O3 -Wall -shared -std=c++11 -undefined dynamic_lookup `python3 -m pybind11 --includes` RCR_python.cpp RCR.cpp FunctionalForm.cpp MiscFunctions.cpp NonParametric.cpp -o rcr`python3-config --extension-suffix`
-
 */
 #include "RCR.h"
 #include <pybind11/pybind11.h> // pybind header files are within ./pybind11/include/pybind11/
@@ -16,9 +15,8 @@ build cmd: (only tested on mac atm):
 #include <pybind11/functional.h>
 
 namespace py = pybind11;
-using namespace RCRLib;
-
 using namespace pybind11::literals;
+using namespace RCRLib;
 
 // variable argument conversion handlers
 
@@ -703,7 +701,7 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
             priorType : :class:`rcr.priorsTypes`
                 The type of priors that you're applying to your model (see :class:`rcr.priorsTypes` and :ref:`priorstypes`).
 
-            p : function, optional
+            p : function, optional 2nd argument
                 Custom priors function; takes in a vector of model parameters and returns a vector of the prior probability density for each value (see :ref:`priors` for an example).
             
             gaussianParams : 2D list/array_like, optional 2nd argument
@@ -726,9 +724,9 @@ PYBIND11_MODULE(rcr, m) { // rcr is module name, m is docstring instance
             *function*. Custom priors function; takes in a vector of model parameters and returns a vector of the prior probability density for each value (see :ref:`priors` for an example).
         )mydelimiter")
         .def_readwrite("gaussianParams", &Priors::gaussianParams, R"mydelimiter(
-            *2D list/array_like*. A list that contains lists of mu and sigma for the Gaussian prior of each param. If no prior, then just use NaNs (see :ref:`priors` for an example).
+            *2D list/array_like of floats*. A list that contains lists of mu and sigma for the Gaussian prior of each param. If no prior, then just use NaNs (see :ref:`priors` for an example).
         )mydelimiter")
         .def_readwrite("paramBounds", &Priors::paramBounds, R"mydelimiter(
-            A list that contains lists of the lower and upper hard bounds of each param. If not bounded, use NaNs, and if there's only one bound, use NaN for the other bound (see :ref:`priors` for an example).
+            *2D list/array_like of floats*. A list that contains lists of the lower and upper hard bounds of each param. If not bounded, use NaNs, and if there's only one bound, use NaN for the other bound (see :ref:`priors` for an example).
         )mydelimiter");
 }
