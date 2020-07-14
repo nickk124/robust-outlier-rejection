@@ -683,7 +683,6 @@ Therefore, given some fitted :math:`m`, the fitted intercept will be impacted by
 As shown in `Trotter (2011) <https://cdr.lib.unc.edu/concern/dissertations/1544bq461>`_,
 there exists some optimal :math:`x_p` that minimizes the correlation between :math:`b` and :math:`m`.
 
-
 RCR has an algorithm for this; but first, why does this matter? One reason is
 that if the linear parameters are uncorrelated with each other, then the uncertainty
 in their estimation can be represented with simple, one-dimensional error bars. However,
@@ -770,7 +769,8 @@ Next, we can use this with RCR as normal, except now supplying additional argume
 of ``pivot_function`` and ``pivot_guess`` to the model constructor ``rcr.FunctionalForm``, 
 where ``pivot_function`` is the function that returns
 the pivot for model give ``xdata, weights, f, params``, and ``pivot_guess`` is a guess for the optimal
-pivot point (for the iterative optimization algorithm). For example, if our initial guess for the pivot point
+pivot point (for the iterative optimization algorithm), that should accompany the initial guess for the model parameters. 
+For example, if our initial guess for the pivot point
 is some ``pivot_guess = 1.5``, we could initialize our model as:
 
 .. code-block:: python
