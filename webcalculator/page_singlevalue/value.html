@@ -565,7 +565,25 @@ function makeDefaultBinCount(data){
 	// }
 
 	return;
+ }
+
+function onlyGetVisibleBins(arr_hist, left, right){
+     let arr_hist_result = [];
+     let left_result = [];
+     let right_result = [];
+
+     for (let i = 0; i < arr_hist.length; i++){
+         if (!((left[i] < xMin && right[i] < xMin) || (left[i] > xMax && right[i] > xMax))){
+            // only triggers if both left and right are not outside of visible bounds
+            arr_hist_result.push(arr_hist[i]);
+            left_result.push(left[i]);
+            right_result.push(right[i]);
+         }
+     }
+
+     return [arr_hist_result, left_result, right_result];
 }
+
 function getHistBins(data, w_data){
     //console.log(bincount);
 	var arr_hist = []; //each element in this is the number of data points in the associated bin
@@ -574,7 +592,7 @@ function getHistBins(data, w_data){
     //console.log(data);
 	var edges = [Math.min(... data)];
 
-	for (var i = 0; i < bincount; i++){
+	 for (var i = 0; i < bincount; i++){
     //console.log(edges);
 		edges.push(edges[i] + binwidth);
 	}
@@ -631,7 +649,7 @@ function getHistBins(data, w_data){
 	//console.log(arr_hist);
 	//console.log(left);
 	//console.log(right);
-
+     //return onlyGetVisibleBins(arr_hist, left, right);
 	return [arr_hist, left, right];
 }
 function overRejPercentage(N){

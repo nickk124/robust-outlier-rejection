@@ -16,6 +16,7 @@ left = []
 right = []
 #xMin = 0
 #xMax = 1
+#xMed = -1
 
 src = ColumnDataSource(data=dict(arr_hist = arr_hist, left = left, right = right))
 
