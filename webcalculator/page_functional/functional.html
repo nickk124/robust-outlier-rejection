@@ -1146,25 +1146,25 @@ function displayBar(t){
       document.getElementById("XBarDisplay").innerHTML = "<span style=\"text-decoration:overline\">log x</span> = Σ<sub>i</sub>w<sub>i</sub>(log x<sub>i</sub>)y<sup>2</sup>(x<sub>i</sub>) / Σ<sub>i</sub>w<sub>i</sub>y<sup>2</sup>(x<sub>i</sub>)";
       document.getElementById("xBarType").innerHTML = "log x";
       document.getElementById("xBarInp").innerHTML = "log x";
-      document.getElementById("xBarOut").innerHTML = "log x";
+      //document.getElementById("xBarOut").innerHTML = "log x";
       break;
     case "Exponential":
       document.getElementById("XBarDisplay").innerHTML = "<span style=\"text-decoration:overline\">x</span> = Σ<sub>i</sub>w<sub>i</sub>x<sub>i</sub>y<sup>2</sup>(x<sub>i</sub>) / Σ<sub>i</sub>w<sub>i</sub>y<sup>2</sup>(x<sub>i</sub>)";
       document.getElementById("xBarType").innerHTML = "x";
       document.getElementById("xBarInp").innerHTML = "x";
-      document.getElementById("xBarOut").innerHTML = "x";
+      //document.getElementById("xBarOut").innerHTML = "x";
       break;
     case "Logarithmic":
       document.getElementById("XBarDisplay").innerHTML = "<span style=\"text-decoration:overline\">log x</span> = Σ<sub>i</sub>w<sub>i</sub>(log x<sub>i</sub>)10<sup>-2y(x<sub>i</sub>)</sup> / Σ<sub>i</sub>w<sub>i</sub>10<sup>-2y(x<sub>i</sub>)</sup>";
       document.getElementById("xBarType").innerHTML = "log x";
       document.getElementById("xBarInp").innerHTML = "log x";
-      document.getElementById("xBarOut").innerHTML = "log x";
+      //document.getElementById("xBarOut").innerHTML = "log x";
       break;
     default:
       document.getElementById("XBarDisplay").innerHTML = "<span style=\"text-decoration:overline\">x</span> = Σ<sub>i</sub>w<sub>i</sub>x<sub>i</sub> / Σ<sub>i</sub>w<sub>i</sub>";
       document.getElementById("xBarType").innerHTML = "x";
       document.getElementById("xBarInp").innerHTML = "x";
-      document.getElementById("xBarOut").innerHTML = "x";
+      //document.getElementById("xBarOut").innerHTML = "x";
       break;
   }
   return;
