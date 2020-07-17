@@ -717,7 +717,7 @@ pivot point :math:`(\log_{10}x)_p`, and the data transforms as :math:`\log_{10}y
 The formula for the pivot point is 
 
 .. math::
-    (\log_{10}x)_p = \frac{\sum\limits_iw_i(\log_{10} x_i)y^2(x_i)}{\sum\limits_i w_iy^2(x_i)}
+    (\log_{10}x)_p = \frac{\sum\limits_iw_i(\log_{10} x_i)10^{-2y(x_i)}}{\sum\limits_i w_i10^{-2y(x_i)}}
 
 (`Maples et al. 2018 <https://arxiv.org/abs/1807.05276>`_, Section 8.3.5); we'll need such a formula
 for the pivot point of any model that we'd like to apply this procedure to. Keeping that in mind,
@@ -737,8 +737,8 @@ Keeping this in mind, let's define our pivot point function for this power law m
 .. code-block:: python
 
     def get_pivot_powerlaw(xdata, weights, f, params):
-        topsum = np.sum(weights * np.log10(xdata) * np.power(f(xdata, params), 2.))
-        bottomsum = np.sum(weights * np.power(f(xdata, params), 2.))
+        topsum = np.sum(weights * np.log10(xdata) * np.power(10., -2.*f(xdata, params)))
+        bottomsum = np.sum(weights * np.power(10., -2.*f(xdata, params)))
         
         return topsum / bottomsum
 
