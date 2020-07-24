@@ -22,6 +22,7 @@ src/test.py
 /docs/build
 src/sphinx_test.py
 tests/maintest.py
+tests/functional_calc_test.py
 
 # deprecated
 /example_imgs
