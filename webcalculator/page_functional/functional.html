@@ -138,13 +138,25 @@
       <h1 style="font-size:2.5em;">Model Data</h1>
       <div id="StepOne" style="overflow:visible">
         <div>
-          <div id="ButtonSection" style="float:left; width:30%">
+          <div id="ButtonSection" style="float:left; width:45%">
             <h2 id="ModelTitle">Model y(x):</h2>
             <div>
               <div class="dropdown">
                 <button id="SelectedFunction" class="dropbtn">(Select Function Here)</button>
                 <div class="dropdown-content" style="width:180%; overflow:visible;">
-                  <button id="Linear" class="Button Function" onclick="displayChosenFunction(this); displayBar(this);">y(x) = a<sub>0</sub> + a<sub>1</sub>(x-<span style="text-decoration:overline">x</span>)</button>
+                  <button id="Linear" class="Button Function" onclick="displayChosenFunction(this);">y(x) = a<sub>0</sub> + a<sub>1</sub>x</button>
+                  <br>
+                  <button id="Quadratic" class="Button Function" onclick="displayChosenFunction(this);">y(x) = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup></button>
+                  <br>
+                  <button id="Cubic" class="Button Function" onclick="displayChosenFunction(this);">y(x) = a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>x<sup>3</sup></button>
+                  <br>
+                  <button id="PowerLaw" class="Button Function" onclick="displayChosenFunction(this);">y(x) = a<sub>0</sub>x<sup>a<sub>1</sub></sup></button>
+                  <br>
+                  <button id="Exponential" class="Button Function" onclick="displayChosenFunction(this);">y(x) = a<sub>0</sub>10<sup>a<sub>1</sub>x</sup></button>
+                  <br>
+                  <button id="Logarithmic" class="Button Function" onclick="displayChosenFunction(this);">y(x) = a<sub>0</sub>log<sub>10</sub>(x)</button>
+
+                  <!-- <button id="Linear" class="Button Function" onclick="displayChosenFunction(this); displayBar(this);">y(x) = a<sub>0</sub> + a<sub>1</sub>(x-<span style="text-decoration:overline">x</span>)</button>
                   <br>
                   <button id="Quadratic" class="Button Function" onclick="displayChosenFunction(this); displayBar(this);">y(x) = a<sub>0</sub> + a<sub>1</sub>(x-<span style="text-decoration:overline">x</span>) + a<sub>2</sub>(x-<span style="text-decoration:overline">x</span>)<sup>2</sup></button>
                   <br>
@@ -154,12 +166,12 @@
                   <br>
                   <button id="Exponential" class="Button Function" onclick="displayChosenFunction(this); displayBar(this);">y(x) = a<sub>0</sub>10<sup>a<sub>1</sub>(x-<span style="text-decoration:overline">x</span>)</sup></button>
                   <br>
-                  <button id="Logarithmic" class="Button Function" onclick="displayChosenFunction(this); displayBar(this);">y(x) = a<sub>0</sub>log(x/10<sup><span style="text-decoration:overline">log x</span></sup> )</button>
+                  <button id="Logarithmic" class="Button Function" onclick="displayChosenFunction(this); displayBar(this);">y(x) = a<sub>0</sub>log(x/10<sup><span style="text-decoration:overline">log x</span></sup> )</button> -->
                 </div>
               </div>
               <br>
               <br>
-              <i style="padding-top:10px">Here, select a function to model y(x), log y(x) or 10<sup> y</sup>, depending on your chosen basis for y(x) in the above section. Depending on the chosen function, the formula for the pivot point---either <span style="text-decoration:overline">x</span> or <span style="text-decoration:overline">log x</span>---will be displayed from the inputted data, depending on which model function is selected (See <a href="https://rcr.readthedocs.io/en/latest/tutorials/functional.html#automatically-minimizing-correlation-between-linear-model-parameters-advanced">here</a> for more info; this is to automatically minimize the correlation between certain, linearizable parameters of the model).</i>
+              <i style="padding-top:10px">Here, select a function to model y(x), log y(x) or 10<sup> y</sup>, depending on your chosen basis for y(x) in the above section. <!-- Depending on the chosen function, the formula for the pivot point---either <span style="text-decoration:overline">x</span> or <span style="text-decoration:overline">log x</span>---will be displayed from the inputted data, depending on which model function is selected (See <a href="https://rcr.readthedocs.io/en/latest/tutorials/functional.html#automatically-minimizing-correlation-between-linear-model-parameters-advanced">here</a> for more info; this is to automatically minimize the correlation between certain, linearizable parameters of the model).</i> -->
               <br>
               <br>
               <i style="padding-top:10px">Next, in the box to the right, enter your guess for the model function parameters a<sub>0</sub> , a<sub>1</sub> , a<sub>2</sub> , etc, one per line. For example, in the linear model case, a<sub>0</sub> corresponds to the y-intercept, and a<sub>1</sub> to the slope. </i>
@@ -173,15 +185,15 @@
               <br>
             </div>
           </div>
-          <div style="float:left; width:30%; padding:5px;">
+          <!-- <div style="float:left; width:30%; padding:5px;">
             <h2>Suggested form of initial guess for <span id="xBarType" style="text-decoration:overline">x</span>:</h2>
             <h3 id="XBarDisplay"><span style="text-decoration:overline">x</span> = Σ<sub>i</sub>w<sub>i</sub>x<sub>i</sub> / Σ<sub>i</sub>w<sub>i</sub></h3>
             <br>
             <h2>Input Initial Guess for <span id="xBarInp" style="text-decoration:overline">x</span>:</h2>
             <textarea class="dataTable" id="barArea" style="height:20px; width:70%;float: left;"></textarea>
 
-          </div>
-          <div id="RejectionMethod" style="float:left; width:30%">
+          </div> -->
+          <div id="RejectionMethod" style="float:left; width:45%">
             <h2>Input Initial Guess for Model Function Parameters:</h2>
             <br>
             <textarea class="dataTable" id="guessarea" style="height:300px"></textarea>
@@ -189,7 +201,10 @@
           <br style="clear: left;" />
         </div>
         <br>
-        <div><!-- style="position:relative; display:block;"> -->
+
+        <p>&nbsp;</p>
+
+        <div style="display: inline-block; width:80%;"><!-- style="position:relative; display:block;"> -->
           <h2>Model Bayesian Prior Distributions of Model Function Parameters (Optional):</h2>
           <div style="width:45%; float:left; padding:5px;">
             <div id="ButtonSection">
@@ -318,7 +333,7 @@
                         <div id="RejectionMethod" style="width:130%; float:right">
                           <table style="float:right">
                             <tr>
-                              <th>Final model<br>parameters (and pivot point):</th>
+                              <th>Final model<br>parameters<!-- (and pivot point)-->:</th>
                               <th style="width:400px">Selected Points (x, y):</th>
                             </tr>
                             <tr>
@@ -1434,7 +1449,7 @@ function performFunctionalRCR(){
   //mainDataContents = document.getElementById('ydataarea').value
   //xDataContents = document.getElementById('xdataarea').value
   guessDataContents = document.getElementById('guessarea').value
-  barDataContents = document.getElementById('barArea').value
+  // barDataContents = document.getElementById('barArea').value
   priorsDataContents = document.getElementById('priorsArea').value
 
 
@@ -1469,7 +1484,7 @@ function performFunctionalRCR(){
   console.log("chosenFunctionType: " + chosenFunctionType);
   console.log("hasPriors: " + hasPriors);
   console.log('priorsDataContents: ' + priorsDataContents);
-  console.log('barDataContents: ' + barDataContents);
+  // console.log('barDataContents: ' + barDataContents);
   //console.log(correct_barData);
 
   //Rejection tech determination:
@@ -1503,7 +1518,7 @@ function performFunctionalRCR(){
                       rejectionType : rejTechInt,
                       weighted :  hasWeights,
                       functionType : chosenFunctionType,
-                      barData : barDataContents,
+                      // barData : barDataContents,
                       priorsData : priorsDataContents,
                       priorsCheck : hasPriors
 
@@ -1514,7 +1529,8 @@ function performFunctionalRCR(){
               {
                   console.log('yes');
       console.log(data);
-                  document.getElementById('finalParameters').value = data['finalParametersData'].split("\n").slice(0, -1).join("\n") + "\n\n" + data['finalParametersData'].split("\n").slice(-1)[0];
+                  document.getElementById('finalParameters').value = data['finalParametersData']; // without pivot points
+                  // document.getElementById('finalParameters').value = data['finalParametersData'].split("\n").slice(0, -1).join("\n") + "\n\n" + data['finalParametersData'].split("\n").slice(-1)[0];
                   document.getElementById('nonRejectedData').value = data['nonRejectedData'];
                   document.getElementById('rejectedData').value = data['rejectedData'];
                   document.getElementById('allData').value = data['allData'];
@@ -1523,7 +1539,8 @@ function performFunctionalRCR(){
                   var parameters_result = data['finalParametersData'].split("\n");
                   parameters_result = parameters_result.map(Number);
 
-                  var bar_result = parameters_result[parameters_result.length - 1];
+                  // var bar_result = parameters_result[parameters_result.length - 1];
+                  var bar_result = 0;
 
                   var nonRejArr = data['nonRejectedData'].split("\n");
                   var rejArr = data['rejectedData'].split("\n");
