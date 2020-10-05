@@ -46,6 +46,8 @@
 <!-- DATA INPUT SECTION -->
 <!--////////////////////////////////////////////////////////////////////////////-->
     <div id="RMInput">
+      <!-- <h1 style="font-size:3.5em;"><b>NOTICE:</b><i>Currently Under Maintenance</i></h1>
+            <br> -->
       <h1 style="font-size:3.5em;"> Functional RCR Calculator</h1>
             <br>
 
@@ -1487,25 +1489,25 @@ function performFunctionalRCR(){
   // console.log('barDataContents: ' + barDataContents);
   //console.log(correct_barData);
 
-  //Rejection tech determination:
-  var rejTechInt = "0"
+  // //Rejection tech determination:
+  // var rejTechInt = "0"
 
-  if (hasSymmetricDist){
-      if (hasEqualCont){
-          rejTechInt = "1"
-        }
-      else if (hasOneSidedCont){
-          rejTechInt = "2"
-        }
-      else if (hasInBetweenCont){
-          rejTechInt = "3"
-        }
-      }
-  else{
-      rejTechInt = "4"
-    }
+  // if (hasSymmetricDist){
+  //     if (hasEqualCont){
+  //         rejTechInt = "1"
+  //       }
+  //     else if (hasOneSidedCont){
+  //         rejTechInt = "2"
+  //       }
+  //     else if (hasInBetweenCont){
+  //         rejTechInt = "3"
+  //       }
+  //     }
+  // else{
+  //     rejTechInt = "4"
+  //   }
 
-  console.log("Rejection Type Int: " + rejTechInt);
+  // console.log("Rejection Type Int: " + rejTechInt);
 
   var request = $.ajax
       (
@@ -1515,7 +1517,10 @@ function performFunctionalRCR(){
               data: { mainData : mainDataContents,
                       xData : xDataContents,
                       guessData : guessDataContents,
-                      rejectionType : rejTechInt,
+                      symDist : hasSymmetricDist,
+                      equalCont :  hasEqualCont,
+                      oneSidedCont : hasOneSidedCont,
+                      inBetweenCont : hasInBetweenCont,
                       weighted :  hasWeights,
                       functionType : chosenFunctionType,
                       // barData : barDataContents,

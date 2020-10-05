@@ -26,3 +26,4 @@ tests/functional_calc_test.py
 
 # deprecated
 /example_imgs
+tests/functional_calc_test_simple.py
