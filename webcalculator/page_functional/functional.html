@@ -1030,7 +1030,7 @@ function convertData(inputDataContents){ //convert from new format to old format
   var y_data = []; //these are lists of strings
 	var w_data = [];
 
-  console.log("inputDataContents: " + inputDataContents);
+  // console.log("inputDataContents: " + inputDataContents);
 
   mainDataContents = "";
   xDataContents = "";
@@ -1043,7 +1043,7 @@ function convertData(inputDataContents){ //convert from new format to old format
 	}
 	var N = inputData_Arr.length;
 
-  console.log("inputData_Arr: " + inputData_Arr);
+  // console.log("inputData_Arr: " + inputData_Arr);
 
   if (has_Weights || has_ErrorBars){ //creates lists of data (list of strings)
     for (var i = 0; i < N; i++){
@@ -1081,8 +1081,8 @@ function convertData(inputDataContents){ //convert from new format to old format
 		}
 	}
 
-  console.log(xDataContents);
-  console.log(mainDataContents);
+  // console.log(xDataContents);
+  // console.log(mainDataContents);
 
   return [mainDataContents, xDataContents];
 }
@@ -1384,7 +1384,7 @@ function linspace(start, stop, size){
 
 function makeXPlotData(xDataContents){
   let x_data = xDataContents.split("\n");
-  console.log(x_data);
+  // console.log(x_data);
   let x_data_new = [];
   for (let i = 0; i < x_data.length; i++){
     if (x_data[i] !== ""){
@@ -1393,18 +1393,18 @@ function makeXPlotData(xDataContents){
   }
   x_data = x_data_new
 
-  console.log(x_data);
+  // console.log(x_data);
   x_data = x_data.map(Number);
 
-  console.log(x_data);
+  // console.log(x_data);
 
   let xmax = Math.max(...x_data)
   let xmin = Math.min(...x_data)
   x_data_range = Math.abs(xmax - xmin)
 
   x_original_result = linspace(xmin - x_data_range/2, xmax + x_data_range/2, 1000);
-  console.log(xDataContents);
-  console.log(x_original_result);
+  // console.log(xDataContents);
+  // console.log(x_original_result);
   return;
 }
 

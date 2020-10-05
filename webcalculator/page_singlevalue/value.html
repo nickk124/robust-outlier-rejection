@@ -785,8 +785,7 @@ function calculateStDev(inputData)
 {
 	var inputDataContents = document.getElementById('inputTextAreaData').value;
 
-	console.log(inputData);
-	console.log(inputDataContents)
+	// console.log("inputDataContents:" + inputDataContents);
     var request = $.ajax
         (
             {
@@ -904,16 +903,15 @@ function performRCR(){
 				newInputData += Number(datapoint[0]).toString() + " " + w_new.toString() + "\n";
 			}
 			inputDataContents = newInputData;
-			console.log(inputDataContents);
+			// console.log(inputDataContents);
 		}
 
-	console.log(hasSymmetricDist);
-	console.log(hasEqualCont);
-	console.log(hasOneSidedCont);
-	console.log(hasInBetweenCont);
-	console.log(hasWeights);
-	// console.log(inputDataContents);
-	console.log(inputDataContents.split("\n"))
+	console.log("hasSymmetricDist: " + hasSymmetricDist);
+	console.log("hasEqualCont: " + hasEqualCont);
+	console.log("hasOneSidedCont: " + hasOneSidedCont);
+	console.log("hasInBetweenCont: " + hasInBetweenCont);
+	console.log("hasWeights: " + hasWeights);
+	console.log("inputDataContents:" + inputDataContents);
     var request = $.ajax
         (
             {
