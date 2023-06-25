@@ -16,6 +16,10 @@ Robust Chauvenet Outlier Rejection (RCR)
    :target: https://zenodo.org/badge/latestdoi/246971427
    :alt: Zenodo (DOI)
 
+.. image:: https://img.shields.io/badge/ascl-2302.006-blue.svg?colorB=262255
+   :target: https://ascl.net/2302.006
+   :alt: astrophysics source code library:2302.006
+
 What is RCR?
 ============
 RCR is advanced, but easy to use, outlier rejection.
