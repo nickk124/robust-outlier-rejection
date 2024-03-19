@@ -4,6 +4,10 @@ Robust Chauvenet Outlier Rejection (RCR)
    :target: https://rcr.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
+.. image:: https://static.pepy.tech/badge/rcr
+   :target: https://pepy.tech/project/rcr
+   :alt: Downloads
+
 .. image:: https://travis-ci.com/nickk124/RCR.svg?branch=master
     :target: https://travis-ci.com/nickk124/RCR
     :alt: Build Status
